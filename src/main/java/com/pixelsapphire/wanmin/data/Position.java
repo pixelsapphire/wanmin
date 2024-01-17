@@ -17,7 +17,7 @@ public class Position {
     }
 
     @Contract("_ -> new")
-    public static @NotNull Position fromResult(@NotNull ResultSet record) throws SQLException {
+    public static @NotNull Position fromRecord(@NotNull ResultSet record) throws SQLException {
         return new Position(record.getString("nazwa"), record.getFloat("pensja"));
     }
 

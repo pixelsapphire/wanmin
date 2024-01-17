@@ -21,7 +21,7 @@ public class EmploymentContract {
     }
 
     @Contract("_ -> new")
-    public static @NotNull EmploymentContract fromResult(@NotNull ResultSet record) throws SQLException {
+    public static @NotNull EmploymentContract fromRecord(@NotNull ResultSet record) throws SQLException {
         return new EmploymentContract(record.getString("typ"), record.getDate("zawiazana"), record.getDate("zerwana"));
     }
 

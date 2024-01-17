@@ -21,7 +21,7 @@ public class Employee {
     }
 
     @Contract("_, _, _ -> new")
-    public static @NotNull Employee fromResult(@NotNull ResultSet record, @NotNull Provider<Position> positionProvider,
+    public static @NotNull Employee fromRecord(@NotNull ResultSet record, @NotNull Provider<Position> positionProvider,
                                                @NotNull Provider<EmploymentContract> contractProvider) throws SQLException {
         return new Employee(record.getString("imie"), record.getString("nazwisko"),
                             positionProvider.getByValue(record.getString("stanowisko")),
