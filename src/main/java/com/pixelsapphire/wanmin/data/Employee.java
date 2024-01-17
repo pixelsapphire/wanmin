@@ -1,5 +1,6 @@
-package com.pixelsapphire.wanmin;
+package com.pixelsapphire.wanmin.data;
 
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.ResultSet;
@@ -11,7 +12,7 @@ public class Employee {
     private final @NotNull String surname, job;
     private final float salary;
 
-    private Employee(int id, @NotNull String surname, @NotNull String job, @NotNull float salary, int team) {
+    private Employee(int id, @NotNull String surname, @NotNull String job, float salary, int team) {
         this.id = id;
         this.surname = surname;
         this.job = job;
@@ -19,7 +20,8 @@ public class Employee {
         this.team = team;
     }
 
-    public static Employee fromResult(@NotNull ResultSet record) throws SQLException {
+    @Contract("_ -> new")
+    public static @NotNull Employee fromResult(@NotNull ResultSet record) throws SQLException {
         return new Employee(record.getInt("id_prac"), record.getString("nazwisko"), record.getString("etat"),
                             record.getFloat("placa_pod"), record.getInt("id_zesp"));
     }
