@@ -1,5 +1,6 @@
 package com.pixelsapphire.wanmin.data;
 
+import com.pixelsapphire.wanmin.controller.Provider;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -8,47 +9,39 @@ import java.sql.SQLException;
 
 public class Employee {
 
-    private final int id, team;
-    private final @NotNull String surname, job;
-    private final float salary;
+    private final @NotNull String firstName, lastName;
+    private Position position;
+    private EmploymentContract contract;
 
-    private Employee(int id, @NotNull String surname, @NotNull String job, float salary, int team) {
-        this.id = id;
-        this.surname = surname;
-        this.job = job;
-        this.salary = salary;
-        this.team = team;
+    private Employee(@NotNull String firstName, @NotNull String lastName, @NotNull Position position, @NotNull EmploymentContract contract) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.position = position;
+        this.contract = contract;
     }
 
-    @Contract("_ -> new")
-    public static @NotNull Employee fromResult(@NotNull ResultSet record) throws SQLException {
-        return new Employee(record.getInt("id_prac"), record.getString("nazwisko"), record.getString("etat"),
-                            record.getFloat("placa_pod"), record.getInt("id_zesp"));
+    @Contract("_, _, _ -> new")
+    public static @NotNull Employee fromResult(@NotNull ResultSet record, @NotNull Provider<Position> positionProvider,
+                                               @NotNull Provider<EmploymentContract> contractProvider) throws SQLException {
+        return new Employee(record.getString("imie"), record.getString("nazwisko"),
+                            positionProvider.getByValue(record.getString("stanowisko")),
+                            contractProvider.getByValue(record.getString("numer_umowy")));
     }
 
-    public int getId() {
-        return id;
+    public @NotNull String getFirstName() {
+        return firstName;
     }
 
-    public @NotNull String getSurname() {
-        return surname;
+    public @NotNull String getLastName() {
+        return lastName;
     }
 
-    public @NotNull String getJob() {
-        return job;
+    public @NotNull Position getPosition() {
+        return position;
     }
 
-    public float getSalary() {
-        return salary;
-    }
-
-    public int getTeam() {
-        return team;
-    }
-
-    @Override
-    public String toString() {
-        return String.format("%4d %-12s %-10s %6s %4d", id, surname, job, salary, team);
+    public @NotNull EmploymentContract getContract() {
+        return contract;
     }
 }
 

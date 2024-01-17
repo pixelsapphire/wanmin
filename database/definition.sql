@@ -20,7 +20,7 @@ CREATE TABLE wm_umowy
 (
     id        NUMBER(5) GENERATED ALWAYS AS IDENTITY,
     typ       VARCHAR2(30) NOT NULL,
-    zawiazana TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    zawiazana DATE DEFAULT CURRENT_TIMESTAMP,
     zerwana   DATE         NULL,
     CONSTRAINT pk_umowy_id PRIMARY KEY (id)
 );
