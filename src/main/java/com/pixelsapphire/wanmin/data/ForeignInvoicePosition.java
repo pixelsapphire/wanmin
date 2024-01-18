@@ -12,10 +12,10 @@ public class ForeignInvoicePosition {
 
     private final @NotNull ForeignInvoice invoice;
     private final @NotNull Product product;
-    private final int price, amount;
+    private final float price, amount;
     private final Date date;
 
-    private ForeignInvoicePosition(@NotNull ForeignInvoice invoice, @NotNull Product product, int price, int amount, Date date) {
+    private ForeignInvoicePosition(@NotNull ForeignInvoice invoice, @NotNull Product product, float price, float amount, Date date) {
         this.invoice = invoice;
         this.product = product;
         this.price = price;
@@ -27,14 +27,14 @@ public class ForeignInvoicePosition {
     public static @NotNull ForeignInvoicePosition fromRecord(@NotNull ResultSet record, @NotNull Provider<ForeignInvoice> invoiceProvider,
                                                              @NotNull Provider<Product> productProvider) throws SQLException {
         return new ForeignInvoicePosition(invoiceProvider.getByValue(record.getString("faktura")), productProvider.getByValue(record.getString("produkt")),
-                record.getInt("cena"), record.getInt("ilosc"), record.getDate("data_waznosci"));
+                record.getFloat("cena"), record.getFloat("ilosc"), record.getDate("data_waznosci"));
     }
 
     public @NotNull Product getProduct() {
         return product;
     }
 
-    public int getAmount() {
+    public float getAmount() {
         return amount;
     }
 
@@ -46,7 +46,7 @@ public class ForeignInvoicePosition {
         return date;
     }
 
-    public int getPrice() {
+    public float getPrice() {
         return price;
     }
 }
