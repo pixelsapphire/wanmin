@@ -1,12 +1,19 @@
 package com.pixelsapphire.wanmin;
 
-import com.pixelsapphire.wanmin.controller.WanminDBController;
+import com.formdev.flatlaf.FlatDarculaLaf;
+import com.pixelsapphire.wanmin.gui.MainWindow;
 
-@SuppressWarnings({"SameParameterValue"})
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+
 public class Wanmin {
 
     public static void main(String[] args) {
-        final var controller = new WanminDBController("sbd147412", "sbd147412");
+        try {
+            UIManager.setLookAndFeel(new FlatDarculaLaf());
+        } catch (UnsupportedLookAndFeelException ignored) {
+        }
+        new MainWindow();
     }
 
 }

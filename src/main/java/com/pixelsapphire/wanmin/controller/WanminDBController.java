@@ -1,6 +1,7 @@
 package com.pixelsapphire.wanmin.controller;
 
 import com.pixelsapphire.wanmin.DatabaseException;
+import com.pixelsapphire.wanmin.Wanmin;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.Connection;
@@ -11,6 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.function.Function;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class WanminDBController {
 
@@ -26,10 +29,12 @@ public class WanminDBController {
                                                         @NotNull String username, char @NotNull [] password) {
         final var connectionProps = new Properties();
         connectionProps.put("user", username);
-        connectionProps.put("password", password);
+        connectionProps.put("password", new String(password));
         DriverManager.setLoginTimeout(5);
         try {
-            return DriverManager.getConnection(driver + ":@//" + host + ":" + port + "/" + service, connectionProps);
+            final var connection = DriverManager.getConnection(driver + ":@//" + host + ":" + port + "/" + service, connectionProps);
+            Logger.getLogger(Wanmin.class.getName()).log(Level.INFO, "Połączono z bazą danych");
+            return connection;
         } catch (SQLException e) {
             throw new DatabaseException("Nie udało się połączyć z bazą danych", e);
         }
