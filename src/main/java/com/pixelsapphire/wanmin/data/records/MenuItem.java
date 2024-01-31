@@ -28,6 +28,7 @@ public class MenuItem implements DatabaseRecord {
                             recipeProvider.getByValue(record.getInt("przepis")), record.getString("kategoria"));
     }
 
+    @Override
     public int getId() {
         return id;
     }
