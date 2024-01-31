@@ -1,4 +1,4 @@
-package com.pixelsapphire.wanmin.data;
+package com.pixelsapphire.wanmin.data.records;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;

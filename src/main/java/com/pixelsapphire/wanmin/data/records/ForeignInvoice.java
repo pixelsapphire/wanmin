@@ -1,4 +1,4 @@
-package com.pixelsapphire.wanmin.data;
+package com.pixelsapphire.wanmin.data.records;
 
 import com.pixelsapphire.wanmin.controller.Provider;
 import org.jetbrains.annotations.Contract;
