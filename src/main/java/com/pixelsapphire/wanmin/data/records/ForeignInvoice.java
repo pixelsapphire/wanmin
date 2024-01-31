@@ -8,13 +8,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
 
-public class ForeignInvoice {
+public class ForeignInvoice implements DatabaseRecord {
 
+    private final int id;
     private final @NotNull Contractor contractor;
     private final @NotNull Date date;
     private final @NotNull String number;
 
-    private ForeignInvoice(@NotNull Contractor contractor, @NotNull Date date, @NotNull String number) {
+    private ForeignInvoice(int id, @NotNull Contractor contractor, @NotNull Date date, @NotNull String number) {
+        this.id = id;
         this.contractor = contractor;
         this.date = date;
         this.number = number;
@@ -22,8 +24,8 @@ public class ForeignInvoice {
 
     @Contract("_, _ -> new")
     public static @NotNull ForeignInvoice fromRecord(@NotNull ResultSet record, @NotNull Provider<Contractor> contractorProvider) throws SQLException {
-        return new ForeignInvoice(contractorProvider.getByValue(record.getInt("kontrahent")), record.getDate("data"),
-                                  record.getString("nr_obcy"));
+        return new ForeignInvoice(record.getInt("id"), contractorProvider.getByValue(record.getInt("kontrahent")),
+                                  record.getDate("data"), record.getString("nr_obcy"));
     }
 
     public @NotNull Contractor getContractor() {
@@ -36,5 +38,15 @@ public class ForeignInvoice {
 
     public @NotNull String getNumber() {
         return number;
+    }
+
+    @Override
+    public int getId() {
+        return id;
+    }
+
+    @Override
+    public @NotNull String getTableName() {
+        return "wm_faktury_obce";
     }
 }

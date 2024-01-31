@@ -7,13 +7,15 @@ import org.jetbrains.annotations.NotNull;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class Employee {
+public class Employee implements DatabaseRecord {
 
+    private final int id;
     private final @NotNull String firstName, lastName;
     private Position position;
     private EmploymentContract contract;
 
-    private Employee(@NotNull String firstName, @NotNull String lastName, @NotNull Position position, @NotNull EmploymentContract contract) {
+    private Employee(int id, @NotNull String firstName, @NotNull String lastName, @NotNull Position position, @NotNull EmploymentContract contract) {
+        this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.position = position;
@@ -23,7 +25,7 @@ public class Employee {
     @Contract("_, _, _ -> new")
     public static @NotNull Employee fromRecord(@NotNull ResultSet record, @NotNull Provider<Position> positionProvider,
                                                @NotNull Provider<EmploymentContract> contractProvider) throws SQLException {
-        return new Employee(record.getString("imie"), record.getString("nazwisko"),
+        return new Employee(record.getInt("id"), record.getString("imie"), record.getString("nazwisko"),
                             positionProvider.getByValue(record.getString("stanowisko")),
                             contractProvider.getByValue(record.getString("numer_umowy")));
     }
@@ -42,6 +44,16 @@ public class Employee {
 
     public @NotNull EmploymentContract getContract() {
         return contract;
+    }
+
+    @Override
+    public int getId() {
+        return id;
+    }
+
+    @Override
+    public @NotNull String getTableName() {
+        return "wm_pracownicy";
     }
 }
 

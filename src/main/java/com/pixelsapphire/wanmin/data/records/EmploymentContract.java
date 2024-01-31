@@ -8,13 +8,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
 
-public class EmploymentContract {
+public class EmploymentContract implements DatabaseRecord {
 
+    private final int id;
     private final @NotNull String type;
     private final @NotNull Date concluded;
     private final @Nullable Date terminated;
 
-    private EmploymentContract(@NotNull String type, @NotNull Date concluded, @Nullable Date terminated) {
+    private EmploymentContract(int id, @NotNull String type, @NotNull Date concluded, @Nullable Date terminated) {
+        this.id = id;
         this.type = type;
         this.concluded = concluded;
         this.terminated = terminated;
@@ -22,7 +24,8 @@ public class EmploymentContract {
 
     @Contract("_ -> new")
     public static @NotNull EmploymentContract fromRecord(@NotNull ResultSet record) throws SQLException {
-        return new EmploymentContract(record.getString("typ"), record.getDate("zawiazana"), record.getDate("zerwana"));
+        return new EmploymentContract(record.getInt("id"), record.getString("typ"),
+                                      record.getDate("zawiazana"), record.getDate("zerwana"));
     }
 
     public @NotNull String getType() {
@@ -35,5 +38,15 @@ public class EmploymentContract {
 
     public @Nullable Date getTerminated() {
         return terminated;
+    }
+
+    @Override
+    public int getId() {
+        return id;
+    }
+
+    @Override
+    public @NotNull String getTableName() {
+        return "wm_umowy";
     }
 }

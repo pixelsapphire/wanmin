@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class Menu {
+public class Menu implements DatabaseRecord {
 
     private final int id;
     private final @NotNull String name;
@@ -21,11 +21,17 @@ public class Menu {
         return new Menu(record.getInt("id"), record.getString("name"));
     }
 
+    @Override
     public int getId() {
         return id;
     }
 
-    public String getName() {
+    @Override
+    public @NotNull String getTableName() {
+        return "wm_menu";
+    }
+
+    public @NotNull String getName() {
         return name;
     }
 }
