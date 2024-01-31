@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class Ingredient {
+
     private final @NotNull Product product;
     private final float amount;
 
@@ -17,8 +18,8 @@ public class Ingredient {
     }
 
     @Contract("_, _ -> new")
-    public static Ingredient fromRecord(@NotNull ResultSet record, @NotNull Provider<Product> productProvider) throws SQLException {
-        return new Ingredient(productProvider.getByValue(record.getString("produkt")),record.getFloat("ilosc"));
+    public static @NotNull Ingredient fromRecord(@NotNull ResultSet record, @NotNull Provider<Product> productProvider) throws SQLException {
+        return new Ingredient(productProvider.getByValue(record.getString("produkt")), record.getFloat("ilosc"));
     }
 
     public @NotNull Product getProduct() {

@@ -21,9 +21,9 @@ public class ForeignInvoice {
     }
 
     @Contract("_, _ -> new")
-    public static @NotNull ForeignInvoice fromRecord (@NotNull ResultSet record, @NotNull Provider<Contractor> contractorProvider) throws SQLException {
+    public static @NotNull ForeignInvoice fromRecord(@NotNull ResultSet record, @NotNull Provider<Contractor> contractorProvider) throws SQLException {
         return new ForeignInvoice(contractorProvider.getByValue(record.getInt("kontrahent")), record.getDate("data"),
-                record.getString("nr_obcy"));
+                                  record.getString("nr_obcy"));
     }
 
     public @NotNull Contractor getContractor() {

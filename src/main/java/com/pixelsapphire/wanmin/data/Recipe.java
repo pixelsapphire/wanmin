@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class Recipe {
+
     private final @NotNull String description;
     private List<Ingredient> ingredients;
 
@@ -16,7 +17,7 @@ public class Recipe {
     }
 
     @Contract("_ -> new")
-    public static Recipe formRecord(@NotNull ResultSet record) throws SQLException {
+    public static @NotNull Recipe formRecord(@NotNull ResultSet record) throws SQLException {
         return new Recipe(record.getString("opis"));
     }
 

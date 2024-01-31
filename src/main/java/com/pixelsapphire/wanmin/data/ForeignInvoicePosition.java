@@ -27,7 +27,7 @@ public class ForeignInvoicePosition {
     public static @NotNull ForeignInvoicePosition fromRecord(@NotNull ResultSet record, @NotNull Provider<ForeignInvoice> invoiceProvider,
                                                              @NotNull Provider<Product> productProvider) throws SQLException {
         return new ForeignInvoicePosition(invoiceProvider.getByValue(record.getString("faktura")), productProvider.getByValue(record.getString("produkt")),
-                record.getFloat("cena"), record.getFloat("ilosc"), record.getDate("data_waznosci"));
+                                          record.getFloat("cena"), record.getFloat("ilosc"), record.getDate("data_waznosci"));
     }
 
     public @NotNull Product getProduct() {

@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class Product {
+
     private final @NotNull String name;
     private String unit;
 
@@ -24,5 +25,7 @@ public class Product {
         return name;
     }
 
-    public  String getUnit() {return unit;}
+    public String getUnit() {
+        return unit;
+    }
 }
