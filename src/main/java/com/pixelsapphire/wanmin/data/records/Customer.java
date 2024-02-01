@@ -30,11 +30,6 @@ public class Customer implements DatabaseRecord {
         return cardNumber;
     }
 
-    @Override
-    public @NotNull String getTableName() {
-        return "wm_klienci";
-    }
-
     public @NotNull String getFirstName() {
         return firstName;
     }

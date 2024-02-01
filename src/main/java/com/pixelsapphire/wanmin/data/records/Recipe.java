@@ -41,9 +41,4 @@ public class Recipe implements DatabaseRecord {
     public int getId() {
         return id;
     }
-
-    @Override
-    public @NotNull String getTableName() {
-        return "wm_przepisy";
-    }
 }

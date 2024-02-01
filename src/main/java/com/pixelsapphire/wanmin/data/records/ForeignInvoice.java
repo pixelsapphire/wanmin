@@ -56,9 +56,4 @@ public class ForeignInvoice implements DatabaseRecord {
     public int getId() {
         return id;
     }
-
-    @Override
-    public @NotNull String getTableName() {
-        return "wm_faktury_obce";
-    }
 }

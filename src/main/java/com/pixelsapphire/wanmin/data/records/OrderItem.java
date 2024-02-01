@@ -36,9 +36,4 @@ public class OrderItem implements DatabaseRecord {
     public int getId() {
         return id;
     }
-
-    @Override
-    public @NotNull String getTableName() {
-        return "wm_zamowienia_pozycje";
-    }
 }

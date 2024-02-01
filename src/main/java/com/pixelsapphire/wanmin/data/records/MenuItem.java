@@ -41,9 +41,4 @@ public class MenuItem implements DatabaseRecord {
     public int getId() {
         return id;
     }
-
-    @Override
-    public @NotNull String getTableName() {
-        return "wm_menu_pozycje";
-    }
 }
