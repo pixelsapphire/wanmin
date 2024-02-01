@@ -11,8 +11,8 @@ public class Employee implements DatabaseRecord {
 
     private final int id;
     private final @NotNull String firstName, lastName;
-    private Position position;
-    private EmploymentContract contract;
+    private final Position position;
+    private final EmploymentContract contract;
 
     private Employee(int id, @NotNull String firstName, @NotNull String lastName, @NotNull Position position, @NotNull EmploymentContract contract) {
         this.id = id;

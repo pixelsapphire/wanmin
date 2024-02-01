@@ -4,7 +4,5 @@ import org.jetbrains.annotations.NotNull;
 
 public interface Provider<T> {
 
-    @NotNull T getById(int id);
-
-    @NotNull <V> T getByValue(@NotNull V value);
+    @NotNull <K> T getByKey(K id);
 }

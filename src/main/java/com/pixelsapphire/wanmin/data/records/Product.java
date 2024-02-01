@@ -33,7 +33,7 @@ public class Product implements DatabaseRecord {
 
     @Override
     public int getId() {
-        return 0;
+        return id;
     }
 
     @Override

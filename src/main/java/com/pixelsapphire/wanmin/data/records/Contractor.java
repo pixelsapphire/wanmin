@@ -10,7 +10,7 @@ public class Contractor implements DatabaseRecord {
 
     private final int id;
     private final @NotNull String name, address;
-    private String phone, email, nip;
+    private final String phone, email, nip;
 
     private Contractor(int id, @NotNull String name, @NotNull String address, String phone, String email, String nip) {
         this.id = id;

@@ -15,25 +15,25 @@ public class StorageItem implements DatabaseRecord {
     private final @NotNull Product product;
     private final float amount;
     private final @NotNull ForeignInvoice invoice;
-    private final @Nullable Date dueDate;
+    private final @Nullable Date expirationDate;
 
-    private StorageItem(int id, @NotNull Product product, float amount, Date dueDate, @NotNull ForeignInvoice invoice) {
+    private StorageItem(int id, @NotNull Product product, float amount, @Nullable Date expirationDate, @NotNull ForeignInvoice invoice) {
         this.id = id;
         this.product = product;
         this.amount = amount;
-        this.dueDate = dueDate;
+        this.expirationDate = expirationDate;
         this.invoice = invoice;
     }
 
     @Contract("_, _, _ -> new")
     public static @NotNull StorageItem fromRecord(@NotNull ResultSet record, @NotNull Provider<Product> productProvider,
                                                   @NotNull Provider<ForeignInvoice> invoiceProvider) throws SQLException {
-        return new StorageItem(record.getInt("is"), productProvider.getByValue(record.getString("produkt")), record.getFloat("ilosc"),
-                               record.getDate("data_waznosci"), invoiceProvider.getByValue(record.getString("faktura")));
+        return new StorageItem(record.getInt("is"), productProvider.getByKey(record.getString("produkt")), record.getFloat("ilosc"),
+                               record.getDate("data_waznosci"), invoiceProvider.getByKey(record.getString("faktura")));
     }
 
-    public @Nullable Date getDueDate() {
-        return dueDate;
+    public @Nullable Date getExpirationDate() {
+        return expirationDate;
     }
 
     public float getAmount() {

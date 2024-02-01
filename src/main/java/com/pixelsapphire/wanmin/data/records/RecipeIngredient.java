@@ -21,7 +21,7 @@ public class RecipeIngredient implements DatabaseRecord {
 
     @Contract("_, _ -> new")
     public static @NotNull RecipeIngredient fromRecord(@NotNull ResultSet record, @NotNull Provider<Product> productProvider) throws SQLException {
-        return new RecipeIngredient(record.getInt("id"), productProvider.getByValue(record.getString("produkt")),
+        return new RecipeIngredient(record.getInt("id"), productProvider.getByKey(record.getString("produkt")),
                                     record.getFloat("ilosc"));
     }
 

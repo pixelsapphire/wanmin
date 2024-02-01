@@ -11,26 +11,22 @@ import java.util.Date;
 public class ForeignInvoiceItem implements DatabaseRecord {
 
     private final int id;
-    private final @NotNull ForeignInvoice invoice;
     private final @NotNull Product product;
     private final float price, amount;
     private final Date date;
 
-    private ForeignInvoiceItem(int id, @NotNull ForeignInvoice invoice, @NotNull Product product, float price, float amount, Date date) {
+    private ForeignInvoiceItem(int id, @NotNull Product product, float price, float amount, Date date) {
         this.id = id;
-        this.invoice = invoice;
         this.product = product;
         this.price = price;
         this.amount = amount;
         this.date = date;
     }
 
-    @Contract("_, _, _ -> new")
-    public static @NotNull ForeignInvoiceItem fromRecord(@NotNull ResultSet record, @NotNull Provider<ForeignInvoice> invoiceProvider,
-                                                         @NotNull Provider<Product> productProvider) throws SQLException {
-        return new ForeignInvoiceItem(record.getInt("id"), invoiceProvider.getByValue(record.getString("faktura")),
-                                      productProvider.getByValue(record.getString("produkt")), record.getFloat("cena"),
-                                      record.getFloat("ilosc"), record.getDate("data_waznosci"));
+    @Contract("_, _ -> new")
+    public static @NotNull ForeignInvoiceItem fromRecord(@NotNull ResultSet record, @NotNull Provider<Product> productProvider) throws SQLException {
+        return new ForeignInvoiceItem(record.getInt("id"), productProvider.getByKey(record.getString("produkt")),
+                                      record.getFloat("cena"), record.getFloat("ilosc"), record.getDate("data_waznosci"));
     }
 
     public @NotNull Product getProduct() {
@@ -39,10 +35,6 @@ public class ForeignInvoiceItem implements DatabaseRecord {
 
     public float getAmount() {
         return amount;
-    }
-
-    public @NotNull ForeignInvoice getInvoice() {
-        return invoice;
     }
 
     public Date getDate() {

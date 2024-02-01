@@ -11,17 +11,25 @@ public class OrderItem implements DatabaseRecord {
 
     private final int id;
     private final float amount;
-    private MenuItem position;
+    private final @NotNull MenuItem menuItem;
 
-    private OrderItem (int id, float amount, MenuItem position) {
+    private OrderItem(int id, float amount, @NotNull MenuItem menuItem) {
         this.id = id;
         this.amount = amount;
-        this.position = position;
+        this.menuItem = menuItem;
     }
 
-    @Contract ("_, _ -> new")
-    public static @NotNull OrderItem fromRecord(@NotNull ResultSet record, Provider<MenuItem> positionProvider) throws SQLException {
-        return new OrderItem (record.getInt("id"), record.getFloat("amount"), positionProvider.getById(record.getInt("pozycja")));
+    @Contract("_, _ -> new")
+    public static @NotNull OrderItem fromRecord(@NotNull ResultSet record, @NotNull Provider<MenuItem> menuItemProvider) throws SQLException {
+        return new OrderItem(record.getInt("id"), record.getFloat("amount"), menuItemProvider.getByKey(record.getInt("pozycja")));
+    }
+
+    public float getAmount() {
+        return amount;
+    }
+
+    public @NotNull MenuItem getMenuItem() {
+        return menuItem;
     }
 
     @Override
