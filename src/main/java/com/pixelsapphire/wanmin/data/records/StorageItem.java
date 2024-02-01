@@ -1,5 +1,6 @@
 package com.pixelsapphire.wanmin.data.records;
 
+import com.pixelsapphire.wanmin.DatabaseException;
 import com.pixelsapphire.wanmin.controller.Provider;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -27,9 +28,13 @@ public class StorageItem implements DatabaseRecord {
 
     @Contract("_, _, _ -> new")
     public static @NotNull StorageItem fromRecord(@NotNull ResultSet record, @NotNull Provider<Product> productProvider,
-                                                  @NotNull Provider<ForeignInvoice> invoiceProvider) throws SQLException {
-        return new StorageItem(record.getInt("is"), productProvider.getByKey(record.getString("produkt")), record.getFloat("ilosc"),
-                               record.getDate("data_waznosci"), invoiceProvider.getByKey(record.getString("faktura")));
+                                                  @NotNull Provider<ForeignInvoice> invoiceProvider) {
+        try {
+            return new StorageItem(record.getInt("is"), productProvider.getByKey(record.getString("produkt")), record.getFloat("ilosc"),
+                                   record.getDate("data_waznosci"), invoiceProvider.getByKey(record.getString("faktura")));
+        } catch (SQLException e) {
+            throw new DatabaseException("Failed to create StorageItem from record", e);
+        }
     }
 
     public @Nullable Date getExpirationDate() {

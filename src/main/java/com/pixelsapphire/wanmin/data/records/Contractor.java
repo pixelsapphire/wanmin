@@ -1,5 +1,6 @@
 package com.pixelsapphire.wanmin.data.records;
 
+import com.pixelsapphire.wanmin.DatabaseException;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -22,9 +23,13 @@ public class Contractor implements DatabaseRecord {
     }
 
     @Contract("_ -> new")
-    public static @NotNull Contractor fromRecord(@NotNull ResultSet record) throws SQLException {
-        return new Contractor(record.getInt("id"), record.getString("nazwa"), record.getString("adres"),
-                              record.getString("telefon"), record.getString("email"), record.getString("NIP"));
+    public static @NotNull Contractor fromRecord(@NotNull ResultSet record) {
+        try {
+            return new Contractor(record.getInt("id"), record.getString("nazwa"), record.getString("adres"),
+                                  record.getString("telefon"), record.getString("email"), record.getString("NIP"));
+        } catch (SQLException e) {
+            throw new DatabaseException("Failed to create Contractor from record", e);
+        }
     }
 
     public @NotNull String getName() {

@@ -1,5 +1,6 @@
 package com.pixelsapphire.wanmin.data.records;
 
+import com.pixelsapphire.wanmin.DatabaseException;
 import com.pixelsapphire.wanmin.controller.Provider;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -24,9 +25,13 @@ public class Menu implements DatabaseRecord {
 
     @Contract("_, _ -> new")
     public static @NotNull Menu fromRecord(@NotNull ResultSet record,
-                                           @NotNull Provider<List<MenuItem>> itemsProvider) throws SQLException {
-        return new Menu(record.getInt("id"), record.getString("name"),
-                        itemsProvider.getByKey(record.getInt("id")));
+                                           @NotNull Provider<List<MenuItem>> itemsProvider) {
+        try {
+            return new Menu(record.getInt("id"), record.getString("name"),
+                            itemsProvider.getByKey(record.getInt("id")));
+        } catch (SQLException e) {
+            throw new DatabaseException("Failed to create Menu from record", e);
+        }
     }
 
     public @NotNull List<MenuItem> getItems() {

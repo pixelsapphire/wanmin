@@ -1,5 +1,6 @@
 package com.pixelsapphire.wanmin.data.records;
 
+import com.pixelsapphire.wanmin.DatabaseException;
 import com.pixelsapphire.wanmin.controller.Provider;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -30,10 +31,14 @@ public class ForeignInvoice implements DatabaseRecord {
 
     @Contract("_, _, _ -> new")
     public static @NotNull ForeignInvoice fromRecord(@NotNull ResultSet record, @NotNull Provider<Contractor> contractorProvider,
-                                                     @NotNull Provider<List<ForeignInvoiceItem>> itemsProvider) throws SQLException {
-        return new ForeignInvoice(record.getInt("id"), contractorProvider.getByKey(record.getInt("kontrahent")),
-                                  record.getDate("data"), record.getString("nr_obcy"),
-                                  itemsProvider.getByKey(record.getInt("id")));
+                                                     @NotNull Provider<List<ForeignInvoiceItem>> itemsProvider) {
+        try {
+            return new ForeignInvoice(record.getInt("id"), contractorProvider.getByKey(record.getInt("kontrahent")),
+                                      record.getDate("data"), record.getString("nr_obcy"),
+                                      itemsProvider.getByKey(record.getInt("id")));
+        } catch (SQLException e) {
+            throw new DatabaseException("Failed to create ForeignInvoice from record", e);
+        }
     }
 
     public @NotNull Contractor getContractor() {

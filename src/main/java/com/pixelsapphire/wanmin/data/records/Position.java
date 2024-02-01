@@ -1,5 +1,6 @@
 package com.pixelsapphire.wanmin.data.records;
 
+import com.pixelsapphire.wanmin.DatabaseException;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -19,8 +20,12 @@ public class Position implements DatabaseRecord {
     }
 
     @Contract("_ -> new")
-    public static @NotNull Position fromRecord(@NotNull ResultSet record) throws SQLException {
-        return new Position(record.getInt("id"), record.getString("nazwa"), record.getFloat("pensja"));
+    public static @NotNull Position fromRecord(@NotNull ResultSet record) {
+        try {
+            return new Position(record.getInt("id"), record.getString("nazwa"), record.getFloat("pensja"));
+        } catch (SQLException e) {
+            throw new DatabaseException("Failed to create Position from record", e);
+        }
     }
 
     public @NotNull String getName() {

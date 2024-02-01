@@ -1,5 +1,6 @@
 package com.pixelsapphire.wanmin.data.records;
 
+import com.pixelsapphire.wanmin.DatabaseException;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -23,9 +24,13 @@ public class EmploymentContract implements DatabaseRecord {
     }
 
     @Contract("_ -> new")
-    public static @NotNull EmploymentContract fromRecord(@NotNull ResultSet record) throws SQLException {
-        return new EmploymentContract(record.getInt("id"), record.getString("typ"),
-                                      record.getDate("zawiazana"), record.getDate("zerwana"));
+    public static @NotNull EmploymentContract fromRecord(@NotNull ResultSet record) {
+        try {
+            return new EmploymentContract(record.getInt("id"), record.getString("typ"),
+                                          record.getDate("zawiazana"), record.getDate("zerwana"));
+        } catch (SQLException e) {
+            throw new DatabaseException("Failed to create EmploymentContract from record", e);
+        }
     }
 
     public @NotNull String getType() {

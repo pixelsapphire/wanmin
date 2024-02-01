@@ -1,5 +1,6 @@
 package com.pixelsapphire.wanmin.data.records;
 
+import com.pixelsapphire.wanmin.DatabaseException;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -19,10 +20,14 @@ public class MenuItem implements DatabaseRecord {
         this.category = category;
     }
 
-    @Contract("_, _ -> new")
-    public static @NotNull MenuItem formRecord(@NotNull ResultSet record) throws SQLException {
-        return new MenuItem(record.getInt("id"), record.getString("nazwa"), record.getFloat("cena"),
-                            record.getString("kategoria"));
+    @Contract("_ -> new")
+    public static @NotNull MenuItem formRecord(@NotNull ResultSet record) {
+        try {
+            return new MenuItem(record.getInt("id"), record.getString("nazwa"), record.getFloat("cena"),
+                                record.getString("kategoria"));
+        } catch (SQLException e) {
+            throw new DatabaseException("Failed to create MenuPosition from record", e);
+        }
     }
 
     public float getPrice() {

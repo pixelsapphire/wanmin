@@ -1,5 +1,6 @@
 package com.pixelsapphire.wanmin.data.records;
 
+import com.pixelsapphire.wanmin.DatabaseException;
 import com.pixelsapphire.wanmin.controller.Provider;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -33,11 +34,15 @@ public class Order implements DatabaseRecord {
     @Contract("_, _, _, _ -> new")
     public static @NotNull Order fromRecord(@NotNull ResultSet record, @NotNull Provider<Employee> employeeProvider,
                                             @NotNull Provider<Customer> customerProvider,
-                                            @NotNull Provider<List<OrderItem>> itemsProvider) throws SQLException {
-        return new Order(record.getInt("id"), record.getInt("stolik"),
-                         employeeProvider.getByKey(record.getInt("kelner")), record.getDate("czas"),
-                         customerProvider.getByKey(record.getInt("klient")), record.getBoolean("zaplacone"),
-                         itemsProvider.getByKey(record.getInt("id")));
+                                            @NotNull Provider<List<OrderItem>> itemsProvider) {
+        try {
+            return new Order(record.getInt("id"), record.getInt("stolik"),
+                             employeeProvider.getByKey(record.getInt("kelner")), record.getDate("czas"),
+                             customerProvider.getByKey(record.getInt("klient")), record.getBoolean("zaplacone"),
+                             itemsProvider.getByKey(record.getInt("id")));
+        } catch (SQLException e) {
+            throw new DatabaseException("Failed to create Order from record", e);
+        }
     }
 
     public int getTable() {

@@ -1,5 +1,6 @@
 package com.pixelsapphire.wanmin.data.records;
 
+import com.pixelsapphire.wanmin.DatabaseException;
 import com.pixelsapphire.wanmin.controller.Provider;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -24,10 +25,14 @@ public class Employee implements DatabaseRecord {
 
     @Contract("_, _, _ -> new")
     public static @NotNull Employee fromRecord(@NotNull ResultSet record, @NotNull Provider<Position> positionProvider,
-                                               @NotNull Provider<EmploymentContract> contractProvider) throws SQLException {
-        return new Employee(record.getInt("id"), record.getString("imie"), record.getString("nazwisko"),
-                            positionProvider.getByValue(record.getString("stanowisko")),
-                            contractProvider.getByValue(record.getString("numer_umowy")));
+                                               @NotNull Provider<EmploymentContract> contractProvider) {
+        try {
+            return new Employee(record.getInt("id"), record.getString("imie"), record.getString("nazwisko"),
+                                positionProvider.getByKey(record.getString("stanowisko")),
+                                contractProvider.getByKey(record.getString("numer_umowy")));
+        } catch (SQLException e) {
+            throw new DatabaseException("Failed to create Employee from record", e);
+        }
     }
 
     public @NotNull String getFirstName() {

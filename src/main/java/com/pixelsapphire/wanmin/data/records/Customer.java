@@ -1,5 +1,6 @@
 package com.pixelsapphire.wanmin.data.records;
 
+import com.pixelsapphire.wanmin.DatabaseException;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -20,9 +21,13 @@ public class Customer implements DatabaseRecord {
     }
 
     @Contract("_ -> new")
-    public static @NotNull Customer fromRecord(@NotNull ResultSet record) throws SQLException {
-        return new Customer(record.getInt("numer_karty"), record.getString("imie"),
-                            record.getString("nazwisko"), record.getInt("punkty"));
+    public static @NotNull Customer fromRecord(@NotNull ResultSet record) {
+        try {
+            return new Customer(record.getInt("numer_karty"), record.getString("imie"),
+                                record.getString("nazwisko"), record.getInt("punkty"));
+        } catch (SQLException e) {
+            throw new DatabaseException("Failed to create Customer from record", e);
+        }
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.pixelsapphire.wanmin.data.records;
 
+import com.pixelsapphire.wanmin.DatabaseException;
 import com.pixelsapphire.wanmin.controller.Provider;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -20,8 +21,12 @@ public class OrderItem implements DatabaseRecord {
     }
 
     @Contract("_, _ -> new")
-    public static @NotNull OrderItem fromRecord(@NotNull ResultSet record, @NotNull Provider<MenuItem> menuItemProvider) throws SQLException {
-        return new OrderItem(record.getInt("id"), record.getFloat("amount"), menuItemProvider.getByKey(record.getInt("pozycja")));
+    public static @NotNull OrderItem fromRecord(@NotNull ResultSet record, @NotNull Provider<MenuItem> menuItemProvider) {
+        try {
+            return new OrderItem(record.getInt("id"), record.getFloat("amount"), menuItemProvider.getByKey(record.getInt("pozycja")));
+        } catch (SQLException e) {
+            throw new DatabaseException("Failed to create OrderItem from record", e);
+        }
     }
 
     public float getAmount() {
