@@ -30,7 +30,7 @@ public class EmploymentContract implements DatabaseRecord {
     public static @NotNull EmploymentContract fromRecord(@NotNull DictTuple record, @NotNull Provider<Employee> employeeProvider) {
         try {
             return new EmploymentContract(record.getInt("id"), record.getString("typ"),
-                                          employeeProvider.getByKey(record.getInt("pracownik")),
+                                          employeeProvider.getById(record.getInt("pracownik")),
                                           record.getDate("zawiazana"), record.getDate("zerwana"));
         } catch (IllegalArgumentException e) {
             throw new DatabaseException("Failed to create EmploymentContract from record", e);

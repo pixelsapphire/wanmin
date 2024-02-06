@@ -27,7 +27,7 @@ public class Menu implements DatabaseRecord {
                                            @NotNull Provider<List<MenuItem>> itemsProvider) {
         try {
             return new Menu(record.getInt("id"), record.getString("name"),
-                            itemsProvider.getByKey(record.getInt("id")));
+                            itemsProvider.getById(record.getInt("id")));
         } catch (IllegalArgumentException e) {
             throw new DatabaseException("Failed to create Menu from record", e);
         }

@@ -21,7 +21,7 @@ public class OrderItem implements DatabaseRecord {
     @Contract("_, _ -> new")
     public static @NotNull OrderItem fromRecord(@NotNull DictTuple record, @NotNull Provider<MenuItem> menuItemProvider) {
         try {
-            return new OrderItem(record.getInt("id"), record.getFloat("amount"), menuItemProvider.getByKey(record.getInt("pozycja")));
+            return new OrderItem(record.getInt("id"), record.getFloat("amount"), menuItemProvider.getById(record.getInt("pozycja")));
         } catch (IllegalArgumentException e) {
             throw new DatabaseException("Failed to create OrderItem from record", e);
         }

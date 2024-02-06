@@ -36,9 +36,9 @@ public class Order implements DatabaseRecord {
                                             @NotNull Provider<List<OrderItem>> itemsProvider) {
         try {
             return new Order(record.getInt("id"), record.getInt("stolik"),
-                             employeeProvider.getByKey(record.getInt("kelner")), record.getDate("czas"),
-                             customerProvider.getByKey(record.getInt("klient")), record.getBoolean("zaplacone"),
-                             itemsProvider.getByKey(record.getInt("id")));
+                             employeeProvider.getById(record.getInt("kelner")), record.getDate("czas"),
+                             customerProvider.getById(record.getInt("klient")), record.getBoolean("zaplacone"),
+                             itemsProvider.getById(record.getInt("id")));
         } catch (IllegalArgumentException e) {
             throw new DatabaseException("Failed to create Order from record", e);
         }

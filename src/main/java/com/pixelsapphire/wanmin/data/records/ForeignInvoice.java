@@ -32,9 +32,9 @@ public class ForeignInvoice implements DatabaseRecord {
     public static @NotNull ForeignInvoice fromRecord(@NotNull DictTuple record, @NotNull Provider<Contractor> contractorProvider,
                                                      @NotNull Provider<List<ForeignInvoiceItem>> itemsProvider) {
         try {
-            return new ForeignInvoice(record.getInt("id"), contractorProvider.getByKey(record.getInt("kontrahent")),
+            return new ForeignInvoice(record.getInt("id"), contractorProvider.getById(record.getInt("kontrahent")),
                                       record.getDate("data"), record.getString("nr_obcy"),
-                                      itemsProvider.getByKey(record.getInt("id")));
+                                      itemsProvider.getById(record.getInt("id")));
         } catch (IllegalArgumentException e) {
             throw new DatabaseException("Failed to create ForeignInvoice from record", e);
         }

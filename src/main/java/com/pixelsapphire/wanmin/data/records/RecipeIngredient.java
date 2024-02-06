@@ -6,9 +6,6 @@ import com.pixelsapphire.wanmin.data.DictTuple;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 public class RecipeIngredient implements DatabaseRecord {
 
     private final int id;
@@ -24,7 +21,7 @@ public class RecipeIngredient implements DatabaseRecord {
     @Contract("_, _ -> new")
     public static @NotNull RecipeIngredient fromRecord(@NotNull DictTuple record, @NotNull Provider<Product> productProvider) {
         try {
-            return new RecipeIngredient(record.getInt("id"), productProvider.getByKey(record.getString("produkt")),
+            return new RecipeIngredient(record.getInt("id"), productProvider.getById(record.getInt("produkt")),
                                         record.getFloat("ilosc"));
         } catch (IllegalArgumentException e) {
             throw new DatabaseException("Failed to create RecipeIngredient from record", e);

@@ -27,7 +27,7 @@ public class ForeignInvoiceItem implements DatabaseRecord {
     @Contract("_, _ -> new")
     public static @NotNull ForeignInvoiceItem fromRecord(@NotNull DictTuple record, @NotNull Provider<Product> productProvider) {
         try {
-            return new ForeignInvoiceItem(record.getInt("id"), productProvider.getByKey(record.getString("produkt")),
+            return new ForeignInvoiceItem(record.getInt("id"), productProvider.getById(record.getInt("produkt")),
                                           record.getFloat("cena"), record.getFloat("ilosc"), record.getDate("data_waznosci"));
         } catch (IllegalArgumentException e) {
             throw new DatabaseException("Failed to create ForeignInvoiceItem from record", e);

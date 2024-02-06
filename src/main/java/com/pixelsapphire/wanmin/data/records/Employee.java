@@ -23,7 +23,7 @@ public class Employee implements DatabaseRecord {
     public static @NotNull Employee fromRecord(@NotNull DictTuple record, @NotNull Provider<Position> positionProvider) {
         try {
             return new Employee(record.getInt("id"), record.getString("imie"), record.getString("nazwisko"),
-                                positionProvider.getByKey(record.getInt("stanowisko")));
+                                positionProvider.getById(record.getInt("stanowisko")));
         } catch (IllegalArgumentException e) {
             throw new DatabaseException("Failed to create Employee from record", e);
         }

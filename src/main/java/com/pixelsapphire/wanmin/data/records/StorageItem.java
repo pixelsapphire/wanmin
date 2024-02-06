@@ -7,8 +7,6 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Date;
 
 public class StorageItem implements DatabaseRecord {
@@ -31,8 +29,8 @@ public class StorageItem implements DatabaseRecord {
     public static @NotNull StorageItem fromRecord(@NotNull DictTuple record, @NotNull Provider<Product> productProvider,
                                                   @NotNull Provider<ForeignInvoice> invoiceProvider) {
         try {
-            return new StorageItem(record.getInt("is"), productProvider.getByKey(record.getString("produkt")), record.getFloat("ilosc"),
-                                   record.getDate("data_waznosci"), invoiceProvider.getByKey(record.getString("faktura")));
+            return new StorageItem(record.getInt("is"), productProvider.getById(record.getInt("produkt")), record.getFloat("ilosc"),
+                                   record.getDate("data_waznosci"), invoiceProvider.getById(record.getInt("faktura")));
         } catch (IllegalArgumentException e) {
             throw new DatabaseException("Failed to create StorageItem from record", e);
         }

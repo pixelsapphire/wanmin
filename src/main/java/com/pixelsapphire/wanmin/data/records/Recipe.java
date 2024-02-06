@@ -6,8 +6,6 @@ import com.pixelsapphire.wanmin.data.DictTuple;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -29,7 +27,7 @@ public class Recipe implements DatabaseRecord {
                                              @NotNull Provider<List<RecipeIngredient>> ingredientsProvider) {
         try {
             return new Recipe(record.getInt("id"), record.getString("opis"),
-                              ingredientsProvider.getByKey(record.getInt("id")));
+                              ingredientsProvider.getById(record.getInt("id")));
         } catch (IllegalArgumentException e) {
             throw new DatabaseException("Failed to create Recipe from record", e);
         }
