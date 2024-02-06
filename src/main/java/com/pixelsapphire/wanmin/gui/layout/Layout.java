@@ -1,7 +1,8 @@
-package com.pixelsapphire.wanmin.gui;
+package com.pixelsapphire.wanmin.gui.layout;
 
 import com.pixelsapphire.wanmin.util.StringUtil;
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.MustBeInvokedByOverriders;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.JFrame;
@@ -60,7 +61,8 @@ public abstract class Layout {
         window.setLocationRelativeTo(null);
     }
 
-    public final void apply() {
+    @MustBeInvokedByOverriders
+    public void apply() {
         window.getContentPane().removeAll();
         window.setLayout(new GridBagLayout());
         init(window);
