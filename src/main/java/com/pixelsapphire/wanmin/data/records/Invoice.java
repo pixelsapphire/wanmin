@@ -1,10 +1,11 @@
 package com.pixelsapphire.wanmin.data.records;
 
+import com.pixelsapphire.wanmin.DatabaseException;
 import com.pixelsapphire.wanmin.controller.Provider;
+import com.pixelsapphire.wanmin.data.DictTuple;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
 
@@ -16,7 +17,7 @@ public class Invoice implements DatabaseRecord {
     private final @NotNull String number;
     private final float discount;
 
-    private Invoice (int id, @NotNull Customer customer, @NotNull Date date, @NotNull String number, float discount) {
+    private Invoice(int id, @NotNull Customer customer, @NotNull Date date, @NotNull String number, float discount) {
         this.id = id;
         this.customer = customer;
         this.date = date;
@@ -25,9 +26,13 @@ public class Invoice implements DatabaseRecord {
     }
 
     @Contract("_, _ -> new")
-    public static @NotNull Invoice fromRecord(@NotNull ResultSet record, @NotNull Provider<Customer> customerProvider) throws SQLException {
-        return new Invoice(record.getInt("id"), customerProvider.getByKey(record.getInt("klient")), record.getDate("data"),
-                record.getString("nr_faktury"),record.getFloat("znizka"));
+    public static @NotNull Invoice fromRecord(@NotNull DictTuple record, @NotNull Provider<Customer> customerProvider) {
+        try {
+            return new Invoice(record.getInt("id"), customerProvider.getByKey(record.getInt("klient")), record.getDate("data"),
+                               record.getString("nr_faktury"), record.getFloat("znizka"));
+        } catch (IllegalArgumentException e) {
+            throw new DatabaseException("Failed to create Invoice from record", e);
+        }
     }
 
     @Override

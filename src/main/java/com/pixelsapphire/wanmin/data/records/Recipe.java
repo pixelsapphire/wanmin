@@ -2,6 +2,7 @@ package com.pixelsapphire.wanmin.data.records;
 
 import com.pixelsapphire.wanmin.DatabaseException;
 import com.pixelsapphire.wanmin.controller.Provider;
+import com.pixelsapphire.wanmin.data.DictTuple;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -24,12 +25,12 @@ public class Recipe implements DatabaseRecord {
     }
 
     @Contract("_, _ -> new")
-    public static @NotNull Recipe formRecord(@NotNull ResultSet record,
+    public static @NotNull Recipe formRecord(@NotNull DictTuple record,
                                              @NotNull Provider<List<RecipeIngredient>> ingredientsProvider) {
         try {
             return new Recipe(record.getInt("id"), record.getString("opis"),
                               ingredientsProvider.getByKey(record.getInt("id")));
-        } catch (SQLException e) {
+        } catch (IllegalArgumentException e) {
             throw new DatabaseException("Failed to create Recipe from record", e);
         }
     }

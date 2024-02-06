@@ -1,11 +1,9 @@
 package com.pixelsapphire.wanmin.data.records;
 
 import com.pixelsapphire.wanmin.DatabaseException;
+import com.pixelsapphire.wanmin.data.DictTuple;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 public class MenuItem implements DatabaseRecord {
 
@@ -21,11 +19,11 @@ public class MenuItem implements DatabaseRecord {
     }
 
     @Contract("_ -> new")
-    public static @NotNull MenuItem formRecord(@NotNull ResultSet record) {
+    public static @NotNull MenuItem formRecord(@NotNull DictTuple record) {
         try {
             return new MenuItem(record.getInt("id"), record.getString("nazwa"), record.getFloat("cena"),
                                 record.getString("kategoria"));
-        } catch (SQLException e) {
+        } catch (IllegalArgumentException e) {
             throw new DatabaseException("Failed to create MenuPosition from record", e);
         }
     }

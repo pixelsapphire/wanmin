@@ -21,7 +21,7 @@ public class Product implements DatabaseRecord {
     public static @NotNull Product fromRecord(@NotNull DictTuple record) {
         try {
             return new Product(record.getInt("id"), record.getString("nazwa"), record.getString("jednostka"));
-        } catch (Exception e) {
+        } catch (IllegalArgumentException e) {
             throw new DatabaseException("Failed to create Product from record", e);
         }
     }

@@ -2,11 +2,10 @@ package com.pixelsapphire.wanmin.data.records;
 
 import com.pixelsapphire.wanmin.DatabaseException;
 import com.pixelsapphire.wanmin.controller.Provider;
+import com.pixelsapphire.wanmin.data.DictTuple;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -32,7 +31,7 @@ public class Order implements DatabaseRecord {
     }
 
     @Contract("_, _, _, _ -> new")
-    public static @NotNull Order fromRecord(@NotNull ResultSet record, @NotNull Provider<Employee> employeeProvider,
+    public static @NotNull Order fromRecord(@NotNull DictTuple record, @NotNull Provider<Employee> employeeProvider,
                                             @NotNull Provider<Customer> customerProvider,
                                             @NotNull Provider<List<OrderItem>> itemsProvider) {
         try {
@@ -40,7 +39,7 @@ public class Order implements DatabaseRecord {
                              employeeProvider.getByKey(record.getInt("kelner")), record.getDate("czas"),
                              customerProvider.getByKey(record.getInt("klient")), record.getBoolean("zaplacone"),
                              itemsProvider.getByKey(record.getInt("id")));
-        } catch (SQLException e) {
+        } catch (IllegalArgumentException e) {
             throw new DatabaseException("Failed to create Order from record", e);
         }
     }

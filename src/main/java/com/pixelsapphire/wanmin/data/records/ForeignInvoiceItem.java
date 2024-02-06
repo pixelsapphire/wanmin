@@ -1,10 +1,11 @@
 package com.pixelsapphire.wanmin.data.records;
 
+import com.pixelsapphire.wanmin.DatabaseException;
 import com.pixelsapphire.wanmin.controller.Provider;
+import com.pixelsapphire.wanmin.data.DictTuple;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
 
@@ -24,9 +25,13 @@ public class ForeignInvoiceItem implements DatabaseRecord {
     }
 
     @Contract("_, _ -> new")
-    public static @NotNull ForeignInvoiceItem fromRecord(@NotNull ResultSet record, @NotNull Provider<Product> productProvider) throws SQLException {
-        return new ForeignInvoiceItem(record.getInt("id"), productProvider.getByKey(record.getString("produkt")),
-                                      record.getFloat("cena"), record.getFloat("ilosc"), record.getDate("data_waznosci"));
+    public static @NotNull ForeignInvoiceItem fromRecord(@NotNull DictTuple record, @NotNull Provider<Product> productProvider) {
+        try {
+            return new ForeignInvoiceItem(record.getInt("id"), productProvider.getByKey(record.getString("produkt")),
+                                          record.getFloat("cena"), record.getFloat("ilosc"), record.getDate("data_waznosci"));
+        } catch (IllegalArgumentException e) {
+            throw new DatabaseException("Failed to create ForeignInvoiceItem from record", e);
+        }
     }
 
     public @NotNull Product getProduct() {
