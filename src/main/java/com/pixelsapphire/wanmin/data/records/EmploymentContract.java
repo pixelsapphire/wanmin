@@ -1,6 +1,7 @@
 package com.pixelsapphire.wanmin.data.records;
 
 import com.pixelsapphire.wanmin.DatabaseException;
+import com.pixelsapphire.wanmin.data.DictTuple;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -24,11 +25,11 @@ public class EmploymentContract implements DatabaseRecord {
     }
 
     @Contract("_ -> new")
-    public static @NotNull EmploymentContract fromRecord(@NotNull ResultSet record) {
+    public static @NotNull EmploymentContract fromRecord(@NotNull DictTuple record) {
         try {
             return new EmploymentContract(record.getInt("id"), record.getString("typ"),
                                           record.getDate("zawiazana"), record.getDate("zerwana"));
-        } catch (SQLException e) {
+        } catch (IllegalArgumentException e) {
             throw new DatabaseException("Failed to create EmploymentContract from record", e);
         }
     }

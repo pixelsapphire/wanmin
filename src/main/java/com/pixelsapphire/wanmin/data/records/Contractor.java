@@ -1,11 +1,9 @@
 package com.pixelsapphire.wanmin.data.records;
 
 import com.pixelsapphire.wanmin.DatabaseException;
+import com.pixelsapphire.wanmin.data.DictTuple;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 public class Contractor implements DatabaseRecord {
 
@@ -23,11 +21,11 @@ public class Contractor implements DatabaseRecord {
     }
 
     @Contract("_ -> new")
-    public static @NotNull Contractor fromRecord(@NotNull ResultSet record) {
+    public static @NotNull Contractor fromRecord(@NotNull DictTuple record) {
         try {
             return new Contractor(record.getInt("id"), record.getString("nazwa"), record.getString("adres"),
                                   record.getString("telefon"), record.getString("email"), record.getString("NIP"));
-        } catch (SQLException e) {
+        } catch (IllegalArgumentException e) {
             throw new DatabaseException("Failed to create Contractor from record", e);
         }
     }

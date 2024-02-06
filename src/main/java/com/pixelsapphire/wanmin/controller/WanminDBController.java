@@ -2,6 +2,8 @@ package com.pixelsapphire.wanmin.controller;
 
 import com.pixelsapphire.wanmin.DatabaseException;
 import com.pixelsapphire.wanmin.Wanmin;
+import com.pixelsapphire.wanmin.data.DictTuple;
+import com.pixelsapphire.wanmin.data.records.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.Connection;
@@ -15,9 +17,20 @@ import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+@SuppressWarnings("SqlSourceToSinkFlow")
 public class WanminDBController {
 
     private final Connection connection;
+    public final WanminCollection<Contractor> contractors = WanminCollection.flat(Contractor::fromRecord,
+                                                                                  () -> executeReadOnly("SELECT * FROM wm_kontrahenci"));
+    public final WanminCollection<Customer> customers = WanminCollection.flat(Customer::fromRecord,
+                                                                              () -> executeReadOnly("SELECT * FROM wm_klienci"));
+    public final WanminCollection<EmploymentContract> employmentContracts = WanminCollection.flat(EmploymentContract::fromRecord,
+                                                                                                  () -> executeReadOnly("SELECT * FROM wm_umowy"));
+    public final WanminCollection<Position> positions = WanminCollection.flat(Position::fromRecord,
+                                                                              () -> executeReadOnly("SELECT * FROM wm_stanowiska"));
+    public final WanminCollection<Product> products = WanminCollection.flat(Product::fromRecord,
+                                                                            () -> executeReadOnly("SELECT * FROM wm_produkty"));
 
     public WanminDBController(@NotNull String username, char[] password) {
         this.connection = createConnection("jdbc:oracle:thin", "admlab2.cs.put.poznan.pl", 1521,
@@ -40,11 +53,11 @@ public class WanminDBController {
         }
     }
 
-    public @NotNull List<ResultSet> executeReadOnly(@NotNull String query) {
+    public @NotNull List<DictTuple> executeReadOnly(@NotNull String query) {
         try (final var statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
             try (final var result = statement.executeQuery(query)) {
-                final List<ResultSet> list = new ArrayList<>();
-                while (result.next()) list.add(result);
+                final List<DictTuple> list = new ArrayList<>();
+                while (result.next()) list.add(DictTuple.from(result));
                 return list;
             }
         } catch (SQLException e) {
@@ -52,7 +65,7 @@ public class WanminDBController {
         }
     }
 
-    public <T> @NotNull List<T> executeReadOnly(@NotNull String query, @NotNull Function<ResultSet, T> mapper) {
+    public <T> @NotNull List<T> executeReadOnly(@NotNull String query, @NotNull Function<DictTuple, T> mapper) {
         return executeReadOnly(query).stream().map(mapper).toList();
     }
 }

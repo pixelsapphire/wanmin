@@ -1,11 +1,9 @@
 package com.pixelsapphire.wanmin.data.records;
 
 import com.pixelsapphire.wanmin.DatabaseException;
+import com.pixelsapphire.wanmin.data.DictTuple;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 public class Position implements DatabaseRecord {
 
@@ -20,10 +18,10 @@ public class Position implements DatabaseRecord {
     }
 
     @Contract("_ -> new")
-    public static @NotNull Position fromRecord(@NotNull ResultSet record) {
+    public static @NotNull Position fromRecord(@NotNull DictTuple record) {
         try {
             return new Position(record.getInt("id"), record.getString("nazwa"), record.getFloat("pensja"));
-        } catch (SQLException e) {
+        } catch (IllegalArgumentException e) {
             throw new DatabaseException("Failed to create Position from record", e);
         }
     }

@@ -1,11 +1,9 @@
 package com.pixelsapphire.wanmin.data.records;
 
 import com.pixelsapphire.wanmin.DatabaseException;
+import com.pixelsapphire.wanmin.data.DictTuple;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 public class Product implements DatabaseRecord {
 
@@ -20,10 +18,10 @@ public class Product implements DatabaseRecord {
     }
 
     @Contract("_ -> new")
-    public static @NotNull Product fromRecord(@NotNull ResultSet record) {
+    public static @NotNull Product fromRecord(@NotNull DictTuple record) {
         try {
             return new Product(record.getInt("id"), record.getString("nazwa"), record.getString("jednostka"));
-        } catch (SQLException e) {
+        } catch (Exception e) {
             throw new DatabaseException("Failed to create Product from record", e);
         }
     }
