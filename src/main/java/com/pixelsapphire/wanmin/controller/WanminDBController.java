@@ -26,8 +26,6 @@ public class WanminDBController {
                                                                                   () -> executeReadOnly("SELECT * FROM wm_kontrahenci"));
     public final WanminCollection<Customer> customers = WanminCollection.flat(Customer::fromRecord,
                                                                               () -> executeReadOnly("SELECT * FROM wm_klienci"));
-    public final WanminCollection<EmploymentContract> employmentContracts = WanminCollection.flat(EmploymentContract::fromRecord,
-                                                                                                  () -> executeReadOnly("SELECT * FROM wm_umowy"));
     public final WanminCollection<Position> positions = WanminCollection.flat(Position::fromRecord,
                                                                               () -> executeReadOnly("SELECT * FROM wm_stanowiska"));
     public final WanminCollection<Product> products = WanminCollection.flat(Product::fromRecord,

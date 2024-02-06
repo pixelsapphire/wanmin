@@ -23,63 +23,65 @@ VALUES ('host', 3500.00);
 
 CREATE TABLE wm_pracownicy
 (
-    id          NUMBER(5) GENERATED ALWAYS AS IDENTITY,
-    imie        VARCHAR2(30) NOT NULL,
-    nazwisko    VARCHAR2(30) NOT NULL,
-    stanowisko  NUMBER(5)    NOT NULL,
-    numer_umowy VARCHAR2(15) NOT NULL,
+    id         NUMBER(5) GENERATED ALWAYS AS IDENTITY,
+    imie       VARCHAR2(30) NOT NULL,
+    nazwisko   VARCHAR2(30) NOT NULL,
+    stanowisko NUMBER(5)    NOT NULL,
     CONSTRAINT pk_pracownicy_id PRIMARY KEY (id),
     CONSTRAINT fk_pracownicy_stanowiska FOREIGN KEY (stanowisko) REFERENCES wm_stanowiska (id)
 );
 
-INSERT INTO wm_pracownicy (imie, nazwisko, stanowisko, numer_umowy)
-VALUES ('Jan', 'Kowalski', (SELECT id FROM wm_stanowiska WHERE nazwa = 'kucharz'), 'UM-0001');
-INSERT INTO wm_pracownicy (imie, nazwisko, stanowisko, numer_umowy)
-VALUES ('Anna', 'Nowak', (SELECT id FROM wm_stanowiska WHERE nazwa = 'kelner'), 'UM-0002');
-INSERT INTO wm_pracownicy (imie, nazwisko, stanowisko, numer_umowy)
-VALUES ('Piotr', 'Wiśniewski', (SELECT id FROM wm_stanowiska WHERE nazwa = 'zmywacz'), 'UM-0003');
-INSERT INTO wm_pracownicy (imie, nazwisko, stanowisko, numer_umowy)
-VALUES ('Agnieszka', 'Kowalczyk', (SELECT id FROM wm_stanowiska WHERE nazwa = 'barman'), 'UM-0004');
-INSERT INTO wm_pracownicy (imie, nazwisko, stanowisko, numer_umowy)
-VALUES ('Tomasz', 'Duda', (SELECT id FROM wm_stanowiska WHERE nazwa = 'szef kuchni'), 'UM-0005');
-INSERT INTO wm_pracownicy (imie, nazwisko, stanowisko, numer_umowy)
-VALUES ('Maria', 'Lewandowska', (SELECT id FROM wm_stanowiska WHERE nazwa = 'pomoc kuchenna'), 'UM-0006');
-INSERT INTO wm_pracownicy (imie, nazwisko, stanowisko, numer_umowy)
-VALUES ('Michał', 'Wójcik', (SELECT id FROM wm_stanowiska WHERE nazwa = 'kelner'), 'UM-0007');
-INSERT INTO wm_pracownicy (imie, nazwisko, stanowisko, numer_umowy)
-VALUES ('Katarzyna', 'Zielinska', (SELECT id FROM wm_stanowiska WHERE nazwa = 'host'), 'UM-0008');
-INSERT INTO wm_pracownicy (imie, nazwisko, stanowisko, numer_umowy)
-VALUES ('Paweł', 'Kamiński', (SELECT id FROM wm_stanowiska WHERE nazwa = 'barman'), 'UM-0009');
-INSERT INTO wm_pracownicy (imie, nazwisko, stanowisko, numer_umowy)
-VALUES ('Magdalena', 'Kwiatkowska', (SELECT id FROM wm_stanowiska WHERE nazwa = 'zmywacz'), 'UM-0010');
-INSERT INTO wm_pracownicy (imie, nazwisko, stanowisko, numer_umowy)
-VALUES ('Marcin', 'Król', (SELECT id FROM wm_stanowiska WHERE nazwa = 'kucharz'), 'UM-0011');
-INSERT INTO wm_pracownicy (imie, nazwisko, stanowisko, numer_umowy)
-VALUES ('Barbara', 'Bąk', (SELECT id FROM wm_stanowiska WHERE nazwa = 'kelner'), 'UM-0012');
-INSERT INTO wm_pracownicy (imie, nazwisko, stanowisko, numer_umowy)
-VALUES ('Jakub', 'Woźniak', (SELECT id FROM wm_stanowiska WHERE nazwa = 'pomoc kuchenna'), 'UM-0013');
-INSERT INTO wm_pracownicy (imie, nazwisko, stanowisko, numer_umowy)
-VALUES ('Zofia', 'Szymczak', (SELECT id FROM wm_stanowiska WHERE nazwa = 'barman'), 'UM-0014');
-INSERT INTO wm_pracownicy (imie, nazwisko, stanowisko, numer_umowy)
-VALUES ('Stanisław', 'Wróbel', (SELECT id FROM wm_stanowiska WHERE nazwa = 'zmywacz'), 'UM-0015');
-INSERT INTO wm_pracownicy (imie, nazwisko, stanowisko, numer_umowy)
-VALUES ('Elżbieta', 'Kozłowska', (SELECT id FROM wm_stanowiska WHERE nazwa = 'kelner'), 'UM-0016');
-INSERT INTO wm_pracownicy (imie, nazwisko, stanowisko, numer_umowy)
-VALUES ('Andrzej', 'Kruk', (SELECT id FROM wm_stanowiska WHERE nazwa = 'szef kuchni'), 'UM-0017');
-INSERT INTO wm_pracownicy (imie, nazwisko, stanowisko, numer_umowy)
-VALUES ('Alicja', 'Stępień', (SELECT id FROM wm_stanowiska WHERE nazwa = 'pomoc kuchenna'), 'UM-0018');
-INSERT INTO wm_pracownicy (imie, nazwisko, stanowisko, numer_umowy)
-VALUES ('Adam', 'Malinowski', (SELECT id FROM wm_stanowiska WHERE nazwa = 'kelner'), 'UM-0019');
-INSERT INTO wm_pracownicy (imie, nazwisko, stanowisko, numer_umowy)
-VALUES ('Ewa', 'Pawlak', (SELECT id FROM wm_stanowiska WHERE nazwa = 'barman'), 'UM-0020');
+INSERT INTO wm_pracownicy (imie, nazwisko, stanowisko)
+VALUES ('Jan', 'Kowalski', (SELECT id FROM wm_stanowiska WHERE nazwa = 'kucharz'));
+INSERT INTO wm_pracownicy (imie, nazwisko, stanowisko)
+VALUES ('Anna', 'Nowak', (SELECT id FROM wm_stanowiska WHERE nazwa = 'kelner'));
+INSERT INTO wm_pracownicy (imie, nazwisko, stanowisko)
+VALUES ('Piotr', 'Wiśniewski', (SELECT id FROM wm_stanowiska WHERE nazwa = 'zmywacz'));
+INSERT INTO wm_pracownicy (imie, nazwisko, stanowisko)
+VALUES ('Agnieszka', 'Kowalczyk', (SELECT id FROM wm_stanowiska WHERE nazwa = 'barman'));
+INSERT INTO wm_pracownicy (imie, nazwisko, stanowisko)
+VALUES ('Tomasz', 'Duda', (SELECT id FROM wm_stanowiska WHERE nazwa = 'szef kuchni'));
+INSERT INTO wm_pracownicy (imie, nazwisko, stanowisko)
+VALUES ('Maria', 'Lewandowska', (SELECT id FROM wm_stanowiska WHERE nazwa = 'pomoc kuchenna'));
+INSERT INTO wm_pracownicy (imie, nazwisko, stanowisko)
+VALUES ('Michał', 'Wójcik', (SELECT id FROM wm_stanowiska WHERE nazwa = 'kelner'));
+INSERT INTO wm_pracownicy (imie, nazwisko, stanowisko)
+VALUES ('Katarzyna', 'Zielinska', (SELECT id FROM wm_stanowiska WHERE nazwa = 'host'));
+INSERT INTO wm_pracownicy (imie, nazwisko, stanowisko)
+VALUES ('Paweł', 'Kamiński', (SELECT id FROM wm_stanowiska WHERE nazwa = 'barman'));
+INSERT INTO wm_pracownicy (imie, nazwisko, stanowisko)
+VALUES ('Magdalena', 'Kwiatkowska', (SELECT id FROM wm_stanowiska WHERE nazwa = 'zmywacz'));
+INSERT INTO wm_pracownicy (imie, nazwisko, stanowisko)
+VALUES ('Marcin', 'Król', (SELECT id FROM wm_stanowiska WHERE nazwa = 'kucharz'));
+INSERT INTO wm_pracownicy (imie, nazwisko, stanowisko)
+VALUES ('Barbara', 'Bąk', (SELECT id FROM wm_stanowiska WHERE nazwa = 'kelner'));
+INSERT INTO wm_pracownicy (imie, nazwisko, stanowisko)
+VALUES ('Jakub', 'Woźniak', (SELECT id FROM wm_stanowiska WHERE nazwa = 'pomoc kuchenna'));
+INSERT INTO wm_pracownicy (imie, nazwisko, stanowisko)
+VALUES ('Zofia', 'Szymczak', (SELECT id FROM wm_stanowiska WHERE nazwa = 'barman'));
+INSERT INTO wm_pracownicy (imie, nazwisko, stanowisko)
+VALUES ('Stanisław', 'Wróbel', (SELECT id FROM wm_stanowiska WHERE nazwa = 'zmywacz'));
+INSERT INTO wm_pracownicy (imie, nazwisko, stanowisko)
+VALUES ('Elżbieta', 'Kozłowska', (SELECT id FROM wm_stanowiska WHERE nazwa = 'kelner'));
+INSERT INTO wm_pracownicy (imie, nazwisko, stanowisko)
+VALUES ('Andrzej', 'Kruk', (SELECT id FROM wm_stanowiska WHERE nazwa = 'szef kuchni'));
+INSERT INTO wm_pracownicy (imie, nazwisko, stanowisko)
+VALUES ('Alicja', 'Stępień', (SELECT id FROM wm_stanowiska WHERE nazwa = 'pomoc kuchenna'));
+INSERT INTO wm_pracownicy (imie, nazwisko, stanowisko)
+VALUES ('Adam', 'Malinowski', (SELECT id FROM wm_stanowiska WHERE nazwa = 'kelner'));
+INSERT INTO wm_pracownicy (imie, nazwisko, stanowisko)
+VALUES ('Ewa', 'Pawlak', (SELECT id FROM wm_stanowiska WHERE nazwa = 'barman'));
 
 CREATE TABLE wm_umowy
 (
     id        NUMBER(5) GENERATED ALWAYS AS IDENTITY,
+    numer     VARCHAR2(15) NOT NULL,
     typ       VARCHAR2(30) NOT NULL,
+    pracownik NUMBER(5)    NOT NULL,
     zawiazana DATE DEFAULT CURRENT_TIMESTAMP,
     zerwana   DATE         NULL,
-    CONSTRAINT pk_umowy_id PRIMARY KEY (id)
+    CONSTRAINT pk_umowy_id PRIMARY KEY (id),
+    CONSTRAINT fk_umowy_pracownicy FOREIGN KEY (pracownik) REFERENCES wm_pracownicy (id)
 );
 
 CREATE TABLE wm_kontrahenci
@@ -225,24 +227,44 @@ CREATE TABLE wm_faktury
     CONSTRAINT fk_faktury_zamowienia FOREIGN KEY (zamowiene) REFERENCES wm_zamowienia (id)
 );
 
-CREATE ROLE wm_kuchnia;
+CREATE OR REPLACE FUNCTION wm_rola_przyznana(rola IN VARCHAR2) RETURN NUMBER AUTHID CURRENT_USER IS
+    v_result NUMBER;
+BEGIN
+    SELECT COUNT(*)
+    INTO v_result
+    FROM user_role_privs
+    WHERE granted_role = rola;
+    RETURN CASE WHEN v_result > 0 THEN 1 ELSE 0 END;
+END;
+GRANT EXECUTE ON wm_rola_przyznana TO PUBLIC;
+
+SELECT wm_rola_przyznana('WM_ADMINISTRATOR')
+FROM dual;
+
+SELECT *
+FROM session_roles;
+
+SELECT *
+FROM session_roles;
+
+CREATE ROLE wm_kucharz;
 GRANT SELECT ON wm_przepisy TO wm_kucharz;
 GRANT SELECT ON wm_przepisy_skladniki TO wm_kucharz;
 GRANT SELECT ON wm_menu TO wm_kucharz;
 GRANT SELECT ON wm_menu_pozycje TO wm_kucharz;
 
-CREATE ROLE wm_kasa;
-GRANT SELECT, INSERT, UPDATE ON wm_klienci TO wm_kelner;
-GRANT SELECT, INSERT, UPDATE, DELETE ON wm_zamowienia TO wm_kelner;
-GRANT SELECT, INSERT, UPDATE, DELETE ON wm_zamowienia_pozycje TO wm_kelner;
-GRANT SELECT, INSERT, UPDATE, DELETE ON wm_faktury TO wm_kelner;
+CREATE ROLE wm_kasjer;
+GRANT SELECT, INSERT, UPDATE ON wm_klienci TO wm_kasjer;
+GRANT SELECT, INSERT, UPDATE, DELETE ON wm_zamowienia TO wm_kasjer;
+GRANT SELECT, INSERT, UPDATE, DELETE ON wm_zamowienia_pozycje TO wm_kasjer;
+GRANT SELECT, INSERT, UPDATE, DELETE ON wm_faktury TO wm_kasjer;
 
 CREATE ROLE wm_kelner;
-GRANT wm_kuchnia TO wm_kelner;
-GRANT wm_kasa TO wm_kelner;
+GRANT wm_kucharz TO wm_kelner;
+GRANT wm_kasjer TO wm_kelner;
 
 CREATE ROLE wm_szef_kuchni;
-GRANT wm_kuchnia TO wm_szef_kuchni;
+GRANT wm_kucharz TO wm_szef_kuchni;
 GRANT INSERT, UPDATE, DELETE ON wm_przepisy TO wm_szef_kuchni;
 GRANT INSERT, UPDATE, DELETE ON wm_przepisy_skladniki TO wm_szef_kuchni;
 GRANT INSERT, UPDATE, DELETE ON wm_menu TO wm_szef_kuchni;
@@ -262,9 +284,10 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON wm_magazyn TO wm_zaopatrzenie;
 
 CREATE ROLE wm_administrator;
 BEGIN
-FOR t IN (SELECT table_name FROM user_tables WHERE table_name LIKE 'WM_%') LOOP
-    EXECUTE IMMEDIATE 'GRANT ALL PRIVILEGES ON ' || t.table_name || ' TO wm_administrator';
-END LOOP;
+    FOR t IN (SELECT table_name FROM user_tables WHERE table_name LIKE 'WM_%')
+        LOOP
+            EXECUTE IMMEDIATE 'GRANT ALL PRIVILEGES ON ' || t.table_name || ' TO wm_administrator';
+        END LOOP;
 END;
 
 SELECT *
@@ -272,3 +295,6 @@ FROM wm_pracownicy;
 
 SELECT *
 FROM wm_stanowiska;
+
+
+GRANT wm_kelner TO sbd151886;

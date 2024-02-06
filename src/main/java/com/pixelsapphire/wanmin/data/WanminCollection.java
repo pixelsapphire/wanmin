@@ -9,23 +9,22 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
-public abstract class WanminCollection<T extends DatabaseRecord> {
+public interface WanminCollection<T extends DatabaseRecord> {
 
     @Contract("_, _ -> new")
-    public static @NotNull <T extends DatabaseRecord> WanminCollection<T> flat(@NotNull Function<DictTuple, T> recordFactory,
-                                                                               @NotNull Supplier<List<DictTuple>> databaseAccessor) {
+    static @NotNull <T extends DatabaseRecord> WanminCollection<T> flat(@NotNull Function<DictTuple, T> recordFactory,
+                                                                        @NotNull Supplier<List<DictTuple>> databaseAccessor) {
         return new FlatWanminCollection<>(recordFactory, databaseAccessor);
     }
 
-    public abstract Stream<T> getAll();
+    Stream<T> getAll();
 
-    public static class FlatWanminCollection<T extends DatabaseRecord> extends WanminCollection<T> {
+    class FlatWanminCollection<T extends DatabaseRecord> implements WanminCollection<T> {
 
         private final @NotNull Function<DictTuple, T> recordFactory;
         private final @NotNull Supplier<List<DictTuple>> databaseAccessor;
 
-        public FlatWanminCollection(@NotNull Function<DictTuple, T> recordFactory,
-                                    @NotNull Supplier<List<DictTuple>> databaseAccessor) {
+        private FlatWanminCollection(@NotNull Function<DictTuple, T> recordFactory, @NotNull Supplier<List<DictTuple>> databaseAccessor) {
             this.recordFactory = recordFactory;
             this.databaseAccessor = databaseAccessor;
         }
@@ -33,6 +32,14 @@ public abstract class WanminCollection<T extends DatabaseRecord> {
         @Override
         public Stream<T> getAll() {
             return databaseAccessor.get().stream().map(recordFactory);
+        }
+    }
+
+    class CompositeWanminCollection<T extends DatabaseRecord> implements WanminCollection<T> {
+
+        @Override
+        public Stream<T> getAll() {
+            return Stream.empty();
         }
     }
 }
