@@ -3,6 +3,7 @@ package com.pixelsapphire.wanmin.controller;
 import com.pixelsapphire.wanmin.DatabaseException;
 import com.pixelsapphire.wanmin.Wanmin;
 import com.pixelsapphire.wanmin.data.DictTuple;
+import com.pixelsapphire.wanmin.data.WanminCollection;
 import com.pixelsapphire.wanmin.data.records.*;
 import org.jetbrains.annotations.NotNull;
 

@@ -1,6 +1,5 @@
-package com.pixelsapphire.wanmin.controller;
+package com.pixelsapphire.wanmin.data;
 
-import com.pixelsapphire.wanmin.data.DictTuple;
 import com.pixelsapphire.wanmin.data.records.DatabaseRecord;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
