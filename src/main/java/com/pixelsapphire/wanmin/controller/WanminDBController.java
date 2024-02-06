@@ -20,9 +20,8 @@ import java.util.logging.Logger;
 @SuppressWarnings("SqlSourceToSinkFlow")
 public class WanminDBController {
 
-    private final String username;
+    private final @NotNull String username;
     private final Connection connection;
-
     public final WanminCollection<Contractor> contractors = WanminCollection.flat(Contractor::fromRecord,
                                                                                   () -> executeReadOnly("SELECT * FROM wm_kontrahenci"));
     public final WanminCollection<Customer> customers = WanminCollection.flat(Customer::fromRecord,
@@ -33,11 +32,10 @@ public class WanminDBController {
                                                                               () -> executeReadOnly("SELECT * FROM wm_stanowiska"));
     public final WanminCollection<Product> products = WanminCollection.flat(Product::fromRecord,
                                                                             () -> executeReadOnly("SELECT * FROM wm_produkty"));
-
     public WanminDBController(@NotNull String username, char[] password) {
         this.username = username;
         this.connection = createConnection("jdbc:oracle:thin", "admlab2.cs.put.poznan.pl", 1521,
-                "dblab03_students.cs.put.poznan.pl", username, password);
+                                           "dblab03_students.cs.put.poznan.pl", username, password);
     }
 
     @SuppressWarnings("SameParameterValue")
@@ -56,10 +54,16 @@ public class WanminDBController {
         }
     }
 
-    public boolean isRoleGranted(@NotNull String role) {
-        final var firstRecord = executeReadOnly("select count(*) as mam_te_role from dba_role_privs where grantee = '%s' and GRANTED_ROLE = '%s'",
-                                                username.toUpperCase(), role.toUpperCase()).getFirst();
-        return firstRecord.getBoolean("mam_te_role");
+    public @NotNull String getUsername() {
+        return username;
+    }
+
+    public boolean isRoleEnabled(@NotNull String role) throws DatabaseException {
+        final var firstRecord = executeReadOnly("SELECT sbd147412.wm_rola_przyznana('%s') AS przyznana FROM dual",
+                                                role.toUpperCase()).getFirst();
+        final var granted = firstRecord.getBoolean("przyznana");
+        if (granted) executeReadOnly("SET ROLE %s", role.toUpperCase());
+        return granted;
     }
 
     public @NotNull List<DictTuple> executeReadOnly(@NotNull String query, Object... parameters) {

@@ -23,7 +23,7 @@ public class Message extends Layout {
     @Override
     protected void init(@NotNull JFrame window) {
         final var fill = GridBagConstraints.HORIZONTAL;
-        window.add(messageLabel, Layout.params("gridy=0;fill=" + fill + ";insets=24,16,24,16"));
+        window.add(messageLabel, Layout.params("gridy=0;fill=?;insets=24,16,24,16", fill));
         if (onDismiss != null) {
             window.add(okButton, Layout.params("gridy=1;insets=0,24,16,24"));
             okButton.addActionListener(e -> onDismiss.run());

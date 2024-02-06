@@ -17,7 +17,7 @@ public class TestWanminDBController {
     @Test
     void testRole() {
         final WanminDBController database = new WanminDBController("sbd151886", "sbd151886".toCharArray());
-        assertTrue(database.isRoleGranted("wm_kelner"));
-        assertFalse(database.isRoleGranted("wm_administrator"));
+        assertTrue(database.isRoleEnabled("wm_kelner"));
+        assertFalse(database.isRoleEnabled("wm_administrator"));
     }
 }

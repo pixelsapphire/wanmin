@@ -6,6 +6,7 @@ import com.pixelsapphire.wanmin.controller.WanminDBController;
 import com.pixelsapphire.wanmin.gui.layout.Layout;
 import com.pixelsapphire.wanmin.gui.layout.LoginForm;
 import com.pixelsapphire.wanmin.gui.layout.Message;
+import com.pixelsapphire.wanmin.gui.layout.WaiterScreen;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.JFrame;
@@ -19,6 +20,7 @@ public class MainWindow extends JFrame {
     public MainWindow() {
         setVisible(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setResizable(false);
         loginForm.apply();
     }
 
@@ -27,6 +29,8 @@ public class MainWindow extends JFrame {
         new Thread(() -> {
             try {
                 controller = new WanminDBController(login, password);
+                if (controller.isRoleEnabled("wm_kelner")) new WaiterScreen(this, controller).apply();
+                else new Message(this, "Nie nadano roli. Skontaktuj się z administratorem.", loginForm::apply).apply();
             } catch (final DatabaseException e) {
                 Logger.getLogger(Wanmin.class.getName()).log(Level.SEVERE, e.getMessage() + ": " + e.getCause().getMessage());
                 new Message(this, "Nie udało się zalogować", loginForm::apply).apply();
@@ -34,6 +38,6 @@ public class MainWindow extends JFrame {
         }).start();
     }
 
-    private final Layout loginForm = new LoginForm(this, this::onLogin);
+    private Layout loginForm = new LoginForm(this, this::onLogin);
 
 }
