@@ -14,14 +14,15 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
-import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @SuppressWarnings("SqlSourceToSinkFlow")
 public class WanminDBController {
 
+    private final String username;
     private final Connection connection;
+
     public final WanminCollection<Contractor> contractors = WanminCollection.flat(Contractor::fromRecord,
                                                                                   () -> executeReadOnly("SELECT * FROM wm_kontrahenci"));
     public final WanminCollection<Customer> customers = WanminCollection.flat(Customer::fromRecord,
@@ -34,8 +35,9 @@ public class WanminDBController {
                                                                             () -> executeReadOnly("SELECT * FROM wm_produkty"));
 
     public WanminDBController(@NotNull String username, char[] password) {
+        this.username = username;
         this.connection = createConnection("jdbc:oracle:thin", "admlab2.cs.put.poznan.pl", 1521,
-                                           "dblab03_students.cs.put.poznan.pl", username, password);
+                "dblab03_students.cs.put.poznan.pl", username, password);
     }
 
     @SuppressWarnings("SameParameterValue")
@@ -54,9 +56,16 @@ public class WanminDBController {
         }
     }
 
-    public @NotNull List<DictTuple> executeReadOnly(@NotNull String query) {
+    public boolean isRoleGranted(@NotNull String role) {
+        final var firstRecord = executeReadOnly("select count(*) as mam_te_role from dba_role_privs where grantee = '%s' and GRANTED_ROLE = '%s'",
+                                                username.toUpperCase(), role.toUpperCase()).getFirst();
+        return firstRecord.getBoolean("mam_te_role");
+    }
+
+    public @NotNull List<DictTuple> executeReadOnly(@NotNull String query, Object... parameters) {
         try (final var statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
-            try (final var result = statement.executeQuery(query)) {
+            final String sql = String.format(query, parameters);
+            try (final var result = statement.executeQuery(sql)) {
                 final List<DictTuple> list = new ArrayList<>();
                 while (result.next()) list.add(DictTuple.from(result));
                 return list;
@@ -64,9 +73,5 @@ public class WanminDBController {
         } catch (SQLException e) {
             throw new DatabaseException("Nie udało się wykonać zapytania", e);
         }
-    }
-
-    public <T> @NotNull List<T> executeReadOnly(@NotNull String query, @NotNull Function<DictTuple, T> mapper) {
-        return executeReadOnly(query).stream().map(mapper).toList();
     }
 }
