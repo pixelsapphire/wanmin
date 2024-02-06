@@ -14,23 +14,28 @@ public class EmploymentContract implements DatabaseRecord {
     private final int id;
     private final @NotNull String type;
     private final @NotNull Employee employee;
+    private final @NotNull Position position;
     private final @NotNull Date concluded;
     private final @Nullable Date terminated;
 
-    private EmploymentContract(int id, @NotNull String type, @NotNull Employee employee,
+    private EmploymentContract(int id, @NotNull String type, @NotNull Employee employee, @NotNull Position position,
                                @NotNull Date concluded, @Nullable Date terminated) {
         this.id = id;
         this.type = type;
         this.employee = employee;
+        this.position = position;
         this.concluded = concluded;
         this.terminated = terminated;
     }
 
-    @Contract("_, _ -> new")
-    public static @NotNull EmploymentContract fromRecord(@NotNull DictTuple record, @NotNull Provider<Employee> employeeProvider) {
+    @Contract("_, _, _ -> new")
+    public static @NotNull EmploymentContract fromRecord(@NotNull DictTuple record,
+                                                         @NotNull Provider<Employee> employeeProvider,
+                                                         @NotNull Provider<Position> positionProvider) {
         try {
             return new EmploymentContract(record.getInt("id"), record.getString("typ"),
                                           employeeProvider.getById(record.getInt("pracownik")),
+                                          positionProvider.getById(record.getInt("stanowisko")),
                                           record.getDate("zawiazana"), record.getDate("zerwana"));
         } catch (IllegalArgumentException e) {
             throw new DatabaseException("Failed to create EmploymentContract from record", e);
@@ -41,12 +46,16 @@ public class EmploymentContract implements DatabaseRecord {
         return type;
     }
 
-    public @NotNull Date getConcluded() {
-        return concluded;
-    }
-
     public @NotNull Employee getEmployee() {
         return employee;
+    }
+
+    public @NotNull Position getPosition() {
+        return position;
+    }
+
+    public @NotNull Date getConcluded() {
+        return concluded;
     }
 
     public @Nullable Date getTerminated() {

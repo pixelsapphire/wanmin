@@ -23,65 +23,65 @@ VALUES ('host', 3500.00);
 
 CREATE TABLE wm_pracownicy
 (
-    id         NUMBER(5) GENERATED ALWAYS AS IDENTITY,
-    imie       VARCHAR2(30) NOT NULL,
-    nazwisko   VARCHAR2(30) NOT NULL,
-    stanowisko NUMBER(5)    NOT NULL,
-    CONSTRAINT pk_pracownicy_id PRIMARY KEY (id),
-    CONSTRAINT fk_pracownicy_stanowiska FOREIGN KEY (stanowisko) REFERENCES wm_stanowiska (id)
+    id       NUMBER(5) GENERATED ALWAYS AS IDENTITY,
+    imie     VARCHAR2(30) NOT NULL,
+    nazwisko VARCHAR2(30) NOT NULL,
+    CONSTRAINT pk_pracownicy_id PRIMARY KEY (id)
 );
 
-INSERT INTO wm_pracownicy (imie, nazwisko, stanowisko)
-VALUES ('Jan', 'Kowalski', (SELECT id FROM wm_stanowiska WHERE nazwa = 'kucharz'));
-INSERT INTO wm_pracownicy (imie, nazwisko, stanowisko)
-VALUES ('Anna', 'Nowak', (SELECT id FROM wm_stanowiska WHERE nazwa = 'kelner'));
-INSERT INTO wm_pracownicy (imie, nazwisko, stanowisko)
-VALUES ('Piotr', 'Wiśniewski', (SELECT id FROM wm_stanowiska WHERE nazwa = 'zmywacz'));
-INSERT INTO wm_pracownicy (imie, nazwisko, stanowisko)
-VALUES ('Agnieszka', 'Kowalczyk', (SELECT id FROM wm_stanowiska WHERE nazwa = 'barman'));
-INSERT INTO wm_pracownicy (imie, nazwisko, stanowisko)
-VALUES ('Tomasz', 'Duda', (SELECT id FROM wm_stanowiska WHERE nazwa = 'szef kuchni'));
-INSERT INTO wm_pracownicy (imie, nazwisko, stanowisko)
-VALUES ('Maria', 'Lewandowska', (SELECT id FROM wm_stanowiska WHERE nazwa = 'pomoc kuchenna'));
-INSERT INTO wm_pracownicy (imie, nazwisko, stanowisko)
-VALUES ('Michał', 'Wójcik', (SELECT id FROM wm_stanowiska WHERE nazwa = 'kelner'));
-INSERT INTO wm_pracownicy (imie, nazwisko, stanowisko)
-VALUES ('Katarzyna', 'Zielinska', (SELECT id FROM wm_stanowiska WHERE nazwa = 'host'));
-INSERT INTO wm_pracownicy (imie, nazwisko, stanowisko)
-VALUES ('Paweł', 'Kamiński', (SELECT id FROM wm_stanowiska WHERE nazwa = 'barman'));
-INSERT INTO wm_pracownicy (imie, nazwisko, stanowisko)
-VALUES ('Magdalena', 'Kwiatkowska', (SELECT id FROM wm_stanowiska WHERE nazwa = 'zmywacz'));
-INSERT INTO wm_pracownicy (imie, nazwisko, stanowisko)
-VALUES ('Marcin', 'Król', (SELECT id FROM wm_stanowiska WHERE nazwa = 'kucharz'));
-INSERT INTO wm_pracownicy (imie, nazwisko, stanowisko)
-VALUES ('Barbara', 'Bąk', (SELECT id FROM wm_stanowiska WHERE nazwa = 'kelner'));
-INSERT INTO wm_pracownicy (imie, nazwisko, stanowisko)
-VALUES ('Jakub', 'Woźniak', (SELECT id FROM wm_stanowiska WHERE nazwa = 'pomoc kuchenna'));
-INSERT INTO wm_pracownicy (imie, nazwisko, stanowisko)
-VALUES ('Zofia', 'Szymczak', (SELECT id FROM wm_stanowiska WHERE nazwa = 'barman'));
-INSERT INTO wm_pracownicy (imie, nazwisko, stanowisko)
-VALUES ('Stanisław', 'Wróbel', (SELECT id FROM wm_stanowiska WHERE nazwa = 'zmywacz'));
-INSERT INTO wm_pracownicy (imie, nazwisko, stanowisko)
-VALUES ('Elżbieta', 'Kozłowska', (SELECT id FROM wm_stanowiska WHERE nazwa = 'kelner'));
-INSERT INTO wm_pracownicy (imie, nazwisko, stanowisko)
-VALUES ('Andrzej', 'Kruk', (SELECT id FROM wm_stanowiska WHERE nazwa = 'szef kuchni'));
-INSERT INTO wm_pracownicy (imie, nazwisko, stanowisko)
-VALUES ('Alicja', 'Stępień', (SELECT id FROM wm_stanowiska WHERE nazwa = 'pomoc kuchenna'));
-INSERT INTO wm_pracownicy (imie, nazwisko, stanowisko)
-VALUES ('Adam', 'Malinowski', (SELECT id FROM wm_stanowiska WHERE nazwa = 'kelner'));
-INSERT INTO wm_pracownicy (imie, nazwisko, stanowisko)
-VALUES ('Ewa', 'Pawlak', (SELECT id FROM wm_stanowiska WHERE nazwa = 'barman'));
+INSERT INTO wm_pracownicy (imie, nazwisko)
+VALUES ('Jan', 'Kowalski');
+INSERT INTO wm_pracownicy (imie, nazwisko)
+VALUES ('Anna', 'Nowak');
+INSERT INTO wm_pracownicy (imie, nazwisko)
+VALUES ('Piotr', 'Wiśniewski');
+INSERT INTO wm_pracownicy (imie, nazwisko)
+VALUES ('Agnieszka', 'Kowalczyk');
+INSERT INTO wm_pracownicy (imie, nazwisko)
+VALUES ('Tomasz', 'Duda');
+INSERT INTO wm_pracownicy (imie, nazwisko)
+VALUES ('Maria', 'Lewandowska');
+INSERT INTO wm_pracownicy (imie, nazwisko)
+VALUES ('Michał', 'Wójcik');
+INSERT INTO wm_pracownicy (imie, nazwisko)
+VALUES ('Katarzyna', 'Zielinska');
+INSERT INTO wm_pracownicy (imie, nazwisko)
+VALUES ('Paweł', 'Kamiński');
+INSERT INTO wm_pracownicy (imie, nazwisko)
+VALUES ('Magdalena', 'Kwiatkowska');
+INSERT INTO wm_pracownicy (imie, nazwisko)
+VALUES ('Marcin', 'Król');
+INSERT INTO wm_pracownicy (imie, nazwisko)
+VALUES ('Barbara', 'Bąk');
+INSERT INTO wm_pracownicy (imie, nazwisko)
+VALUES ('Jakub', 'Woźniak');
+INSERT INTO wm_pracownicy (imie, nazwisko)
+VALUES ('Zofia', 'Szymczak');
+INSERT INTO wm_pracownicy (imie, nazwisko)
+VALUES ('Stanisław', 'Wróbel');
+INSERT INTO wm_pracownicy (imie, nazwisko)
+VALUES ('Elżbieta', 'Kozłowska');
+INSERT INTO wm_pracownicy (imie, nazwisko)
+VALUES ('Andrzej', 'Kruk');
+INSERT INTO wm_pracownicy (imie, nazwisko)
+VALUES ('Alicja', 'Stępień');
+INSERT INTO wm_pracownicy (imie, nazwisko)
+VALUES ('Adam', 'Malinowski');
+INSERT INTO wm_pracownicy (imie, nazwisko)
+VALUES ('Ewa', 'Pawlak');
 
 CREATE TABLE wm_umowy
 (
-    id        NUMBER(5) GENERATED ALWAYS AS IDENTITY,
-    numer     VARCHAR2(15) NOT NULL,
-    typ       VARCHAR2(30) NOT NULL,
-    pracownik NUMBER(5)    NOT NULL,
-    zawiazana DATE DEFAULT CURRENT_TIMESTAMP,
-    zerwana   DATE         NULL,
+    id         NUMBER(5) GENERATED ALWAYS AS IDENTITY,
+    numer      VARCHAR2(15) NOT NULL,
+    typ        VARCHAR2(30) NOT NULL,
+    pracownik  NUMBER(5)    NOT NULL,
+    stanowisko NUMBER(5)    NOT NULL,
+    zawiazana  DATE DEFAULT CURRENT_TIMESTAMP,
+    zerwana    DATE         NULL,
     CONSTRAINT pk_umowy_id PRIMARY KEY (id),
-    CONSTRAINT fk_umowy_pracownicy FOREIGN KEY (pracownik) REFERENCES wm_pracownicy (id)
+    CONSTRAINT fk_umowy_pracownicy FOREIGN KEY (pracownik) REFERENCES wm_pracownicy (id),
+    CONSTRAINT fk_umowy_stanowiska FOREIGN KEY (stanowisko) REFERENCES wm_stanowiska (id)
 );
 
 CREATE TABLE wm_kontrahenci
@@ -98,9 +98,10 @@ CREATE TABLE wm_kontrahenci
 
 CREATE TABLE wm_produkty
 (
+    id        NUMBER(5) GENERATED ALWAYS AS IDENTITY,
     nazwa     VARCHAR2(30),
     jednostka VARCHAR2(7) NULL,
-    CONSTRAINT pk_produkty_nazwa PRIMARY KEY (nazwa)
+    CONSTRAINT pk_produkty_nazwa PRIMARY KEY (id)
 );
 
 CREATE TABLE wm_faktury_obce
@@ -117,12 +118,12 @@ CREATE TABLE wm_faktury_obce
 CREATE TABLE wm_magazyn
 (
     id            NUMBER(5) GENERATED ALWAYS AS IDENTITY,
-    produkt       VARCHAR2(30) NOT NULL,
-    ilosc         NUMBER(5)    NOT NULL,
-    data_waznosci DATE         NULL,
-    faktura       NUMBER(5)    NOT NULL,
+    produkt       NUMBER(5) NOT NULL,
+    ilosc         NUMBER(5) NOT NULL,
+    data_waznosci DATE      NULL,
+    faktura       NUMBER(5) NOT NULL,
     CONSTRAINT pk_magazyn_id PRIMARY KEY (id),
-    CONSTRAINT fk_magazyn_produkty FOREIGN KEY (produkt) REFERENCES wm_produkty (nazwa),
+    CONSTRAINT fk_magazyn_produkty FOREIGN KEY (produkt) REFERENCES wm_produkty (id),
     CONSTRAINT fk_magazyn_faktury_zakupu FOREIGN KEY (faktura) REFERENCES wm_faktury_obce (id)
 );
 
@@ -130,13 +131,13 @@ CREATE TABLE wm_faktury_obce_pozycje
 (
     id            NUMBER(5) GENERATED ALWAYS AS IDENTITY,
     faktura       NUMBER(5)    NOT NULL,
-    produkt       VARCHAR2(30) NOT NULL,
+    produkt       NUMBER(5)    NOT NULL,
     cena          NUMBER(6, 2) NOT NULL,
     ilosc         NUMBER(8, 2) NOT NULL,
     data_waznosci DATE         NULL,
     CONSTRAINT pk_faktury_obce_pozycje_id PRIMARY KEY (id),
     CONSTRAINT fk_faktury_obce_pozycje_faktury_obce FOREIGN KEY (faktura) REFERENCES wm_faktury_obce (id),
-    CONSTRAINT fk_faktury_obce_pozycje_produkty FOREIGN KEY (produkt) REFERENCES wm_produkty (nazwa)
+    CONSTRAINT fk_faktury_obce_pozycje_produkty FOREIGN KEY (produkt) REFERENCES wm_produkty (id)
 );
 
 CREATE TABLE wm_przepisy
@@ -151,11 +152,11 @@ CREATE TABLE wm_przepisy_skladniki
 (
     id      NUMBER(5) GENERATED ALWAYS AS IDENTITY,
     przepis NUMBER(5)    NOT NULL,
-    produkt VARCHAR2(30) NOT NULL,
+    produkt NUMBER(5)    NOT NULL,
     ilosc   NUMBER(8, 2) NOT NULL,
     CONSTRAINT pk_przepisy_skladniki_id PRIMARY KEY (id),
     CONSTRAINT fk_przepisy_skladniki_przepisy FOREIGN KEY (przepis) REFERENCES wm_przepisy (id),
-    CONSTRAINT fk_przepisy_skladniki_produkty FOREIGN KEY (produkt) REFERENCES wm_produkty (nazwa)
+    CONSTRAINT fk_przepisy_skladniki_produkty FOREIGN KEY (produkt) REFERENCES wm_produkty (id)
 );
 
 CREATE TABLE wm_menu
@@ -182,11 +183,11 @@ CREATE TABLE wm_menu_pozycje
 
 CREATE TABLE wm_klienci
 (
-    numer_karty NUMBER(5) GENERATED ALWAYS AS IDENTITY,
-    imie        VARCHAR2(30) NOT NULL,
-    nazwisko    VARCHAR2(30) NOT NULL,
-    punkty      NUMBER(5) DEFAULT 0,
-    CONSTRAINT pk_klienci_numer_karty PRIMARY KEY (numer_karty)
+    id       NUMBER(5) GENERATED ALWAYS AS IDENTITY,
+    imie     VARCHAR2(30) NOT NULL,
+    nazwisko VARCHAR2(30) NOT NULL,
+    punkty   NUMBER(5) DEFAULT 0,
+    CONSTRAINT pk_klienci_numer_karty PRIMARY KEY (id)
 );
 
 CREATE TABLE wm_zamowienia
@@ -199,7 +200,7 @@ CREATE TABLE wm_zamowienia
     czy_zaplacone NUMBER(1) DEFAULT 0,
     CONSTRAINT pk_zamowienia_id PRIMARY KEY (id),
     CONSTRAINT fk_zamowienia_pracownicy FOREIGN KEY (kelner) REFERENCES wm_pracownicy (id),
-    CONSTRAINT fk_zamowienia_klienci FOREIGN KEY (klient) REFERENCES wm_klienci (numer_karty),
+    CONSTRAINT fk_zamowienia_klienci FOREIGN KEY (klient) REFERENCES wm_klienci (id),
     CONSTRAINT chk_zamowienia_czy_zaplacone CHECK (czy_zaplacone IN (0, 1))
 );
 
@@ -223,7 +224,7 @@ CREATE TABLE wm_faktury
     zamowiene  NUMBER(5)    NOT NULL,
     znizka     NUMBER(6, 2) DEFAULT 0,
     CONSTRAINT pk_faktury_id PRIMARY KEY (id),
-    CONSTRAINT fk_faktury_klienci FOREIGN KEY (klient) REFERENCES wm_klienci (numer_karty),
+    CONSTRAINT fk_faktury_klienci FOREIGN KEY (klient) REFERENCES wm_klienci (id),
     CONSTRAINT fk_faktury_zamowienia FOREIGN KEY (zamowiene) REFERENCES wm_zamowienia (id)
 );
 
@@ -240,12 +241,6 @@ GRANT EXECUTE ON wm_rola_przyznana TO PUBLIC;
 
 SELECT wm_rola_przyznana('WM_ADMINISTRATOR')
 FROM dual;
-
-SELECT *
-FROM session_roles;
-
-SELECT *
-FROM session_roles;
 
 CREATE ROLE wm_kucharz;
 GRANT SELECT ON wm_przepisy TO wm_kucharz;

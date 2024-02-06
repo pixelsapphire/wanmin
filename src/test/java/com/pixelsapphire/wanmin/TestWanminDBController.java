@@ -15,6 +15,12 @@ public class TestWanminDBController {
     }
 
     @Test
+    void testEmployees() {
+        final WanminDBController database = new WanminDBController("sbd147412", "sbd147412".toCharArray());
+        database.employees.getAll().forEach(e -> System.out.println(e.getFirstName() + " " + e.getLastName() + " "));
+    }
+
+    @Test
     void testRole() {
         final WanminDBController database = new WanminDBController("sbd151886", "sbd151886".toCharArray());
         assertTrue(database.isRoleEnabled("wm_kelner"));
