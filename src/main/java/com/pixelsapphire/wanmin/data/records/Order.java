@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+@SuppressWarnings("ClassCanBeRecord")
 public class Order implements DatabaseRecord {
 
     private final int id, table;
@@ -71,5 +72,28 @@ public class Order implements DatabaseRecord {
     @Override
     public int getId() {
         return id;
+    }
+
+    @Override
+    public String toString() {
+        final var sb = new StringBuilder();
+
+        sb.append(table).append(' ');
+        sb.append(customer).append(' ');
+        sb.append('\n');
+
+        items.forEach(it -> {
+            sb.append('\t');
+            final var menuItem = it.getMenuItem();
+            sb.append(menuItem.getName());
+            sb.append(" x ");
+            float amount = it.getAmount();
+            sb.append(amount);
+            sb.append('\t');
+            sb.append(menuItem.getPrice() * amount);
+            sb.append("\n");
+        });
+
+        return sb.toString();
     }
 }

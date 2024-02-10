@@ -43,25 +43,29 @@ public class WanminDBController {
     public final WanminCollection<Customer> customers = new WanminCollection<>(
             Customer::fromRecord,
             () -> executeReadOnly("SELECT * FROM wm_klienci"));
-    public final WanminCollection<Invoice> invoices = new WanminCollection<>(
-            (r) -> Invoice.fromRecord(r, customers),
-            () -> executeReadOnly("SELECT * FROM wm_faktury"));
-//    public final WanminCollection<Order> orders = new WanminCollection<>(
-//            (r) -> Order.fromRecord(r, customers, id -> executeReadOnly("SELECT * FROM WM_zamowienia_pozycje WHERE zamowienie = %id", id)
-//                    .stream().map((it) -> OrderItem.fromRecord(it, disz -> executeReadOnly("SELECT * FROM WM_MENU_POZYCJE") .stream().map(MenuItem::fromRecord).toList())).toList()),
-//            () -> executeReadOnly("SELECT * FROM WM_ZAMOWIENIA"));
+    private final Provider<MenuItem> menuItemProvider = id -> executeReadOnly("SELECT * FROM wm_menu_pozycje WHERE id = %d", id)
+            .stream().map(MenuItem::fromRecord).findFirst().orElseThrow();
+    private final Provider<List<OrderItem>> orderItemsProvider = id -> executeReadOnly("SELECT * FROM WM_ZAMOWIENIA_POZYCJE WHERE zamowienie = %d", id)
+            .stream().map(r -> OrderItem.fromRecord(r, menuItemProvider)).toList();
     public final WanminCollection<Position> positions = new WanminCollection<>(
             Position::fromRecord,
             () -> executeReadOnly("SELECT * FROM wm_stanowiska"));
     public final WanminCollection<Employee> employees = new WanminCollection<>(
             (r) -> Employee.fromRecord(r, positions),
             () -> executeReadOnly("SELECT * FROM wm_pracownicy"));
+    public final WanminCollection<Order> orders = new WanminCollection<>(
+            (r) -> Order.fromRecord(r, employees, customers, orderItemsProvider),
+            () -> executeReadOnly("SELECT * FROM WM_ZAMOWIENIA"));
+    public final WanminCollection<Invoice> invoices = new WanminCollection<>(
+            (r) -> Invoice.fromRecord(r, customers, orders),
+            () -> executeReadOnly("SELECT * FROM wm_faktury"));
     public final WanminCollection<EmploymentContract> employmentContracts = new WanminCollection<>(
             (r) -> EmploymentContract.fromRecord(r, employees, positions),
             () -> executeReadOnly("SELECT * FROM wm_umowy"));
+    private final Provider<List<MenuItem>> menuItemsProvider = id -> executeReadOnly("SELECT * FROM wm_menu_pozycje WHERE menu = %d", id)
+            .stream().map(MenuItem::fromRecord).toList();
     public final WanminCollection<Menu> menus = new WanminCollection<>(
-            (r) -> Menu.fromRecord(r, id -> executeReadOnly("SELECT * FROM wm_menu_pozycje WHERE menu = %d", id)
-                    .stream().map(MenuItem::fromRecord).toList()),
+            (r) -> Menu.fromRecord(r, menuItemsProvider),
             () -> executeReadOnly("SELECT * FROM wm_menu"));
 
     public WanminDBController(@NotNull String username, char[] password) {
@@ -89,6 +93,7 @@ public class WanminDBController {
     public @NotNull String getUsername() {
         return username;
     }
+
 
     public boolean isRoleEnabled(@NotNull String role) throws DatabaseException {
         final var firstRecord = executeReadOnly("SELECT sbd147412.wm_rola_przyznana('%s') AS przyznana FROM dual",

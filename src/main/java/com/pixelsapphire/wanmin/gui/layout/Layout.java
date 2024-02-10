@@ -56,6 +56,12 @@ public abstract class Layout {
 
     protected abstract void init(@NotNull JFrame window);
 
+    protected void revalidate() {
+        window.revalidate();
+        window.repaint();
+        window.pack();
+    }
+
     public final void refresh() {
         window.pack();
         window.setLocationRelativeTo(null);

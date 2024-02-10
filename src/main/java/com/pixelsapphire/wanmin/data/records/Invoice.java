@@ -13,23 +13,26 @@ public class Invoice implements DatabaseRecord {
 
     private final int id;
     private final @NotNull Customer customer;
+    private final @NotNull Order order;
     private final @NotNull Date date;
     private final @NotNull String number;
     private final float discount;
 
-    private Invoice(int id, @NotNull Customer customer, @NotNull Date date, @NotNull String number, float discount) {
+    private Invoice(int id, @NotNull Customer customer, @NotNull Order order, @NotNull Date date, @NotNull String number, float discount) {
         this.id = id;
         this.customer = customer;
+        this.order = order;
         this.date = date;
         this.number = number;
         this.discount = discount;
     }
 
     @Contract("_, _ -> new")
-    public static @NotNull Invoice fromRecord(@NotNull DictTuple record, @NotNull Provider<Customer> customerProvider) {
+    public static @NotNull Invoice fromRecord(@NotNull DictTuple record, @NotNull Provider<Customer> customerProvider,
+                                              @NotNull Provider<Order> orderProvider) {
         try {
-            return new Invoice(record.getInt("id"), customerProvider.getById(record.getInt("klient")), record.getDate("data"),
-                               record.getString("nr_faktury"), record.getFloat("znizka"));
+            return new Invoice(record.getInt("id"), customerProvider.getById(record.getInt("klient")), orderProvider.getById(record.getInt("zamowienie")),
+                                record.getDate("data"), record.getString("nr_faktury"), record.getFloat("znizka"));
         } catch (IllegalArgumentException e) {
             throw new DatabaseException("Failed to create Invoice from record", e);
         }
@@ -54,5 +57,9 @@ public class Invoice implements DatabaseRecord {
 
     public float getDiscount() {
         return discount;
+    }
+
+    public Order getOrder() {
+        return order;
     }
 }
