@@ -26,7 +26,9 @@ CREATE TABLE wm_pracownicy
     id       NUMBER(5) GENERATED ALWAYS AS IDENTITY,
     imie     VARCHAR2(30) NOT NULL,
     nazwisko VARCHAR2(30) NOT NULL,
-    CONSTRAINT pk_pracownicy_id PRIMARY KEY (id)
+    login    VARCHAR2(30) NULL,
+    CONSTRAINT pk_pracownicy_id PRIMARY KEY (id),
+    CONSTRAINT uk_pracownicy_username UNIQUE (login)
 );
 
 INSERT INTO wm_pracownicy (imie, nazwisko)
@@ -44,7 +46,7 @@ VALUES ('Maria', 'Lewandowska');
 INSERT INTO wm_pracownicy (imie, nazwisko)
 VALUES ('Michał', 'Wójcik');
 INSERT INTO wm_pracownicy (imie, nazwisko)
-VALUES ('Katarzyna', 'Zielinska');
+VALUES ('Katarzyna', 'Zielińska');
 INSERT INTO wm_pracownicy (imie, nazwisko)
 VALUES ('Paweł', 'Kamiński');
 INSERT INTO wm_pracownicy (imie, nazwisko)
@@ -69,6 +71,8 @@ INSERT INTO wm_pracownicy (imie, nazwisko)
 VALUES ('Adam', 'Malinowski');
 INSERT INTO wm_pracownicy (imie, nazwisko)
 VALUES ('Ewa', 'Pawlak');
+INSERT INTO wm_pracownicy (imie, nazwisko, login)
+VALUES ('Stanisław', 'Puzio', 'SBD151886');
 
 CREATE TABLE wm_umowy
 (
@@ -83,6 +87,70 @@ CREATE TABLE wm_umowy
     CONSTRAINT fk_umowy_pracownicy FOREIGN KEY (pracownik) REFERENCES wm_pracownicy (id),
     CONSTRAINT fk_umowy_stanowiska FOREIGN KEY (stanowisko) REFERENCES wm_stanowiska (id)
 );
+
+INSERT INTO wm_umowy (numer, typ, pracownik, stanowisko)
+VALUES ('UM/2024/0001', 'umowa o pracę', (SELECT id FROM wm_pracownicy WHERE nazwisko = 'Kowalski'),
+        (SELECT id FROM wm_stanowiska WHERE nazwa = 'kucharz'));
+INSERT INTO wm_umowy (numer, typ, pracownik, stanowisko)
+VALUES ('UM/2024/0002', 'umowa o pracę', (SELECT id FROM wm_pracownicy WHERE nazwisko = 'Nowak'),
+        (SELECT id FROM wm_stanowiska WHERE nazwa = 'kelner'));
+INSERT INTO wm_umowy (numer, typ, pracownik, stanowisko)
+VALUES ('UM/2024/0003', 'umowa o pracę', (SELECT id FROM wm_pracownicy WHERE nazwisko = 'Wiśniewski'),
+        (SELECT id FROM wm_stanowiska WHERE nazwa = 'zmywacz'));
+INSERT INTO wm_umowy (numer, typ, pracownik, stanowisko)
+VALUES ('UM/2024/0004', 'umowa o pracę', (SELECT id FROM wm_pracownicy WHERE nazwisko = 'Kowalczyk'),
+        (SELECT id FROM wm_stanowiska WHERE nazwa = 'barman'));
+INSERT INTO wm_umowy (numer, typ, pracownik, stanowisko)
+VALUES ('UM/2024/0005', 'umowa o pracę', (SELECT id FROM wm_pracownicy WHERE nazwisko = 'Duda'),
+        (SELECT id FROM wm_stanowiska WHERE nazwa = 'pomoc kuchenna'));
+INSERT INTO wm_umowy (numer, typ, pracownik, stanowisko)
+VALUES ('UM/2024/0006', 'umowa o pracę', (SELECT id FROM wm_pracownicy WHERE nazwisko = 'Lewandowska'),
+        (SELECT id FROM wm_stanowiska WHERE nazwa = 'host'));
+INSERT INTO wm_umowy (numer, typ, pracownik, stanowisko)
+VALUES ('UM/2024/0007', 'umowa o pracę', (SELECT id FROM wm_pracownicy WHERE nazwisko = 'Wójcik'),
+        (SELECT id FROM wm_stanowiska WHERE nazwa = 'kucharz'));
+INSERT INTO wm_umowy (numer, typ, pracownik, stanowisko)
+VALUES ('UM/2024/0008', 'umowa o pracę', (SELECT id FROM wm_pracownicy WHERE nazwisko = 'Zielińska'),
+        (SELECT id FROM wm_stanowiska WHERE nazwa = 'kelner'));
+INSERT INTO wm_umowy (numer, typ, pracownik, stanowisko)
+VALUES ('UM/2024/0009', 'umowa o pracę', (SELECT id FROM wm_pracownicy WHERE nazwisko = 'Kamiński'),
+        (SELECT id FROM wm_stanowiska WHERE nazwa = 'zmywacz'));
+INSERT INTO wm_umowy (numer, typ, pracownik, stanowisko)
+VALUES ('UM/2024/0010', 'umowa o pracę', (SELECT id FROM wm_pracownicy WHERE nazwisko = 'Kwiatkowska'),
+        (SELECT id FROM wm_stanowiska WHERE nazwa = 'barman'));
+INSERT INTO wm_umowy (numer, typ, pracownik, stanowisko)
+VALUES ('UM/2024/0011', 'umowa o pracę', (SELECT id FROM wm_pracownicy WHERE nazwisko = 'Król'),
+        (SELECT id FROM wm_stanowiska WHERE nazwa = 'pomoc kuchenna'));
+INSERT INTO wm_umowy (numer, typ, pracownik, stanowisko)
+VALUES ('UM/2024/0012', 'umowa o pracę', (SELECT id FROM wm_pracownicy WHERE nazwisko = 'Bąk'),
+        (SELECT id FROM wm_stanowiska WHERE nazwa = 'host'));
+INSERT INTO wm_umowy (numer, typ, pracownik, stanowisko)
+VALUES ('UM/2024/0013', 'umowa o pracę', (SELECT id FROM wm_pracownicy WHERE nazwisko = 'Woźniak'),
+        (SELECT id FROM wm_stanowiska WHERE nazwa = 'kucharz'));
+INSERT INTO wm_umowy (numer, typ, pracownik, stanowisko)
+VALUES ('UM/2024/0014', 'umowa o pracę', (SELECT id FROM wm_pracownicy WHERE nazwisko = 'Szymczak'),
+        (SELECT id FROM wm_stanowiska WHERE nazwa = 'kelner'));
+INSERT INTO wm_umowy (numer, typ, pracownik, stanowisko)
+VALUES ('UM/2024/0015', 'umowa o pracę', (SELECT id FROM wm_pracownicy WHERE nazwisko = 'Wróbel'),
+        (SELECT id FROM wm_stanowiska WHERE nazwa = 'zmywacz'));
+INSERT INTO wm_umowy (numer, typ, pracownik, stanowisko)
+VALUES ('UM/2024/0016', 'umowa o pracę', (SELECT id FROM wm_pracownicy WHERE nazwisko = 'Kozłowska'),
+        (SELECT id FROM wm_stanowiska WHERE nazwa = 'barman'));
+INSERT INTO wm_umowy (numer, typ, pracownik, stanowisko)
+VALUES ('UM/2024/0017', 'umowa o pracę', (SELECT id FROM wm_pracownicy WHERE nazwisko = 'Kruk'),
+        (SELECT id FROM wm_stanowiska WHERE nazwa = 'pomoc kuchenna'));
+INSERT INTO wm_umowy (numer, typ, pracownik, stanowisko)
+VALUES ('UM/2024/0018', 'umowa o pracę', (SELECT id FROM wm_pracownicy WHERE nazwisko = 'Stępień'),
+        (SELECT id FROM wm_stanowiska WHERE nazwa = 'host'));
+INSERT INTO wm_umowy (numer, typ, pracownik, stanowisko)
+VALUES ('UM/2024/0019', 'umowa o pracę', (SELECT id FROM wm_pracownicy WHERE nazwisko = 'Malinowski'),
+        (SELECT id FROM wm_stanowiska WHERE nazwa = 'kucharz'));
+INSERT INTO wm_umowy (numer, typ, pracownik, stanowisko)
+VALUES ('UM/2024/0020', 'umowa o pracę', (SELECT id FROM wm_pracownicy WHERE nazwisko = 'Pawlak'),
+        (SELECT id FROM wm_stanowiska WHERE nazwa = 'kelner'));
+INSERT INTO wm_umowy (numer, typ, pracownik, stanowisko)
+VALUES ('UM/2024/0019', 'umowa o pracę', (SELECT id FROM wm_pracownicy WHERE nazwisko = 'Puzio' AND login = 'SBD151886'),
+        (SELECT id FROM wm_stanowiska WHERE nazwa = 'szef kuchni'));
 
 CREATE TABLE wm_kontrahenci
 (
@@ -116,31 +184,67 @@ CREATE TABLE wm_produkty
     CONSTRAINT uk_produkty_nazwa UNIQUE (nazwa)
 );
 
-INSERT INTO wm_produkty (nazwa, jednostka) VALUES ('Ryż', 'kg');
-INSERT INTO wm_produkty (nazwa, jednostka) VALUES ('Makaron ryżowy', 'kg');
-INSERT INTO wm_produkty (nazwa, jednostka) VALUES ('Tofu', 'kg');
-INSERT INTO wm_produkty (nazwa, jednostka) VALUES ('Soja', 'kg');
-INSERT INTO wm_produkty (nazwa, jednostka) VALUES ('Miso', 'kg');
-INSERT INTO wm_produkty (nazwa, jednostka) VALUES ('Sos sojowy', 'l');
-INSERT INTO wm_produkty (nazwa, jednostka) VALUES ('Kurczak', 'kg');
-INSERT INTO wm_produkty (nazwa, jednostka) VALUES ('Wołowina', 'kg');
-INSERT INTO wm_produkty (nazwa, jednostka) VALUES ('Krewetki', 'kg');
-INSERT INTO wm_produkty (nazwa, jednostka) VALUES ('Algi nori', 'szt.');
-INSERT INTO wm_produkty (nazwa, jednostka) VALUES ('Imbir', 'kg');
-INSERT INTO wm_produkty (nazwa, jednostka) VALUES ('Sos teriyaki', 'l');
-INSERT INTO wm_produkty (nazwa, jednostka) VALUES ('Wasabi', 'kg');
-INSERT INTO wm_produkty (nazwa, jednostka) VALUES ('Sos rybny', 'l');
-INSERT INTO wm_produkty (nazwa, jednostka) VALUES ('Sezam', 'kg');
-INSERT INTO wm_produkty (nazwa, jednostka) VALUES ('Pasta chili', 'kg');
-INSERT INTO wm_produkty (nazwa, jednostka) VALUES ('Kurkuma', 'kg');
-INSERT INTO wm_produkty (nazwa, jednostka) VALUES ('Mleko kokosowe', 'l');
-INSERT INTO wm_produkty (nazwa, jednostka) VALUES ('Ostre papryczki', 'kg');
-INSERT INTO wm_produkty (nazwa, jednostka) VALUES ('Ocet ryżowy', 'l');
-INSERT INTO wm_produkty (nazwa, jednostka) VALUES ('Mirin', 'l');
-INSERT INTO wm_produkty (nazwa, jednostka) VALUES ('Papier ryżowy', 'szt.');
-INSERT INTO wm_produkty (nazwa, jednostka) VALUES ('Sos hoisin', 'l');
-INSERT INTO wm_produkty (nazwa, jednostka) VALUES ('Sos curry', 'l');
-INSERT INTO wm_produkty (nazwa, jednostka) VALUES ('Wodorosty wakame', 'kg');
+INSERT INTO wm_produkty (nazwa, jednostka)
+VALUES ('Woda', 'l');
+INSERT INTO wm_produkty (nazwa, jednostka)
+VALUES ('Ryż', 'kg');
+INSERT INTO wm_produkty (nazwa, jednostka)
+VALUES ('Makaron ryżowy', 'kg');
+INSERT INTO wm_produkty (nazwa, jednostka)
+VALUES ('Tofu', 'kg');
+INSERT INTO wm_produkty (nazwa, jednostka)
+VALUES ('Soja', 'kg');
+INSERT INTO wm_produkty (nazwa, jednostka)
+VALUES ('Sos sojowy', 'l');
+INSERT INTO wm_produkty (nazwa, jednostka)
+VALUES ('Kurczak', 'kg');
+INSERT INTO wm_produkty (nazwa, jednostka)
+VALUES ('Wołowina', 'kg');
+INSERT INTO wm_produkty (nazwa, jednostka)
+VALUES ('Krewetki', 'kg');
+INSERT INTO wm_produkty (nazwa, jednostka)
+VALUES ('Wodorosty nori', 'szt.');
+INSERT INTO wm_produkty (nazwa, jednostka)
+VALUES ('Imbir', 'kg');
+INSERT INTO wm_produkty (nazwa, jednostka)
+VALUES ('Sos teriyaki', 'l');
+INSERT INTO wm_produkty (nazwa, jednostka)
+VALUES ('Wasabi', 'kg');
+INSERT INTO wm_produkty (nazwa, jednostka)
+VALUES ('Sos rybny', 'l');
+INSERT INTO wm_produkty (nazwa, jednostka)
+VALUES ('Sezam', 'kg');
+INSERT INTO wm_produkty (nazwa, jednostka)
+VALUES ('Pasta chili', 'kg');
+INSERT INTO wm_produkty (nazwa, jednostka)
+VALUES ('Kurkuma', 'kg');
+INSERT INTO wm_produkty (nazwa, jednostka)
+VALUES ('Mleko kokosowe', 'l');
+INSERT INTO wm_produkty (nazwa, jednostka)
+VALUES ('Ostre papryczki', 'kg');
+INSERT INTO wm_produkty (nazwa, jednostka)
+VALUES ('Ocet ryżowy', 'l');
+INSERT INTO wm_produkty (nazwa, jednostka)
+VALUES ('Mirin', 'l');
+INSERT INTO wm_produkty (nazwa, jednostka)
+VALUES ('Sake', 'l');
+INSERT INTO wm_produkty (nazwa, jednostka)
+VALUES ('Orzeszki ziemne', 'kg');
+INSERT INTO wm_produkty (nazwa, jednostka)
+VALUES ('Sos curry', 'l');
+INSERT INTO wm_produkty (nazwa, jednostka)
+VALUES ('Wodorosty wakame', 'kg');
+INSERT INTO wm_produkty (nazwa, jednostka)
+VALUES ('Jajko', 'szt.');
+INSERT INTO wm_produkty (nazwa, jednostka)
+VALUES ('Kiełki fasoli mung', 'kg');
+INSERT INTO wm_produkty (nazwa, jednostka)
+VALUES ('Wodorosty kombu', 'kg');
+INSERT INTO wm_produkty (nazwa, jednostka)
+VALUES ('Makaron ramen', 'kg');
+INSERT INTO wm_produkty (nazwa, jednostka)
+VALUES ('Szczypiorek', 'kg');
+
 
 CREATE TABLE wm_faktury_obce
 (
@@ -153,16 +257,26 @@ CREATE TABLE wm_faktury_obce
     CONSTRAINT uk_faktury_obce_kontrahent_nr_obcy UNIQUE (kontrahent, nr_obcy)
 );
 
-INSERT INTO wm_faktury_obce (kontrahent, data, nr_obcy) VALUES (1, '2024-02-06', 'FV/2024/0001');
-INSERT INTO wm_faktury_obce (kontrahent, data, nr_obcy) VALUES (2, '2024-02-07', 'FV/2024/0002');
-INSERT INTO wm_faktury_obce (kontrahent, data, nr_obcy) VALUES (3, '2024-02-08', 'FV/2024/0003');
-INSERT INTO wm_faktury_obce (kontrahent, data, nr_obcy) VALUES (4, '2024-02-09', 'FV/2024/0004');
-INSERT INTO wm_faktury_obce (kontrahent, data, nr_obcy) VALUES (5, '2024-02-10', 'FV/2024/0005');
-INSERT INTO wm_faktury_obce (kontrahent, data, nr_obcy) VALUES (1, '2024-02-11', 'FV/2024/0006');
-INSERT INTO wm_faktury_obce (kontrahent, data, nr_obcy) VALUES (2, '2024-02-12', 'FV/2024/0007');
-INSERT INTO wm_faktury_obce (kontrahent, data, nr_obcy) VALUES (3, '2024-02-13', 'FV/2024/0008');
-INSERT INTO wm_faktury_obce (kontrahent, data, nr_obcy) VALUES (4, '2024-02-14', 'FV/2024/0009');
-INSERT INTO wm_faktury_obce (kontrahent, data, nr_obcy) VALUES (5, '2024-02-15', 'FV/2024/0010');
+INSERT INTO wm_faktury_obce (kontrahent, data, nr_obcy)
+VALUES (1, '2024-02-06', 'FV/2024/0001');
+INSERT INTO wm_faktury_obce (kontrahent, data, nr_obcy)
+VALUES (2, '2024-02-07', 'FV/2024/0002');
+INSERT INTO wm_faktury_obce (kontrahent, data, nr_obcy)
+VALUES (3, '2024-02-08', 'FV/2024/0003');
+INSERT INTO wm_faktury_obce (kontrahent, data, nr_obcy)
+VALUES (4, '2024-02-09', 'FV/2024/0004');
+INSERT INTO wm_faktury_obce (kontrahent, data, nr_obcy)
+VALUES (5, '2024-02-10', 'FV/2024/0005');
+INSERT INTO wm_faktury_obce (kontrahent, data, nr_obcy)
+VALUES (1, '2024-02-11', 'FV/2024/0006');
+INSERT INTO wm_faktury_obce (kontrahent, data, nr_obcy)
+VALUES (2, '2024-02-12', 'FV/2024/0007');
+INSERT INTO wm_faktury_obce (kontrahent, data, nr_obcy)
+VALUES (3, '2024-02-13', 'FV/2024/0008');
+INSERT INTO wm_faktury_obce (kontrahent, data, nr_obcy)
+VALUES (4, '2024-02-14', 'FV/2024/0009');
+INSERT INTO wm_faktury_obce (kontrahent, data, nr_obcy)
+VALUES (5, '2024-02-15', 'FV/2024/0010');
 
 CREATE TABLE wm_faktury_obce_pozycje
 (
@@ -177,55 +291,104 @@ CREATE TABLE wm_faktury_obce_pozycje
     CONSTRAINT fk_faktury_obce_pozycje_produkty FOREIGN KEY (produkt) REFERENCES wm_produkty (id)
 );
 
-INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci) VALUES (1, 1, 2.50, 10, '2024-03-01');
-INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci) VALUES (2, 2, 3.75, 8, '2024-03-02');
-INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci) VALUES (3, 3, 5.20, 5, '2024-03-03');
-INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci) VALUES (4, 4, 4.80, 7, '2024-03-04');
-INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci) VALUES (5, 5, 6.90, 4, '2024-03-05');
-INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci) VALUES (6, 6, 2.20, 12, '2024-03-06');
-INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci) VALUES (7, 7, 8.50, 6, '2024-03-07');
-INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci) VALUES (8, 8, 9.75, 3, '2024-03-08');
-INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci) VALUES (9, 9, 12.30, 2, '2024-03-09');
-INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci) VALUES (10, 10, 7.60, 9, '2024-03-10');
-INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci) VALUES (1, 11, 3.40, 11, '2024-03-11');
-INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci) VALUES (2, 12, 5.90, 6, '2024-03-12');
-INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci) VALUES (3, 13, 1.80, 15, '2024-03-13');
-INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci) VALUES (4, 14, 4.50, 8, '2024-03-14');
-INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci) VALUES (5, 15, 6.20, 5, '2024-03-15');
-INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci) VALUES (6, 16, 2.90, 10, '2024-03-16');
-INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci) VALUES (7, 17, 4.10, 7, '2024-03-17');
-INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci) VALUES (8, 18, 8.80, 4, '2024-03-18');
-INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci) VALUES (9, 19, 5.40, 6, '2024-03-19');
-INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci) VALUES (10, 20, 10.75, 3, '2024-03-20');
-INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci) VALUES (1, 21, 6.90, 8, '2024-03-21');
-INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci) VALUES (2, 22, 3.20, 12, '2024-03-22');
-INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci) VALUES (3, 24, 9.40, 4, '2024-03-23');
-INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci) VALUES (4, 25, 7.60, 6, '2024-03-24');
-INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci) VALUES (6, 1, 3.25, 15, '2024-03-26');
-INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci) VALUES (7, 2, 7.10, 8, '2024-03-27');
-INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci) VALUES (8, 3, 5.80, 6, '2024-03-28');
-INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci) VALUES (9, 4, 8.50, 4, '2024-03-29');
-INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci) VALUES (10, 5, 2.40, 12, '2024-03-30');
-INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci) VALUES (1, 6, 9.20, 5, '2024-03-31');
-INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci) VALUES (2, 7, 4.75, 9, '2024-04-01');
-INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci) VALUES (3, 8, 6.90, 7, '2024-04-02');
-INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci) VALUES (4, 9, 11.40, 3, '2024-04-03');
-INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci) VALUES (5, 10, 7.20, 6, '2024-04-04');
-INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci) VALUES (6, 11, 3.90, 11, '2024-04-05');
-INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci) VALUES (7, 12, 5.60, 8, '2024-04-06');
-INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci) VALUES (8, 13, 2.30, 14, '2024-04-07');
-INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci) VALUES (9, 14, 6.80, 7, '2024-04-08');
-INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci) VALUES (10, 15, 8.90, 5, '2024-04-09');
-INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci) VALUES (1, 16, 4.50, 9, '2024-04-10');
-INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci) VALUES (2, 17, 9.20, 4, '2024-04-11');
-INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci) VALUES (3, 18, 5.40, 10, '2024-04-12');
-INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci) VALUES (4, 19, 3.70, 13, '2024-04-13');
-INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci) VALUES (5, 20, 2.90, 15, '2024-04-14');
-INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci) VALUES (6, 21, 7.60, 6, '2024-04-15');
-INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci) VALUES (7, 22, 4.20, 12, '2024-04-16');
-INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci) VALUES (8, 24, 6.90, 8, '2024-04-17');
-INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci) VALUES (9, 25, 8.30, 5, '2024-04-18');
-INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci) VALUES (10, 26, 3.50, 11, '2024-04-19');
+INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci)
+VALUES (1, 1, 2.50, 10, '2024-03-01');
+INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci)
+VALUES (2, 2, 3.75, 8, '2024-03-02');
+INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci)
+VALUES (3, 3, 5.20, 5, '2024-03-03');
+INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci)
+VALUES (4, 4, 4.80, 7, '2024-03-04');
+INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci)
+VALUES (5, 5, 6.90, 4, '2024-03-05');
+INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci)
+VALUES (6, 6, 2.20, 12, '2024-03-06');
+INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci)
+VALUES (7, 7, 8.50, 6, '2024-03-07');
+INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci)
+VALUES (8, 8, 9.75, 3, '2024-03-08');
+INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci)
+VALUES (9, 9, 12.30, 2, '2024-03-09');
+INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci)
+VALUES (10, 10, 7.60, 9, '2024-03-10');
+INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci)
+VALUES (1, 11, 3.40, 11, '2024-03-11');
+INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci)
+VALUES (2, 12, 5.90, 6, '2024-03-12');
+INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci)
+VALUES (3, 13, 1.80, 15, '2024-03-13');
+INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci)
+VALUES (4, 14, 4.50, 8, '2024-03-14');
+INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci)
+VALUES (5, 15, 6.20, 5, '2024-03-15');
+INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci)
+VALUES (6, 16, 2.90, 10, '2024-03-16');
+INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci)
+VALUES (7, 17, 4.10, 7, '2024-03-17');
+INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci)
+VALUES (8, 18, 8.80, 4, '2024-03-18');
+INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci)
+VALUES (9, 19, 5.40, 6, '2024-03-19');
+INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci)
+VALUES (10, 20, 10.75, 3, '2024-03-20');
+INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci)
+VALUES (1, 21, 6.90, 8, '2024-03-21');
+INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci)
+VALUES (2, 22, 3.20, 12, '2024-03-22');
+INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci)
+VALUES (3, 24, 9.40, 4, '2024-03-23');
+INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci)
+VALUES (4, 25, 7.60, 6, '2024-03-24');
+INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci)
+VALUES (6, 1, 3.25, 15, '2024-03-26');
+INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci)
+VALUES (7, 2, 7.10, 8, '2024-03-27');
+INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci)
+VALUES (8, 3, 5.80, 6, '2024-03-28');
+INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci)
+VALUES (9, 4, 8.50, 4, '2024-03-29');
+INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci)
+VALUES (10, 5, 2.40, 12, '2024-03-30');
+INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci)
+VALUES (1, 6, 9.20, 5, '2024-03-31');
+INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci)
+VALUES (2, 7, 4.75, 9, '2024-04-01');
+INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci)
+VALUES (3, 8, 6.90, 7, '2024-04-02');
+INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci)
+VALUES (4, 9, 11.40, 3, '2024-04-03');
+INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci)
+VALUES (5, 10, 7.20, 6, '2024-04-04');
+INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci)
+VALUES (6, 11, 3.90, 11, '2024-04-05');
+INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci)
+VALUES (7, 12, 5.60, 8, '2024-04-06');
+INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci)
+VALUES (8, 13, 2.30, 14, '2024-04-07');
+INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci)
+VALUES (9, 14, 6.80, 7, '2024-04-08');
+INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci)
+VALUES (10, 15, 8.90, 5, '2024-04-09');
+INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci)
+VALUES (1, 16, 4.50, 9, '2024-04-10');
+INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci)
+VALUES (2, 17, 9.20, 4, '2024-04-11');
+INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci)
+VALUES (3, 18, 5.40, 10, '2024-04-12');
+INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci)
+VALUES (4, 19, 3.70, 13, '2024-04-13');
+INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci)
+VALUES (5, 20, 2.90, 15, '2024-04-14');
+INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci)
+VALUES (6, 21, 7.60, 6, '2024-04-15');
+INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci)
+VALUES (7, 22, 4.20, 12, '2024-04-16');
+INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci)
+VALUES (8, 24, 6.90, 8, '2024-04-17');
+INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci)
+VALUES (9, 25, 8.30, 5, '2024-04-18');
+INSERT INTO wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci)
+VALUES (10, 26, 3.50, 11, '2024-04-19');
 
 CREATE TABLE wm_magazyn
 (
@@ -247,6 +410,11 @@ CREATE TABLE wm_przepisy
     CONSTRAINT uk_przepisy_nazwa UNIQUE (nazwa)
 );
 
+INSERT INTO wm_przepisy (nazwa)
+VALUES ('Pad Thai z Kurczakiem');
+INSERT INTO wm_przepisy (nazwa)
+VALUES ('Ramen z Wołowiną');
+
 CREATE TABLE wm_przepisy_skladniki
 (
     id      NUMBER(5) GENERATED ALWAYS AS IDENTITY,
@@ -258,6 +426,57 @@ CREATE TABLE wm_przepisy_skladniki
     CONSTRAINT fk_przepisy_skladniki_produkty FOREIGN KEY (produkt) REFERENCES wm_produkty (id)
 );
 
+SELECT *
+FROM wm_produkty;
+INSERT INTO wm_przepisy_skladniki (przepis, produkt, ilosc)
+VALUES ((SELECT id FROM wm_przepisy WHERE nazwa = 'Pad Thai z Kurczakiem'),
+        (SELECT id FROM wm_produkty WHERE nazwa = 'Makaron ryżowy'), 200);
+INSERT INTO wm_przepisy_skladniki (przepis, produkt, ilosc)
+VALUES ((SELECT id FROM wm_przepisy WHERE nazwa = 'Pad Thai z Kurczakiem'),
+        (SELECT id FROM wm_produkty WHERE nazwa = 'Kurczak'), 300);
+INSERT INTO wm_przepisy_skladniki (przepis, produkt, ilosc)
+VALUES ((SELECT id FROM wm_przepisy WHERE nazwa = 'Pad Thai z Kurczakiem'),
+        (SELECT id FROM wm_produkty WHERE nazwa = 'Jajko'), 1);
+INSERT INTO wm_przepisy_skladniki (przepis, produkt, ilosc)
+VALUES ((SELECT id FROM wm_przepisy WHERE nazwa = 'Pad Thai z Kurczakiem'),
+        (SELECT id FROM wm_produkty WHERE nazwa = 'Sos sojowy'), 0.03);
+INSERT INTO wm_przepisy_skladniki (przepis, produkt, ilosc)
+VALUES ((SELECT id FROM wm_przepisy WHERE nazwa = 'Pad Thai z Kurczakiem'),
+        (SELECT id FROM wm_produkty WHERE nazwa = 'Kiełki fasoli mung'), 50);
+INSERT INTO wm_przepisy_skladniki (przepis, produkt, ilosc)
+VALUES ((SELECT id FROM wm_przepisy WHERE nazwa = 'Pad Thai z Kurczakiem'),
+        (SELECT id FROM wm_produkty WHERE nazwa = 'Orzeszki ziemne'), 50);
+INSERT INTO wm_przepisy_skladniki (przepis, produkt, ilosc)
+VALUES ((SELECT id FROM wm_przepisy WHERE nazwa = 'Ramen z Wołowiną'),
+        (SELECT id FROM wm_produkty WHERE nazwa = 'Woda'), 2);
+INSERT INTO wm_przepisy_skladniki (przepis, produkt, ilosc)
+VALUES ((SELECT id FROM wm_przepisy WHERE nazwa = 'Ramen z Wołowiną'),
+        (SELECT id FROM wm_produkty WHERE nazwa = 'Sos sojowy'), 0.06);
+INSERT INTO wm_przepisy_skladniki (przepis, produkt, ilosc)
+VALUES ((SELECT id FROM wm_przepisy WHERE nazwa = 'Ramen z Wołowiną'),
+        (SELECT id FROM wm_produkty WHERE nazwa = 'Mirin'), 0.03);
+INSERT INTO wm_przepisy_skladniki (przepis, produkt, ilosc)
+VALUES ((SELECT id FROM wm_przepisy WHERE nazwa = 'Ramen z Wołowiną'),
+        (SELECT id FROM wm_produkty WHERE nazwa = 'Sake'), 0.03);
+INSERT INTO wm_przepisy_skladniki (przepis, produkt, ilosc)
+VALUES ((SELECT id FROM wm_przepisy WHERE nazwa = 'Ramen z Wołowiną'),
+        (SELECT id FROM wm_produkty WHERE nazwa = 'Wodorosty kombu'), 0.01);
+INSERT INTO wm_przepisy_skladniki (przepis, produkt, ilosc)
+VALUES ((SELECT id FROM wm_przepisy WHERE nazwa = 'Ramen z Wołowiną'),
+        (SELECT id FROM wm_produkty WHERE nazwa = 'Wodorosty wakame'), 0.015);
+INSERT INTO wm_przepisy_skladniki (przepis, produkt, ilosc)
+VALUES ((SELECT id FROM wm_przepisy WHERE nazwa = 'Ramen z Wołowiną'),
+        (SELECT id FROM wm_produkty WHERE nazwa = 'Wołowina'), 0.3);
+INSERT INTO wm_przepisy_skladniki (przepis, produkt, ilosc)
+VALUES ((SELECT id FROM wm_przepisy WHERE nazwa = 'Ramen z Wołowiną'),
+        (SELECT id FROM wm_produkty WHERE nazwa = 'Makaron ramen'), 0.2);
+INSERT INTO wm_przepisy_skladniki (przepis, produkt, ilosc)
+VALUES ((SELECT id FROM wm_przepisy WHERE nazwa = 'Ramen z Wołowiną'),
+        (SELECT id FROM wm_produkty WHERE nazwa = 'Jajko'), 1);
+INSERT INTO wm_przepisy_skladniki (przepis, produkt, ilosc)
+VALUES ((SELECT id FROM wm_przepisy WHERE nazwa = 'Ramen z Wołowiną'),
+        (SELECT id FROM wm_produkty WHERE nazwa = 'Szczypiorek'), 0.015);
+
 CREATE TABLE wm_menu
 (
     id    NUMBER(5) GENERATED ALWAYS AS IDENTITY,
@@ -265,6 +484,13 @@ CREATE TABLE wm_menu
     CONSTRAINT pk_menu_id PRIMARY KEY (id),
     CONSTRAINT uk_menu_nazwa UNIQUE (nazwa)
 );
+
+INSERT INTO wm_menu (nazwa)
+VALUES ('Menu japońskie');
+INSERT INTO wm_menu (nazwa)
+VALUES ('Menu tajskie');
+INSERT INTO wm_menu (nazwa)
+VALUES ('Menu chińskie');
 
 CREATE TABLE wm_menu_pozycje
 (
@@ -279,6 +505,13 @@ CREATE TABLE wm_menu_pozycje
     CONSTRAINT chk_menu_pozycje_kategoria CHECK (kategoria IN ('zupy', 'dania glowne', 'przystawki', 'desery', 'napoje')),
     CONSTRAINT fk_menu_pozycje_menu FOREIGN KEY (menu) REFERENCES wm_menu (id)
 );
+
+INSERT INTO wm_menu_pozycje (nazwa, cena, przepis, kategoria, menu)
+VALUES ('Pad Thai z Kurczakiem', 25.00, (SELECT id FROM wm_przepisy WHERE nazwa = 'Pad Thai z Kurczakiem'), 'dania glowne',
+        (SELECT id FROM wm_menu WHERE nazwa = 'Menu tajskie'));
+INSERT INTO wm_menu_pozycje (nazwa, cena, przepis, kategoria, menu)
+VALUES ('Ramen z Wołowiną', 30.00, (SELECT id FROM wm_przepisy WHERE nazwa = 'Ramen z Wołowiną'), 'dania glowne',
+        (SELECT id FROM wm_menu WHERE nazwa = 'Menu japońskie'));
 
 CREATE TABLE wm_klienci
 (
@@ -380,7 +613,8 @@ CREATE ROLE wm_administrator;
 BEGIN
     FOR t IN (SELECT table_name FROM user_tables WHERE table_name LIKE 'WM_%')
         LOOP
-            EXECUTE IMMEDIATE 'GRANT ALL PRIVILEGES ON ' || t.table_name || ' TO wm_administrator';
+            EXECUTE IMMEDIATE 'GRANT ALL PRIVILEGES
+         ON ' || t.table_name || ' TO wm_administrator ';
         END LOOP;
 END;
 
