@@ -23,7 +23,7 @@ public class Recipe implements DatabaseRecord {
     }
 
     @Contract("_, _ -> new")
-    public static @NotNull Recipe formRecord(@NotNull DictTuple record,
+    public static @NotNull Recipe fromRecord(@NotNull DictTuple record,
                                              @NotNull Provider<List<RecipeIngredient>> ingredientsProvider) {
         try {
             return new Recipe(record.getInt("id"), record.getString("opis"),

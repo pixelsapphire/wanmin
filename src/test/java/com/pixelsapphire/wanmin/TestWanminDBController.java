@@ -21,6 +21,24 @@ public class TestWanminDBController {
     }
 
     @Test
+    void testForeignInvoices() {
+        final WanminDBController database = new WanminDBController("sbd147412", "sbd147412".toCharArray());
+        database.foreignInvoices.getAll().forEach(i -> System.out.println(i.getId() + " " + i.getContractor().getName() +
+                                                                          " " + i.getItems().size() + " items: " +
+                                                                          i.getItems().stream()
+                                                                           .map(item -> item.getProduct().getName() + " " + item.getAmount() + item.getProduct().getUnit())
+                                                                           .reduce("", (a, b) -> a + b + ", ")));
+    }
+
+    @Test
+    void testMenus() {
+        final WanminDBController database = new WanminDBController("sbd147412", "sbd147412".toCharArray());
+        database.menus.getAll().forEach(m -> System.out.println(m.getId() + " " + m.getName() + " " + m.getItems().size() + " items: " +
+                                                                m.getItems().stream().map(item -> item.getName() + " " + item.getPrice())
+                                                                 .reduce("", (a, b) -> a + b + ", ")));
+    }
+
+    @Test
     void testRole() {
         final WanminDBController database = new WanminDBController("sbd151886", "sbd151886".toCharArray());
         assertTrue(database.isRoleEnabled("wm_kelner"));

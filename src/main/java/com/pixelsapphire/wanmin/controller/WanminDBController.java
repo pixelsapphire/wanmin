@@ -22,14 +22,48 @@ public class WanminDBController {
 
     private final @NotNull String username;
     private final Connection connection;
-    public final WanminCollection<Contractor> contractors = WanminCollection.flat(Contractor::fromRecord,
-                                                                                  () -> executeReadOnly("SELECT * FROM wm_kontrahenci"));
-    public final WanminCollection<Customer> customers = WanminCollection.flat(Customer::fromRecord,
-                                                                              () -> executeReadOnly("SELECT * FROM wm_klienci"));
-    public final WanminCollection<Position> positions = WanminCollection.flat(Position::fromRecord,
-                                                                              () -> executeReadOnly("SELECT * FROM wm_stanowiska"));
-    public final WanminCollection<Product> products = WanminCollection.flat(Product::fromRecord,
-                                                                            () -> executeReadOnly("SELECT * FROM wm_produkty"));
+    public final WanminCollection<Contractor> contractors = new WanminCollection<>(
+            Contractor::fromRecord,
+            () -> executeReadOnly("SELECT * FROM wm_kontrahenci"));
+    public final WanminCollection<Product> products = new WanminCollection<>(
+            Product::fromRecord,
+            () -> executeReadOnly("SELECT * FROM wm_produkty"));
+    public final WanminCollection<ForeignInvoice> foreignInvoices = new WanminCollection<>(
+            (in) -> ForeignInvoice.fromRecord(in, contractors,
+                                              id -> executeReadOnly("SELECT * FROM wm_faktury_obce_pozycje WHERE faktura = %d", id)
+                                                      .stream().map((it) -> ForeignInvoiceItem.fromRecord(it, products)).toList()),
+            () -> executeReadOnly("SELECT * FROM wm_faktury_obce"));
+    public final WanminCollection<StorageItem> storage = new WanminCollection<>(
+            (r) -> StorageItem.fromRecord(r, products, foreignInvoices),
+            () -> executeReadOnly("SELECT * FROM wm_magazyn"));
+    public final WanminCollection<Recipe> recipes = new WanminCollection<>(
+            (r) -> Recipe.fromRecord(r, id -> executeReadOnly("SELECT * FROM WM_PRZEPISY_SKLADNIKI WHERE przepis = %d", id)
+                    .stream().map((it) -> RecipeIngredient.fromRecord(it, products)).toList()),
+            () -> executeReadOnly("SELECT * FROM wm_przepisy"));
+    public final WanminCollection<Customer> customers = new WanminCollection<>(
+            Customer::fromRecord,
+            () -> executeReadOnly("SELECT * FROM wm_klienci"));
+    public final WanminCollection<Invoice> invoices = new WanminCollection<>(
+            (r) -> Invoice.fromRecord(r, customers),
+            () -> executeReadOnly("SELECT * FROM wm_faktury"));
+//    public final WanminCollection<Order> orders = new WanminCollection<>(
+//            (r) -> Order.fromRecord(r, customers, id -> executeReadOnly("SELECT * FROM WM_zamowienia_pozycje WHERE zamowienie = %id", id)
+//                    .stream().map((it) -> OrderItem.fromRecord(it, disz -> executeReadOnly("SELECT * FROM WM_MENU_POZYCJE") .stream().map(MenuItem::fromRecord).toList())).toList()),
+//            () -> executeReadOnly("SELECT * FROM WM_ZAMOWIENIA"));
+    public final WanminCollection<Position> positions = new WanminCollection<>(
+            Position::fromRecord,
+            () -> executeReadOnly("SELECT * FROM wm_stanowiska"));
+    public final WanminCollection<Employee> employees = new WanminCollection<>(
+            (r) -> Employee.fromRecord(r, positions),
+            () -> executeReadOnly("SELECT * FROM wm_pracownicy"));
+    public final WanminCollection<EmploymentContract> employmentContracts = new WanminCollection<>(
+            (r) -> EmploymentContract.fromRecord(r, employees, positions),
+            () -> executeReadOnly("SELECT * FROM wm_umowy"));
+    public final WanminCollection<Menu> menus = new WanminCollection<>(
+            (r) -> Menu.fromRecord(r, id -> executeReadOnly("SELECT * FROM wm_menu_pozycje WHERE menu = %d", id)
+                    .stream().map(MenuItem::fromRecord).toList()),
+            () -> executeReadOnly("SELECT * FROM wm_menu"));
+
     public WanminDBController(@NotNull String username, char[] password) {
         this.username = username;
         this.connection = createConnection("jdbc:oracle:thin", "admlab2.cs.put.poznan.pl", 1521,

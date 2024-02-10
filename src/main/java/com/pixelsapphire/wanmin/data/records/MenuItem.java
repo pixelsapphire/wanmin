@@ -19,7 +19,7 @@ public class MenuItem implements DatabaseRecord {
     }
 
     @Contract("_ -> new")
-    public static @NotNull MenuItem formRecord(@NotNull DictTuple record) {
+    public static @NotNull MenuItem fromRecord(@NotNull DictTuple record) {
         try {
             return new MenuItem(record.getInt("id"), record.getString("nazwa"), record.getFloat("cena"),
                                 record.getString("kategoria"));

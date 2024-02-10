@@ -6,6 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -53,6 +54,8 @@ public class DictTuple {
     public @NotNull Date getDate(@NotNull String key) {
         final String k = key.toLowerCase();
         if (values.get(k) instanceof Date) return (Date) values.get(k);
+        if (values.get(k) instanceof Timestamp)
+            return Date.valueOf(((Timestamp) values.get(k)).toLocalDateTime().toLocalDate());
         throw new IllegalArgumentException("Value for key " + key + " is not a date");
     }
 }
