@@ -1,6 +1,7 @@
 package com.pixelsapphire.wanmin.data;
 
 import com.pixelsapphire.wanmin.util.ObjectUtil;
+import oracle.sql.TIMESTAMP;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -10,6 +11,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class DictTuple {
 
@@ -52,12 +54,24 @@ public class DictTuple {
         throw new IllegalArgumentException("Value for key " + key + " (" + ObjectUtil.getClass(values.get(k)) + ") is not a string");
     }
 
+    public @NotNull Optional<String> getOptionalString(@NotNull String key) {
+        final String k = key.toLowerCase();
+        if (!values.containsKey(k) || values.get(k) == null) return Optional.empty();
+        if (values.get(k) instanceof String) return Optional.of((String) values.get(k));
+        throw new IllegalArgumentException("Value for key " + key + " (" + ObjectUtil.getClass(values.get(k)) + ") is not a string");
+    }
+
     public @NotNull Date getDate(@NotNull String key) {
         final String k = key.toLowerCase();
         if (values.get(k) instanceof Date) return (Date) values.get(k);
         if (values.get(k) instanceof Timestamp)
             return Date.valueOf(((Timestamp) values.get(k)).toLocalDateTime().toLocalDate());
-        throw new IllegalArgumentException("Value for key " + key + " is not a date");
+        if (values.get(k) instanceof TIMESTAMP)
+            try {
+                return Date.valueOf(((TIMESTAMP) values.get(k)).timestampValue().toLocalDateTime().toLocalDate());
+            } catch (SQLException ignored) {
+            }
+        throw new IllegalArgumentException("Value for key " + key + " (" + ObjectUtil.getClass(values.get(k)) + ") is not a date");
     }
 
     @Override
