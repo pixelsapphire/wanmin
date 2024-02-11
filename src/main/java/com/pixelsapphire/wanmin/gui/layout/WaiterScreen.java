@@ -4,12 +4,14 @@ import com.pixelsapphire.wanmin.controller.WanminDBController;
 import com.pixelsapphire.wanmin.data.records.Invoice;
 import com.pixelsapphire.wanmin.data.records.Order;
 import com.pixelsapphire.wanmin.util.ListAdapter;
+import com.pixelsapphire.wanmin.util.StreamAdapter;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class WaiterScreen extends Layout {
 
@@ -62,30 +64,29 @@ public class WaiterScreen extends Layout {
 
         private MainPanel() {
             setLayout(new GridBagLayout());
-
         }
 
-        public void showMyOrders() {
+        public void showMyOrders() { // I WILL HAVE ORDER ~Zhongli
 
             removeAll();
 
-            final List<Order> myOrders = database.orders.getAllWhere(o -> o.getWaiter().getId() == database.employees.getFirstWhere(e -> e.getUsername().equals(database.getUsername())).getId()
-                                                                          && !o.isPaid()).toList();
-            ListAdapter.wrap(myOrders).forEachIndexed((i, o) -> {
-                add(new JTextArea((i + 1) + ". " + o.toString()), Layout.params("gridx=0;gridy=0;fill=?;insets=0,0,0,0", SwingConstants.HORIZONTAL));
-            });
+            final int waiterId = database.getEmployeeId();
+            final Stream<Order> myOrders = database.orders.getAllWhere(o -> o.getWaiter().getId() == waiterId && !o.isPaid());
+            StreamAdapter.wrap(myOrders).forEachIndexed((i, o) -> add(new JLabel("<html>" + (i + 1) + ". " + o.toString().replace("\n", "<br>") + "</html>"),
+                                                                      Layout.params("gridx=0;gridy=?;fill=?;insets=0,0,0,0", i, SwingConstants.HORIZONTAL)));
 
             final JButton addOrder = new JButton("Dodaj zamowienie");
             addOrder.addActionListener(e -> addNewOrder());
-            add(addOrder);
-            SwingUtilities.invokeLater(this::revalidate);
+            add(addOrder, Layout.params("gridx=0;gridy=?;fill=?;insets=0,0,0,0", getComponentCount(), SwingConstants.HORIZONTAL));
+
+            resizeToContent();
         }
 
         public void showInvoices() {
             removeAll();
 
             final List<Invoice> myInvoices = database.invoices.getAllWhere(i -> i.getOrder().getWaiter().getId() == database.employees.getFirstWhere(e -> e.getUsername().equals(database.getUsername())).getId()
-                    && i.getOrder().isPaid()).toList();
+                                                                                && i.getOrder().isPaid()).toList();
             ListAdapter.wrap(myInvoices).forEachIndexed((i, o) -> {
                 String s = "" + (i + 1);
 
@@ -108,7 +109,13 @@ public class WaiterScreen extends Layout {
         }
 
         public void showRecipes() {
-
+            removeAll();
+            database.recipes.getAll().forEach(recipe -> {
+                final var recipePanel = new JPanel();
+                recipePanel.setLayout(new GridBagLayout());
+                recipePanel.add(new JLabel("recipe"), Layout.params("gridx=0;gridy=0;fill=?;insets=0,0,0,0", SwingConstants.HORIZONTAL));
+                add(recipePanel, Layout.params("gridx=0;gridy=0;fill=?;insets=0,0,0,0", SwingConstants.HORIZONTAL));
+            });
         }
 
         private void addNewOrder() {

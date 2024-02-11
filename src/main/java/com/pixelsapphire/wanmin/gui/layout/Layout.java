@@ -56,7 +56,7 @@ public abstract class Layout {
 
     protected abstract void init(@NotNull JFrame window);
 
-    protected void revalidate() {
+    protected void resizeToContent() {
         window.revalidate();
         window.repaint();
         window.pack();
