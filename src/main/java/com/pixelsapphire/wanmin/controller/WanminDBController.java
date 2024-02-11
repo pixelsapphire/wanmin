@@ -24,49 +24,49 @@ public class WanminDBController {
     private final Connection connection;
     public final WanminCollection<Contractor> contractors = new WanminCollection<>(
             Contractor::fromRecord,
-            () -> executeReadOnly("SELECT * FROM wm_kontrahenci"));
+            () -> executeReadOnly("SELECT * FROM sbd147412.wm_kontrahenci"));
     public final WanminCollection<Product> products = new WanminCollection<>(
             Product::fromRecord,
-            () -> executeReadOnly("SELECT * FROM wm_produkty"));
+            () -> executeReadOnly("SELECT * FROM sbd147412.wm_produkty"));
     public final WanminCollection<ForeignInvoice> foreignInvoices = new WanminCollection<>(
             (in) -> ForeignInvoice.fromRecord(in, contractors,
-                                              id -> executeReadOnly("SELECT * FROM wm_faktury_obce_pozycje WHERE faktura = %d", id)
+                                              id -> executeReadOnly("SELECT * FROM sbd147412.wm_faktury_obce_pozycje WHERE faktura = %d", id)
                                                       .stream().map((it) -> ForeignInvoiceItem.fromRecord(it, products)).toList()),
-            () -> executeReadOnly("SELECT * FROM wm_faktury_obce"));
+            () -> executeReadOnly("SELECT * FROM sbd147412.wm_faktury_obce"));
     public final WanminCollection<StorageItem> storage = new WanminCollection<>(
             (r) -> StorageItem.fromRecord(r, products, foreignInvoices),
-            () -> executeReadOnly("SELECT * FROM wm_magazyn"));
+            () -> executeReadOnly("SELECT * FROM sbd147412.wm_magazyn"));
     public final WanminCollection<Recipe> recipes = new WanminCollection<>(
-            (r) -> Recipe.fromRecord(r, id -> executeReadOnly("SELECT * FROM WM_PRZEPISY_SKLADNIKI WHERE przepis = %d", id)
+            (r) -> Recipe.fromRecord(r, id -> executeReadOnly("SELECT * FROM sbd147412.wm_przepisy_skladniki WHERE przepis = %d", id)
                     .stream().map((it) -> RecipeIngredient.fromRecord(it, products)).toList()),
-            () -> executeReadOnly("SELECT * FROM wm_przepisy"));
+            () -> executeReadOnly("SELECT * FROM sbd147412.wm_przepisy"));
     public final WanminCollection<Customer> customers = new WanminCollection<>(
             Customer::fromRecord,
-            () -> executeReadOnly("SELECT * FROM wm_klienci"));
-    private final Provider<MenuItem> menuItemProvider = id -> executeReadOnly("SELECT * FROM wm_menu_pozycje WHERE id = %d", id)
-            .stream().map(MenuItem::fromRecord).findFirst().orElseThrow();
-    private final Provider<List<OrderItem>> orderItemsProvider = id -> executeReadOnly("SELECT * FROM WM_ZAMOWIENIA_POZYCJE WHERE zamowienie = %d", id)
-            .stream().map(r -> OrderItem.fromRecord(r, menuItemProvider)).toList();
+            () -> executeReadOnly("SELECT * FROM sbd147412.wm_klienci"));
     public final WanminCollection<Position> positions = new WanminCollection<>(
             Position::fromRecord,
-            () -> executeReadOnly("SELECT * FROM wm_stanowiska"));
+            () -> executeReadOnly("SELECT * FROM sbd147412.wm_stanowiska"));
     public final WanminCollection<Employee> employees = new WanminCollection<>(
-            (r) -> Employee.fromRecord(r, positions),
-            () -> executeReadOnly("SELECT * FROM wm_pracownicy"));
-    public final WanminCollection<Order> orders = new WanminCollection<>(
-            (r) -> Order.fromRecord(r, employees, customers, orderItemsProvider),
-            () -> executeReadOnly("SELECT * FROM WM_ZAMOWIENIA"));
-    public final WanminCollection<Invoice> invoices = new WanminCollection<>(
-            (r) -> Invoice.fromRecord(r, customers, orders),
-            () -> executeReadOnly("SELECT * FROM wm_faktury"));
+            Employee::fromRecord,
+            () -> executeReadOnly("SELECT * FROM sbd147412.wm_pracownicy"));
     public final WanminCollection<EmploymentContract> employmentContracts = new WanminCollection<>(
             (r) -> EmploymentContract.fromRecord(r, employees, positions),
-            () -> executeReadOnly("SELECT * FROM wm_umowy"));
-    private final Provider<List<MenuItem>> menuItemsProvider = id -> executeReadOnly("SELECT * FROM wm_menu_pozycje WHERE menu = %d", id)
+            () -> executeReadOnly("SELECT * FROM sbd147412.wm_umowy"));
+    private final Provider<MenuItem> menuItemProvider = id -> executeReadOnly("SELECT * FROM sbd147412.wm_menu_pozycje WHERE id = %d", id)
+            .stream().map(MenuItem::fromRecord).findFirst().orElseThrow();
+    private final Provider<List<OrderItem>> orderItemsProvider = id -> executeReadOnly("SELECT * FROM sbd147412.wm_zamowienia_pozycje WHERE zamowienie = %d", id)
+            .stream().map(r -> OrderItem.fromRecord(r, menuItemProvider)).toList();
+    public final WanminCollection<Order> orders = new WanminCollection<>(
+            (r) -> Order.fromRecord(r, employees, customers, orderItemsProvider),
+            () -> executeReadOnly("SELECT * FROM sbd147412.wm_zamowienia"));
+    public final WanminCollection<Invoice> invoices = new WanminCollection<>(
+            (r) -> Invoice.fromRecord(r, customers, orders),
+            () -> executeReadOnly("SELECT * FROM sbd147412.wm_faktury"));
+    private final Provider<List<MenuItem>> menuItemsProvider = id -> executeReadOnly("SELECT * FROM sbd147412.wm_menu_pozycje WHERE menu = %d", id)
             .stream().map(MenuItem::fromRecord).toList();
     public final WanminCollection<Menu> menus = new WanminCollection<>(
             (r) -> Menu.fromRecord(r, menuItemsProvider),
-            () -> executeReadOnly("SELECT * FROM wm_menu"));
+            () -> executeReadOnly("SELECT * FROM sbd147412.wm_menu"));
 
     public WanminDBController(@NotNull String username, char[] password) {
         this.username = username;
@@ -94,6 +94,9 @@ public class WanminDBController {
         return username;
     }
 
+    public int getEmployeeId() {
+        return executeReadOnly("SELECT sbd147412.wm_my_id('%s') AS id FROM dual", username.toUpperCase()).getFirst().getInt("id");
+    }
 
     public boolean isRoleEnabled(@NotNull String role) throws DatabaseException {
         final var firstRecord = executeReadOnly("SELECT sbd147412.wm_rola_przyznana('%s') AS przyznana FROM dual",
