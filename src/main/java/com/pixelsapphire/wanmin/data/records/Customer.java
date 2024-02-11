@@ -21,7 +21,7 @@ public class Customer implements DatabaseRecord {
     @Contract("_ -> new")
     public static @NotNull Customer fromRecord(@NotNull DictTuple record) {
         try {
-            return new Customer(record.getInt("numer_karty"), record.getString("imie"),
+            return new Customer(record.getInt("id"), record.getString("imie"),
                                 record.getString("nazwisko"), record.getInt("punkty"));
         } catch (IllegalArgumentException e) {
             throw new DatabaseException("Failed to create Customer from record" + record, e);

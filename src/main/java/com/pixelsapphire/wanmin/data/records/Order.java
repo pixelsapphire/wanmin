@@ -38,7 +38,7 @@ public class Order implements DatabaseRecord {
         try {
             return new Order(record.getInt("id"), record.getInt("stolik"),
                              employeeProvider.getById(record.getInt("kelner")), record.getDate("czas"),
-                             customerProvider.getById(record.getInt("klient")), record.getBoolean("zaplacone"),
+                             customerProvider.getById(record.getInt("klient")), record.getBoolean("czy_zaplacone"),
                              itemsProvider.getById(record.getInt("id")));
         } catch (IllegalArgumentException e) {
             throw new DatabaseException("Failed to create Order from record" + record, e);
@@ -89,7 +89,7 @@ public class Order implements DatabaseRecord {
             sb.append(" x ");
             float amount = it.getAmount();
             sb.append(amount);
-            sb.append('\t');
+            sb.append(' ');
             sb.append(menuItem.getPrice() * amount);
             sb.append("\n");
         });
