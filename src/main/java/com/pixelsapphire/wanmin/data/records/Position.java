@@ -22,7 +22,7 @@ public class Position implements DatabaseRecord {
         try {
             return new Position(record.getInt("id"), record.getString("nazwa"), record.getFloat("pensja"));
         } catch (IllegalArgumentException e) {
-            throw new DatabaseException("Failed to create Position from record", e);
+            throw new DatabaseException("Failed to create Position from record" + record, e);
         }
     }
 

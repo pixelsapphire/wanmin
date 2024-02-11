@@ -36,7 +36,7 @@ public class ForeignInvoice implements DatabaseRecord {
                                       record.getDate("data"), record.getString("nr_obcy"),
                                       itemsProvider.getById(record.getInt("id")));
         } catch (IllegalArgumentException e) {
-            throw new DatabaseException("Failed to create ForeignInvoice from record", e);
+            throw new DatabaseException("Failed to create ForeignInvoice from record" + record, e);
         }
     }
 

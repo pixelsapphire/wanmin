@@ -38,7 +38,7 @@ public class EmploymentContract implements DatabaseRecord {
                                           positionProvider.getById(record.getInt("stanowisko")),
                                           record.getDate("zawiazana"), record.getDate("zerwana"));
         } catch (IllegalArgumentException e) {
-            throw new DatabaseException("Failed to create EmploymentContract from record", e);
+            throw new DatabaseException("Failed to create EmploymentContract from record" + record, e);
         }
     }
 

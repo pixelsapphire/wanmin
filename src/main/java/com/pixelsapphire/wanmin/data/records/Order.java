@@ -41,7 +41,7 @@ public class Order implements DatabaseRecord {
                              customerProvider.getById(record.getInt("klient")), record.getBoolean("zaplacone"),
                              itemsProvider.getById(record.getInt("id")));
         } catch (IllegalArgumentException e) {
-            throw new DatabaseException("Failed to create Order from record", e);
+            throw new DatabaseException("Failed to create Order from record" + record, e);
         }
     }
 

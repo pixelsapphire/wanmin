@@ -30,7 +30,7 @@ public class ForeignInvoiceItem implements DatabaseRecord {
             return new ForeignInvoiceItem(record.getInt("id"), productProvider.getById(record.getInt("produkt")),
                                           record.getFloat("cena"), record.getFloat("ilosc"), record.getDate("data_waznosci"));
         } catch (IllegalArgumentException e) {
-            throw new DatabaseException("Failed to create ForeignInvoiceItem from record", e);
+            throw new DatabaseException("Failed to create ForeignInvoiceItem from record" + record, e);
         }
     }
 

@@ -29,7 +29,7 @@ public class Recipe implements DatabaseRecord {
             return new Recipe(record.getInt("id"), record.getString("opis"),
                               ingredientsProvider.getById(record.getInt("id")));
         } catch (IllegalArgumentException e) {
-            throw new DatabaseException("Failed to create Recipe from record", e);
+            throw new DatabaseException("Failed to create Recipe from record" + record, e);
         }
     }
 

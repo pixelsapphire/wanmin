@@ -24,7 +24,7 @@ public class RecipeIngredient implements DatabaseRecord {
             return new RecipeIngredient(record.getInt("id"), productProvider.getById(record.getInt("produkt")),
                                         record.getFloat("ilosc"));
         } catch (IllegalArgumentException e) {
-            throw new DatabaseException("Failed to create RecipeIngredient from record", e);
+            throw new DatabaseException("Failed to create RecipeIngredient from record" + record, e);
         }
     }
 

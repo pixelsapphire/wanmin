@@ -22,7 +22,7 @@ public class Product implements DatabaseRecord {
         try {
             return new Product(record.getInt("id"), record.getString("nazwa"), record.getString("jednostka"));
         } catch (IllegalArgumentException e) {
-            throw new DatabaseException("Failed to create Product from record", e);
+            throw new DatabaseException("Failed to create Product from record" + record, e);
         }
     }
 

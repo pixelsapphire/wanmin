@@ -34,7 +34,7 @@ public class Invoice implements DatabaseRecord {
             return new Invoice(record.getInt("id"), customerProvider.getById(record.getInt("klient")), orderProvider.getById(record.getInt("zamowienie")),
                                 record.getDate("data"), record.getString("nr_faktury"), record.getFloat("znizka"));
         } catch (IllegalArgumentException e) {
-            throw new DatabaseException("Failed to create Invoice from record", e);
+            throw new DatabaseException("Failed to create Invoice from record" + record, e);
         }
     }
 

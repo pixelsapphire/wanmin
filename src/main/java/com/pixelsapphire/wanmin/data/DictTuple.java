@@ -1,5 +1,6 @@
 package com.pixelsapphire.wanmin.data;
 
+import com.pixelsapphire.wanmin.util.ObjectUtil;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -29,26 +30,26 @@ public class DictTuple {
     public int getInt(@NotNull String key) {
         final String k = key.toLowerCase();
         if (values.get(k) instanceof Number) return ((Number) values.get(k)).intValue();
-        throw new IllegalArgumentException("Value for key " + key + " is not an integer");
+        throw new IllegalArgumentException("Value for key " + key + " (" + ObjectUtil.getClass(values.get(k)) + ") is not an integer");
     }
 
     public float getFloat(@NotNull String key) {
         final String k = key.toLowerCase();
         if (values.get(k) instanceof Number) return ((Number) values.get(k)).floatValue();
-        throw new IllegalArgumentException("Value for key " + key + " is not a float");
+        throw new IllegalArgumentException("Value for key " + key + " (" + ObjectUtil.getClass(values.get(k)) + ") is not a float");
     }
 
     public boolean getBoolean(@NotNull String key) {
         final String k = key.toLowerCase();
         if (values.get(k) instanceof Number) return ((Number) values.get(k)).intValue() != 0;
         if (values.get(k) instanceof Boolean) return ((Boolean) values.get(k));
-        throw new IllegalArgumentException("Value for key " + key + " is not a boolean");
+        throw new IllegalArgumentException("Value for key " + key + " (" + ObjectUtil.getClass(values.get(k)) + ") is not a boolean");
     }
 
     public @NotNull String getString(@NotNull String key) {
         final String k = key.toLowerCase();
         if (values.get(k) instanceof String) return (String) values.get(k);
-        throw new IllegalArgumentException("Value for key " + key + " is not a string");
+        throw new IllegalArgumentException("Value for key " + key + " (" + ObjectUtil.getClass(values.get(k)) + ") is not a string");
     }
 
     public @NotNull Date getDate(@NotNull String key) {
@@ -57,5 +58,13 @@ public class DictTuple {
         if (values.get(k) instanceof Timestamp)
             return Date.valueOf(((Timestamp) values.get(k)).toLocalDateTime().toLocalDate());
         throw new IllegalArgumentException("Value for key " + key + " is not a date");
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("{");
+        for (final var entry : values.entrySet()) sb.append(entry.getKey()).append(": ").append(entry.getValue()).append(", ");
+        sb.setLength(sb.length() - 2);
+        return sb.append("}").toString();
     }
 }

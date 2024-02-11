@@ -29,7 +29,7 @@ public class Menu implements DatabaseRecord {
             return new Menu(record.getInt("id"), record.getString("name"),
                             itemsProvider.getById(record.getInt("id")));
         } catch (IllegalArgumentException e) {
-            throw new DatabaseException("Failed to create Menu from record", e);
+            throw new DatabaseException("Failed to create Menu from record" + record, e);
         }
     }
 

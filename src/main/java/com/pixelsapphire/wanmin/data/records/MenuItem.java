@@ -24,7 +24,7 @@ public class MenuItem implements DatabaseRecord {
             return new MenuItem(record.getInt("id"), record.getString("nazwa"), record.getFloat("cena"),
                                 record.getString("kategoria"));
         } catch (IllegalArgumentException e) {
-            throw new DatabaseException("Failed to create MenuPosition from record", e);
+            throw new DatabaseException("Failed to create MenuPosition from record" + record, e);
         }
     }
 

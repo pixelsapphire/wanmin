@@ -24,7 +24,7 @@ public class Customer implements DatabaseRecord {
             return new Customer(record.getInt("numer_karty"), record.getString("imie"),
                                 record.getString("nazwisko"), record.getInt("punkty"));
         } catch (IllegalArgumentException e) {
-            throw new DatabaseException("Failed to create Customer from record", e);
+            throw new DatabaseException("Failed to create Customer from record" + record, e);
         }
     }
 
@@ -43,5 +43,11 @@ public class Customer implements DatabaseRecord {
 
     public int getPoints() {
         return points;
+    }
+
+    @Override
+    public String toString() {
+        if (points == -1) return "klient niezarejestrowany";
+        return firstName + " " + lastName + " [#" + cardNumber + "]";
     }
 }

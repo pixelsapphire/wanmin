@@ -26,7 +26,7 @@ public class Contractor implements DatabaseRecord {
             return new Contractor(record.getInt("id"), record.getString("nazwa"), record.getString("adres"),
                                   record.getString("telefon"), record.getString("email"), record.getString("NIP"));
         } catch (IllegalArgumentException e) {
-            throw new DatabaseException("Failed to create Contractor from record", e);
+            throw new DatabaseException("Failed to create Contractor from record" + record, e);
         }
     }
 

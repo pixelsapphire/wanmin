@@ -23,7 +23,7 @@ public class Employee implements DatabaseRecord {
         try {
             return new Employee(record.getInt("id"), record.getString("imie"), record.getString("nazwisko"), record.getString("username"));
         } catch (IllegalArgumentException e) {
-            throw new DatabaseException("Failed to create Employee from record", e);
+            throw new DatabaseException("Failed to create Employee from record " + record, e);
         }
     }
 

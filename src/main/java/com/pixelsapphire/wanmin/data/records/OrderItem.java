@@ -23,7 +23,7 @@ public class OrderItem implements DatabaseRecord {
         try {
             return new OrderItem(record.getInt("id"), record.getFloat("amount"), menuItemProvider.getById(record.getInt("pozycja")));
         } catch (IllegalArgumentException e) {
-            throw new DatabaseException("Failed to create OrderItem from record", e);
+            throw new DatabaseException("Failed to create OrderItem from record" + record, e);
         }
     }
 

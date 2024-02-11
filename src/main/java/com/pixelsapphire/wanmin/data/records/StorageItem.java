@@ -32,7 +32,7 @@ public class StorageItem implements DatabaseRecord {
             return new StorageItem(record.getInt("is"), productProvider.getById(record.getInt("produkt")), record.getFloat("ilosc"),
                                    record.getDate("data_waznosci"), invoiceProvider.getById(record.getInt("faktura")));
         } catch (IllegalArgumentException e) {
-            throw new DatabaseException("Failed to create StorageItem from record", e);
+            throw new DatabaseException("Failed to create StorageItem from record" + record, e);
         }
     }
 
