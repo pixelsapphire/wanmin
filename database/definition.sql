@@ -73,6 +73,10 @@ INSERT INTO wm_pracownicy (imie, nazwisko)
 VALUES ('Ewa', 'Pawlak');
 INSERT INTO wm_pracownicy (imie, nazwisko, login)
 VALUES ('Stanisław', 'Puzio', 'SBD151886');
+INSERT INTO wm_pracownicy (imie, nazwisko, login)
+VALUES ('Alex', 'Pawelski', 'SBD147412');
+SELECT *
+FROM wm_pracownicy;
 
 CREATE TABLE wm_umowy
 (
@@ -522,6 +526,9 @@ CREATE TABLE wm_klienci
     CONSTRAINT pk_klienci_numer_karty PRIMARY KEY (id)
 );
 
+INSERT INTO wm_klienci (imie, nazwisko, punkty)
+VALUES ('Gall', 'Anonim', -1);
+
 CREATE TABLE wm_zamowienia
 (
     id            NUMBER(5) GENERATED ALWAYS AS IDENTITY,
@@ -535,6 +542,53 @@ CREATE TABLE wm_zamowienia
     CONSTRAINT fk_zamowienia_klienci FOREIGN KEY (klient) REFERENCES wm_klienci (id),
     CONSTRAINT chk_zamowienia_czy_zaplacone CHECK (czy_zaplacone IN (0, 1))
 );
+
+CREATE OR REPLACE TRIGGER wm_trig_zamowienia_czy_zaplacone
+    BEFORE INSERT OR UPDATE OF czy_zaplacone
+    ON wm_zamowienia
+BEGIN
+    IF (SELECT COUNT(czy_zaplacone)
+        FROM wm_zamowienia
+        WHERE czy_zaplacone = 0
+          AND stolik = :NEW.stolik
+        GROUP BY stolik) > 0 THEN
+        RAISE_APPLICATION_ERROR(-20001, 'Stolik jest już zajęty');
+    END IF;
+END;
+
+INSERT INTO wm_zamowienia (kelner, stolik, klient)
+VALUES ((SELECT id FROM wm_pracownicy WHERE login = 'SBD147412'), 1,
+        (SELECT id FROM wm_klienci WHERE punkty = -1));
+INSERT INTO wm_zamowienia_pozycje (zamowienie, pozycja, ilosc)
+VALUES ((SELECT id FROM wm_zamowienia WHERE stolik = 1 AND czy_zaplacone = 0),
+        (SELECT id FROM wm_menu_pozycje WHERE nazwa = 'Pad Thai z Kurczakiem'), 1);
+INSERT INTO wm_zamowienia_pozycje (zamowienie, pozycja, ilosc)
+VALUES ((SELECT id FROM wm_zamowienia WHERE stolik = 1 AND czy_zaplacone = 0),
+        (SELECT id FROM wm_menu_pozycje WHERE nazwa = 'Ramen z Wołowiną'), 1);
+
+INSERT INTO wm_zamowienia (kelner, stolik, klient)
+VALUES ((SELECT id FROM wm_pracownicy WHERE login = 'SBD147412'), 2,
+        (SELECT id FROM wm_klienci WHERE punkty = -1));
+INSERT INTO wm_zamowienia_pozycje (zamowienie, pozycja, ilosc)
+VALUES ((SELECT id FROM wm_zamowienia WHERE stolik = 2 AND czy_zaplacone = 0),
+        (SELECT id FROM wm_menu_pozycje WHERE nazwa = 'Ramen z Wołowiną'), 2);
+
+INSERT INTO wm_zamowienia (kelner, stolik, klient)
+VALUES ((SELECT id FROM wm_pracownicy WHERE login = 'SBD151886'), 3,
+        (SELECT id FROM wm_klienci WHERE punkty = -1));
+INSERT INTO wm_zamowienia_pozycje (zamowienie, pozycja, ilosc)
+VALUES ((SELECT id FROM wm_zamowienia WHERE stolik = 3 AND czy_zaplacone = 0),
+        (SELECT id FROM wm_menu_pozycje WHERE nazwa = 'Pad Thai z Kurczakiem'), 3);
+
+INSERT INTO wm_zamowienia (kelner, stolik, klient)
+VALUES ((SELECT id FROM wm_pracownicy WHERE login = 'SBD151886'), 4,
+        (SELECT id FROM wm_klienci WHERE punkty = -1));
+INSERT INTO wm_zamowienia_pozycje (zamowienie, pozycja, ilosc)
+VALUES ((SELECT id FROM wm_zamowienia WHERE stolik = 4 AND czy_zaplacone = 0),
+        (SELECT id FROM wm_menu_pozycje WHERE nazwa = 'Ramen z Wołowiną'), 1);
+INSERT INTO wm_zamowienia_pozycje (zamowienie, pozycja, ilosc)
+VALUES ((SELECT id FROM wm_zamowienia WHERE stolik = 4 AND czy_zaplacone = 0),
+        (SELECT id FROM wm_menu_pozycje WHERE nazwa = 'Pad Thai z Kurczakiem'), 2);
 
 CREATE TABLE wm_zamowienia_pozycje
 (
@@ -571,8 +625,17 @@ BEGIN
 END;
 GRANT EXECUTE ON wm_rola_przyznana TO PUBLIC;
 
-SELECT wm_rola_przyznana('WM_ADMINISTRATOR')
-FROM dual;
+CREATE OR REPLACE FUNCTION wm_my_id(username IN VARCHAR2) RETURN NUMBER IS
+    v_id NUMBER;
+BEGIN
+    SELECT id
+    INTO v_id
+    FROM wm_pracownicy
+    WHERE login = username;
+    RETURN v_id;
+END;
+GRANT EXECUTE ON wm_my_id TO PUBLIC;
+
 
 CREATE ROLE wm_kucharz;
 GRANT SELECT ON wm_przepisy TO wm_kucharz;
@@ -589,6 +652,7 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON wm_faktury TO wm_kasjer;
 CREATE ROLE wm_kelner;
 GRANT wm_kucharz TO wm_kelner;
 GRANT wm_kasjer TO wm_kelner;
+GRANT SELECT ON wm_pracownicy TO wm_kelner;
 
 CREATE ROLE wm_szef_kuchni;
 GRANT wm_kucharz TO wm_szef_kuchni;
