@@ -13,12 +13,12 @@ import java.util.List;
 public class Recipe implements DatabaseRecord {
 
     private final int id;
-    private final @NotNull String description;
+    private final @NotNull String name;
     private final List<RecipeIngredient> recipeIngredients;
 
-    private Recipe(int id, @NotNull String description, @NotNull List<RecipeIngredient> recipeIngredients) {
+    private Recipe(int id, @NotNull String name, @NotNull List<RecipeIngredient> recipeIngredients) {
         this.id = id;
-        this.description = description;
+        this.name = name;
         this.recipeIngredients = new ArrayList<>(recipeIngredients);
     }
 
@@ -26,15 +26,15 @@ public class Recipe implements DatabaseRecord {
     public static @NotNull Recipe fromRecord(@NotNull DictTuple record,
                                              @NotNull Provider<List<RecipeIngredient>> ingredientsProvider) {
         try {
-            return new Recipe(record.getInt("id"), record.getString("opis"),
+            return new Recipe(record.getInt("id"), record.getString("nazwa"),
                               ingredientsProvider.getById(record.getInt("id")));
         } catch (IllegalArgumentException e) {
             throw new DatabaseException("Failed to create Recipe from record" + record, e);
         }
     }
 
-    public @NotNull String getDescription() {
-        return description;
+    public @NotNull String getName() {
+        return name;
     }
 
     public @NotNull List<RecipeIngredient> getRecipeIngredients() {
