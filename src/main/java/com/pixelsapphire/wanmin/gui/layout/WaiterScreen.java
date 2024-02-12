@@ -44,11 +44,6 @@ public class WaiterScreen extends Layout {
             myOrders.addActionListener(e -> mainPanel.showMyOrders());
             add(myOrders, Layout.params("gridy=?;fill=?;insets=0,24,8,24", y++, fill));
 
-            // tworzy się przy opłaceniu zmówienia
-//            final JButton invoices = new JButton("Faktury");
-//            invoices.addActionListener(e -> mainPanel.showInvoices());
-//            add(invoices, Layout.params("gridy=?;fill=?;insets=0,24,8,24", y++, fill));
-
             final JButton customers = new JButton("Klienci");
             customers.addActionListener(e -> mainPanel.showCustomers());
             add(customers, Layout.params("gridy=?;fill=?;insets=0,24,8,24", y++, fill));
@@ -56,11 +51,6 @@ public class WaiterScreen extends Layout {
             final JButton menu = new JButton("Menu");
             menu.addActionListener(e -> mainPanel.showMenu());
             add(menu, Layout.params("gridy=?;fill=?;insets=0,24,8,24", y++, fill));
-
-            // przycisk do kazdego dania pokaz przepis
-//            final JButton recipes = new JButton("Przepisy");
-//            recipes.addActionListener(e -> mainPanel.showRecipes());
-//            add(recipes, Layout.params("gridy=?;fill=?;insets=0,24,8,24", y, fill));
         }
     }
 
@@ -76,6 +66,10 @@ public class WaiterScreen extends Layout {
 
             final int waiterId = database.getEmployeeId();
             final Stream<Order> myOrders = database.orders.getAllWhere(o -> o.getWaiter().getId() == waiterId && !o.isPaid());
+
+            //TODO selecty (lista rozwijana) i przyciski dodające nowe potrawy - po jednym dla każdego zamówienia. + przycisk zatwierdź/dodaj potrawę łacznie z wpisaniem tej pozycji do bazy danych
+
+            //TODO do każdego zamówienia przycisk zakończ i płać - ustawiający stan zamowienia w bazie danych ispaid na 1 i tworzący fakturę do tego zamówienia. Sprawdź czy dać zniżkę.
             StreamAdapter.wrap(myOrders).forEachIndexed((i, o) -> add(new JLabel("<html> Zamowienie #" + o.getId() + ". " + o.toString().replace("\n", "<br>") + "</html>"),
                                                                       Layout.params("gridx=0;gridy=?;fill=?;insets=8,0,8,8", i, SwingConstants.HORIZONTAL)));
 
@@ -85,17 +79,6 @@ public class WaiterScreen extends Layout {
 
             resizeToContent();
         }
-
-//        public void showInvoices() {
-//            removeAll();
-//
-//            final int waiterId = database.getEmployeeId();
-//            final Stream<Invoice> myInvoices = database.invoices.getAllWhere(in -> in.getOrder().getWaiter().getId() == waiterId && !in.getOrder().isPaid());
-//            StreamAdapter.wrap(myInvoices).forEachIndexed((i, inv) -> add(new JLabel("<html>" + (i + 1) + ". " + inv.toString().replace("\n", "<br>") + "</html>"),
-//                    Layout.params("gridx=0;gridy=?;fill=?;insets=0,0,0,0", i, SwingConstants.HORIZONTAL)));
-//
-//            resizeToContent();
-//        }
 
         public void showCustomers() {
 
@@ -111,18 +94,8 @@ public class WaiterScreen extends Layout {
             resizeToContent();
         }
 
-//        public void showRecipes() {
-//            removeAll();
-//            database.recipes.getAll().forEach(recipe -> {
-//                final var recipePanel = new JPanel();
-//                recipePanel.setLayout(new GridBagLayout());
-//                recipePanel.add(new JLabel("recipe"), Layout.params("gridx=0;gridy=0;fill=?;insets=0,0,0,0", SwingConstants.HORIZONTAL));
-//                add(recipePanel, Layout.params("gridx=0;gridy=0;fill=?;insets=0,0,0,0", SwingConstants.HORIZONTAL));
-//            });
-//        }
-
         private void addNewOrder() {
-            //TODO: dodanie nowego zamowienia.
+            //TODO: dodanie nowego (pustego) zamowienia do bazy danych. i określenie czy klient jest stałym klientem.
             final var newOrderWindow = new JFrame();
 
             newOrderWindow.setLayout(new GridBagLayout());

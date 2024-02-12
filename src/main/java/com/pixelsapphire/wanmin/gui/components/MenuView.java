@@ -11,7 +11,6 @@ import java.awt.*;
 import java.util.concurrent.Callable;
 import java.util.function.Supplier;
 
-// TODO okno menu z lista potraw i dla kazdej potrawy przycisk z nowym oknem wyswietlajacym przepis
 public class MenuView extends JFrame {
 
     private final @NotNull Menu menu;
