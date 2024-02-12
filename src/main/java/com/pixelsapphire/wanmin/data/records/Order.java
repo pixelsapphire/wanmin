@@ -77,7 +77,9 @@ public class Order implements DatabaseRecord {
     @Override
     public String toString() {
         final var sb = new StringBuilder();
+        final float[] sum = {0};
 
+        sb.append(" Stolik ");
         sb.append(table).append(' ');
         sb.append(customer).append(' ');
         sb.append('\n');
@@ -85,14 +87,19 @@ public class Order implements DatabaseRecord {
         items.forEach(it -> {
             sb.append('\t');
             final var menuItem = it.getMenuItem();
-            sb.append(menuItem.getName());
-            sb.append(" x ");
+
+
             float amount = it.getAmount();
-            sb.append(amount);
+            float charge = menuItem.getPrice() * amount;
+            sum[0] += charge;
+            sb.append((int)amount);
+            sb.append(" x ");
+            sb.append(menuItem.getName());
             sb.append(' ');
-            sb.append(menuItem.getPrice() * amount);
+            sb.append(charge);
             sb.append("\n");
         });
+        sb.append("Suma: ").append(sum[0]).append("\n\n");
 
         return sb.toString();
     }
