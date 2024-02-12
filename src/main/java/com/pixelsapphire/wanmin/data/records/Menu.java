@@ -26,7 +26,7 @@ public class Menu implements DatabaseRecord {
     public static @NotNull Menu fromRecord(@NotNull DictTuple record,
                                            @NotNull Provider<List<MenuItem>> itemsProvider) {
         try {
-            return new Menu(record.getInt("id"), record.getString("name"),
+            return new Menu(record.getInt("id"), record.getString("nazwa"),
                             itemsProvider.getById(record.getInt("id")));
         } catch (IllegalArgumentException e) {
             throw new DatabaseException("Failed to create Menu from record" + record, e);

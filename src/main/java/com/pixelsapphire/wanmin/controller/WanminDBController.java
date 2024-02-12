@@ -53,7 +53,7 @@ public class WanminDBController {
             (r) -> EmploymentContract.fromRecord(r, employees, positions),
             () -> executeReadOnly("SELECT * FROM sbd147412.wm_umowy"));
     private final Provider<MenuItem> menuItemProvider = id -> executeReadOnly("SELECT * FROM sbd147412.wm_menu_pozycje WHERE id = %d", id)
-            .stream().map(MenuItem::fromRecord).findFirst().orElseThrow();
+            .stream().map((r) -> MenuItem.fromRecord(r,recipes)).findFirst().orElseThrow();
     private final Provider<List<OrderItem>> orderItemsProvider = id -> executeReadOnly("SELECT * FROM sbd147412.wm_zamowienia_pozycje WHERE zamowienie = %d", id)
             .stream().map(r -> OrderItem.fromRecord(r, menuItemProvider)).toList();
     public final WanminCollection<Order> orders = new WanminCollection<>(
@@ -63,7 +63,7 @@ public class WanminDBController {
             (r) -> Invoice.fromRecord(r, customers, orders),
             () -> executeReadOnly("SELECT * FROM sbd147412.wm_faktury"));
     private final Provider<List<MenuItem>> menuItemsProvider = id -> executeReadOnly("SELECT * FROM sbd147412.wm_menu_pozycje WHERE menu = %d", id)
-            .stream().map(MenuItem::fromRecord).toList();
+            .stream().map((r) -> MenuItem.fromRecord(r,recipes)).toList();
     public final WanminCollection<Menu> menus = new WanminCollection<>(
             (r) -> Menu.fromRecord(r, menuItemsProvider),
             () -> executeReadOnly("SELECT * FROM sbd147412.wm_menu"));
