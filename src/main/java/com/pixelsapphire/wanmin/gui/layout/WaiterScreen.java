@@ -2,7 +2,9 @@ package com.pixelsapphire.wanmin.gui.layout;
 
 import com.pixelsapphire.wanmin.controller.WanminDBController;
 import com.pixelsapphire.wanmin.data.records.Invoice;
+import com.pixelsapphire.wanmin.data.records.Menu;
 import com.pixelsapphire.wanmin.data.records.Order;
+import com.pixelsapphire.wanmin.gui.components.MenuView;
 import com.pixelsapphire.wanmin.util.ListAdapter;
 import com.pixelsapphire.wanmin.util.StreamAdapter;
 import org.jetbrains.annotations.NotNull;
@@ -42,9 +44,10 @@ public class WaiterScreen extends Layout {
             myOrders.addActionListener(e -> mainPanel.showMyOrders());
             add(myOrders, Layout.params("gridy=?;fill=?;insets=0,24,8,24", y++, fill));
 
-            final JButton invoices = new JButton("Faktury");
-            invoices.addActionListener(e -> mainPanel.showInvoices());
-            add(invoices, Layout.params("gridy=?;fill=?;insets=0,24,8,24", y++, fill));
+            // tworzy się przy opłaceniu zmówienia
+//            final JButton invoices = new JButton("Faktury");
+//            invoices.addActionListener(e -> mainPanel.showInvoices());
+//            add(invoices, Layout.params("gridy=?;fill=?;insets=0,24,8,24", y++, fill));
 
             final JButton customers = new JButton("Klienci");
             customers.addActionListener(e -> mainPanel.showCustomers());
@@ -54,9 +57,10 @@ public class WaiterScreen extends Layout {
             menu.addActionListener(e -> mainPanel.showMenu());
             add(menu, Layout.params("gridy=?;fill=?;insets=0,24,8,24", y++, fill));
 
-            final JButton recipes = new JButton("Przepisy");
-            recipes.addActionListener(e -> mainPanel.showRecipes());
-            add(recipes, Layout.params("gridy=?;fill=?;insets=0,24,8,24", y, fill));
+            // przycisk do kazdego dania pokaz przepis
+//            final JButton recipes = new JButton("Przepisy");
+//            recipes.addActionListener(e -> mainPanel.showRecipes());
+//            add(recipes, Layout.params("gridy=?;fill=?;insets=0,24,8,24", y, fill));
         }
     }
 
@@ -72,27 +76,26 @@ public class WaiterScreen extends Layout {
 
             final int waiterId = database.getEmployeeId();
             final Stream<Order> myOrders = database.orders.getAllWhere(o -> o.getWaiter().getId() == waiterId && !o.isPaid());
-            StreamAdapter.wrap(myOrders).forEachIndexed((i, o) -> add(new JLabel("<html>" + (i + 1) + ". " + o.toString().replace("\n", "<br>") + "</html>"),
-                                                                      Layout.params("gridx=0;gridy=?;fill=?;insets=0,0,0,0", i, SwingConstants.HORIZONTAL)));
+            StreamAdapter.wrap(myOrders).forEachIndexed((i, o) -> add(new JLabel("<html> Zamowienie #" + o.getId() + ". " + o.toString().replace("\n", "<br>") + "</html>"),
+                                                                      Layout.params("gridx=0;gridy=?;fill=?;insets=8,0,8,8", i, SwingConstants.HORIZONTAL)));
 
             final JButton addOrder = new JButton("Dodaj zamowienie");
             addOrder.addActionListener(e -> addNewOrder());
-            add(addOrder, Layout.params("gridx=0;gridy=?;fill=?;insets=0,0,0,0", getComponentCount(), SwingConstants.HORIZONTAL));
+            add(addOrder, Layout.params("gridx=0;gridy=?;fill=?;insets=0,0,8,0", getComponentCount(), SwingConstants.HORIZONTAL));
 
             resizeToContent();
         }
 
-        public void showInvoices() {
-            removeAll();
-
-            final List<Invoice> myInvoices = database.invoices.getAllWhere(i -> i.getOrder().getWaiter().getId() == database.employees.getFirstWhere(e -> e.getUsername().equals(database.getUsername())).getId()
-                                                                                && i.getOrder().isPaid()).toList();
-            ListAdapter.wrap(myInvoices).forEachIndexed((i, o) -> {
-                String s = "" + (i + 1);
-
-                add(new JTextArea(s + o.toString()), Layout.params("gridx=0;gridy=0;fill=?;insets=0,0,0,0", SwingConstants.HORIZONTAL));
-            });
-        }
+//        public void showInvoices() {
+//            removeAll();
+//
+//            final int waiterId = database.getEmployeeId();
+//            final Stream<Invoice> myInvoices = database.invoices.getAllWhere(in -> in.getOrder().getWaiter().getId() == waiterId && !in.getOrder().isPaid());
+//            StreamAdapter.wrap(myInvoices).forEachIndexed((i, inv) -> add(new JLabel("<html>" + (i + 1) + ". " + inv.toString().replace("\n", "<br>") + "</html>"),
+//                    Layout.params("gridx=0;gridy=?;fill=?;insets=0,0,0,0", i, SwingConstants.HORIZONTAL)));
+//
+//            resizeToContent();
+//        }
 
         public void showCustomers() {
 
@@ -100,26 +103,41 @@ public class WaiterScreen extends Layout {
 
         public void showMenu() {
             removeAll();
-            database.menus.getAll().forEach(menu -> {
-                final var menuPanel = new JPanel();
-                menuPanel.setLayout(new GridBagLayout());
-                menuPanel.add(new JLabel(menu.getName()), Layout.params("gridx=0;gridy=0;fill=?;insets=0,0,0,0", SwingConstants.HORIZONTAL));
-                add(menuPanel, Layout.params("gridx=0;gridy=0;fill=?;insets=0,0,0,0", SwingConstants.HORIZONTAL));
+            StreamAdapter.wrap(database.menus.getAll()).forEachIndexed((i, m) -> {
+                final var button = new JButton(m.getName());
+                button.addActionListener(e -> new MenuView(m));
+                add(button, Layout.params("gridx=0;gridy=?;fill=?;insets=0,0,0,0", i, SwingConstants.HORIZONTAL));
             });
+            resizeToContent();
         }
 
-        public void showRecipes() {
-            removeAll();
-            database.recipes.getAll().forEach(recipe -> {
-                final var recipePanel = new JPanel();
-                recipePanel.setLayout(new GridBagLayout());
-                recipePanel.add(new JLabel("recipe"), Layout.params("gridx=0;gridy=0;fill=?;insets=0,0,0,0", SwingConstants.HORIZONTAL));
-                add(recipePanel, Layout.params("gridx=0;gridy=0;fill=?;insets=0,0,0,0", SwingConstants.HORIZONTAL));
-            });
-        }
+//        public void showRecipes() {
+//            removeAll();
+//            database.recipes.getAll().forEach(recipe -> {
+//                final var recipePanel = new JPanel();
+//                recipePanel.setLayout(new GridBagLayout());
+//                recipePanel.add(new JLabel("recipe"), Layout.params("gridx=0;gridy=0;fill=?;insets=0,0,0,0", SwingConstants.HORIZONTAL));
+//                add(recipePanel, Layout.params("gridx=0;gridy=0;fill=?;insets=0,0,0,0", SwingConstants.HORIZONTAL));
+//            });
+//        }
 
         private void addNewOrder() {
-            System.out.println(" obslugiwanie add order.");
+            //TODO: dodanie nowego zamowienia.
+            final var newOrderWindow = new JFrame();
+
+            newOrderWindow.setLayout(new GridBagLayout());
+            var label = new JLabel("<html>" + "sb" + "</html>");
+            newOrderWindow.add((label), Layout.params("insets=4,4,4,4"));
+
+
+            newOrderWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            newOrderWindow.setLocationRelativeTo(null);
+            newOrderWindow.setResizable(false);
+            newOrderWindow.setVisible(true);
+            newOrderWindow.revalidate();
+            newOrderWindow.repaint();
+            newOrderWindow.pack();
         }
+
     }
 }
