@@ -3,10 +3,10 @@ package com.pixelsapphire.wanmin.data.records;
 import com.pixelsapphire.wanmin.DatabaseException;
 import com.pixelsapphire.wanmin.controller.Provider;
 import com.pixelsapphire.wanmin.data.DictTuple;
+import com.pixelsapphire.wanmin.data.DictTuple.DictTupleBuilder;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-import java.sql.SQLException;
 import java.util.Date;
 
 public class Invoice implements DatabaseRecord {
@@ -32,15 +32,10 @@ public class Invoice implements DatabaseRecord {
                                               @NotNull Provider<Order> orderProvider) {
         try {
             return new Invoice(record.getInt("id"), customerProvider.getById(record.getInt("klient")), orderProvider.getById(record.getInt("zamowienie")),
-                                record.getDate("data"), record.getString("nr_faktury"), record.getFloat("znizka"));
+                               record.getDate("data"), record.getString("nr_faktury"), record.getFloat("znizka"));
         } catch (IllegalArgumentException e) {
             throw new DatabaseException("Failed to create Invoice from record" + record, e);
         }
-    }
-
-    @Override
-    public int getId() {
-        return id;
     }
 
     public @NotNull Customer getCustomer() {
@@ -61,5 +56,21 @@ public class Invoice implements DatabaseRecord {
 
     public Order getOrder() {
         return order;
+    }
+
+    @Override
+    public int getId() {
+        return id;
+    }
+
+    @Override
+    public @NotNull DictTuple toRecord() {
+        return new DictTupleBuilder().with("id", id)
+                                     .with("klient", customer.getId())
+                                     .with("zamowienie", order.getId())
+                                     .with("data", date)
+                                     .with("nr_faktury", number)
+                                     .with("znizka", discount)
+                                     .build();
     }
 }

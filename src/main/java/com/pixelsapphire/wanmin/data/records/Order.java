@@ -3,6 +3,7 @@ package com.pixelsapphire.wanmin.data.records;
 import com.pixelsapphire.wanmin.DatabaseException;
 import com.pixelsapphire.wanmin.controller.Provider;
 import com.pixelsapphire.wanmin.data.DictTuple;
+import com.pixelsapphire.wanmin.data.DictTuple.DictTupleBuilder;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -75,6 +76,18 @@ public class Order implements DatabaseRecord {
     }
 
     @Override
+    public @NotNull DictTuple toRecord() {
+        return new DictTupleBuilder().with("id", id)
+                                     .with("stolik", table)
+                                     .with("kelner", waiter.getId())
+                                     .with("czas", time)
+                                     .with("klient", customer.getId())
+                                     .with("czy_zaplacone", paid)
+                                     .with("pozycje", items)
+                                     .build();
+    }
+
+    @Override
     public String toString() {
         final var sb = new StringBuilder();
         final float[] sum = {0};
@@ -88,11 +101,10 @@ public class Order implements DatabaseRecord {
             sb.append('\t');
             final var menuItem = it.getMenuItem();
 
-
             float amount = it.getAmount();
             float charge = menuItem.getPrice() * amount;
             sum[0] += charge;
-            sb.append((int)amount);
+            sb.append((int) amount);
             sb.append(" x ");
             sb.append(menuItem.getName());
             sb.append(' ');

@@ -2,6 +2,7 @@ package com.pixelsapphire.wanmin.data.records;
 
 import com.pixelsapphire.wanmin.DatabaseException;
 import com.pixelsapphire.wanmin.data.DictTuple;
+import com.pixelsapphire.wanmin.data.DictTuple.DictTupleBuilder;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -37,13 +38,22 @@ public class Employee implements DatabaseRecord {
         return lastName;
     }
 
+    public @Nullable String getUsername() {
+        return username;
+    }
+
     @Override
     public int getId() {
         return id;
     }
 
-    public @Nullable String getUsername() {
-        return username;
+    @Contract("-> new")
+    public @NotNull DictTuple toRecord() {
+        return new DictTupleBuilder().with("id", id)
+                                     .with("imie", firstName)
+                                     .with("nazwisko", lastName)
+                                     .with("login", username)
+                                     .build();
     }
 }
 

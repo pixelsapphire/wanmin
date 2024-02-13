@@ -4,6 +4,7 @@ import com.pixelsapphire.wanmin.util.ObjectUtil;
 import oracle.sql.TIMESTAMP;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.sql.Date;
 import java.sql.ResultSet;
@@ -80,5 +81,23 @@ public class DictTuple {
         for (final var entry : values.entrySet()) sb.append(entry.getKey()).append(": ").append(entry.getValue()).append(", ");
         sb.setLength(sb.length() - 2);
         return sb.append("}").toString();
+    }
+
+    public static class DictTupleBuilder {
+
+        private final @NotNull Map<String, Object> values;
+
+        public DictTupleBuilder() {
+            this.values = new HashMap<>();
+        }
+
+        public DictTupleBuilder with(@NotNull String key, @Nullable Object value) {
+            values.put(key.toLowerCase(), value);
+            return this;
+        }
+
+        public @NotNull DictTuple build() {
+            return new DictTuple(values);
+        }
     }
 }

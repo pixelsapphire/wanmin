@@ -3,6 +3,7 @@ package com.pixelsapphire.wanmin.data.records;
 import com.pixelsapphire.wanmin.DatabaseException;
 import com.pixelsapphire.wanmin.controller.Provider;
 import com.pixelsapphire.wanmin.data.DictTuple;
+import com.pixelsapphire.wanmin.data.DictTuple.DictTupleBuilder;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -25,7 +26,7 @@ public class MenuItem implements DatabaseRecord {
     public static @NotNull MenuItem fromRecord(@NotNull DictTuple record, @NotNull Provider<Recipe> recipeProvider) {
         try {
             return new MenuItem(record.getInt("id"), record.getString("nazwa"), record.getFloat("cena"),
-                                recipeProvider.getById(record.getInt("przepis")) ,record.getString("kategoria"));
+                                recipeProvider.getById(record.getInt("przepis")), record.getString("kategoria"));
         } catch (IllegalArgumentException e) {
             throw new DatabaseException("Failed to create MenuPosition from record" + record, e);
         }
@@ -43,12 +44,22 @@ public class MenuItem implements DatabaseRecord {
         return name;
     }
 
+    public Recipe getRecipe() {
+        return recipe;
+    }
+
     @Override
     public int getId() {
         return id;
     }
 
-    public Recipe getRecipe() {
-        return recipe;
+    @Override
+    public @NotNull DictTuple toRecord() {
+        return new DictTupleBuilder().with("id", id)
+                                     .with("nazwa", name)
+                                     .with("cena", price)
+                                     .with("przepis", recipe.getId())
+                                     .with("kategoria", category)
+                                     .build();
     }
 }
