@@ -3,10 +3,10 @@ package com.pixelsapphire.wanmin.data.records;
 import com.pixelsapphire.wanmin.DatabaseException;
 import com.pixelsapphire.wanmin.controller.Provider;
 import com.pixelsapphire.wanmin.data.DictTuple;
+import com.pixelsapphire.wanmin.data.DictTuple.DictTupleBuilder;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-import java.sql.SQLException;
 import java.util.Date;
 
 public class ForeignInvoiceItem implements DatabaseRecord {
@@ -53,5 +53,15 @@ public class ForeignInvoiceItem implements DatabaseRecord {
     @Override
     public int getId() {
         return id;
+    }
+
+    @Override
+    public @NotNull DictTuple toRecord() {
+        return new DictTupleBuilder().with("id", id)
+                                     .with("produkt", product.getId())
+                                     .with("cena", price)
+                                     .with("ilosc", amount)
+                                     .with("data_waznosci", date)
+                                     .build();
     }
 }

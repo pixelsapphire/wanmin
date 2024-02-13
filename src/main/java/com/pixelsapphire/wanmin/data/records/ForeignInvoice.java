@@ -3,6 +3,7 @@ package com.pixelsapphire.wanmin.data.records;
 import com.pixelsapphire.wanmin.DatabaseException;
 import com.pixelsapphire.wanmin.controller.Provider;
 import com.pixelsapphire.wanmin.data.DictTuple;
+import com.pixelsapphire.wanmin.data.DictTuple.DictTupleBuilder;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -59,5 +60,14 @@ public class ForeignInvoice implements DatabaseRecord {
     @Override
     public int getId() {
         return id;
+    }
+
+    @Override
+    public @NotNull DictTuple toRecord() {
+        return new DictTupleBuilder().with("id", id)
+                                     .with("kontrahent", contractor.getId())
+                                     .with("data", date)
+                                     .with("nr_obcy", number)
+                                     .build();
     }
 }

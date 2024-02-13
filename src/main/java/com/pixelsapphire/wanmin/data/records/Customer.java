@@ -2,6 +2,7 @@ package com.pixelsapphire.wanmin.data.records;
 
 import com.pixelsapphire.wanmin.DatabaseException;
 import com.pixelsapphire.wanmin.data.DictTuple;
+import com.pixelsapphire.wanmin.data.DictTuple.DictTupleBuilder;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -28,11 +29,6 @@ public class Customer implements DatabaseRecord {
         }
     }
 
-    @Override
-    public int getId() {
-        return cardNumber;
-    }
-
     public @NotNull String getFirstName() {
         return firstName;
     }
@@ -43,6 +39,20 @@ public class Customer implements DatabaseRecord {
 
     public int getPoints() {
         return points;
+    }
+
+    @Override
+    public int getId() {
+        return cardNumber;
+    }
+
+    @Override
+    public @NotNull DictTuple toRecord() {
+        return new DictTupleBuilder().with("id", cardNumber)
+                                     .with("imie", firstName)
+                                     .with("nazwisko", lastName)
+                                     .with("punkty", points)
+                                     .build();
     }
 
     @Override
