@@ -70,4 +70,8 @@ public class ForeignInvoice implements DatabaseRecord {
                                      .with("nr_obcy", number)
                                      .build();
     }
+
+    public void add(@NotNull ForeignInvoiceItem invoiceItem) {
+
+    }
 }

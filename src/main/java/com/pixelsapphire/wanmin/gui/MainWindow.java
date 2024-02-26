@@ -29,7 +29,7 @@ public class MainWindow extends JFrame {
         new Thread(() -> {
             try {
                 controller = new WanminDBController(login, password);
-                if (controller.isRoleEnabled("wm_kelner")) new WaiterScreen(this, controller).apply();
+                if (controller.isRoleEnabled("sbd147412.wm_kelner")) new WaiterScreen(this, controller).apply();
                 else new Message(this, "Nie nadano roli. Skontaktuj się z administratorem.", loginForm::apply).apply();
             } catch (final DatabaseException e) {
                 Logger.getLogger(Wanmin.class.getName()).log(Level.SEVERE, e.getMessage() + ": " + e.getCause().getMessage());

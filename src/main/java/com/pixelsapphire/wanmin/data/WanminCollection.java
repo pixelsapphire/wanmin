@@ -1,27 +1,35 @@
 package com.pixelsapphire.wanmin.data;
 
+import com.pixelsapphire.wanmin.controller.DatabaseExecutor;
 import com.pixelsapphire.wanmin.controller.Provider;
 import com.pixelsapphire.wanmin.data.records.DatabaseRecord;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
 import java.util.stream.Stream;
 
-public class WanminCollection<T extends DatabaseRecord> implements Provider<T> {
+public abstract class WanminCollection<T extends DatabaseRecord> implements Provider<T> {
 
-    private final @NotNull Function<DictTuple, T> recordFactory;
-    private final @NotNull Supplier<List<DictTuple>> databaseAccessor;
+    protected final @NotNull DatabaseExecutor controller;
 
-    public WanminCollection(@NotNull Function<DictTuple, T> recordFactory, @NotNull Supplier<List<DictTuple>> databaseAccessor) {
-        this.recordFactory = recordFactory;
-        this.databaseAccessor = databaseAccessor;
+    protected WanminCollection(@NotNull DatabaseExecutor controller) {
+        this.controller = controller;
     }
 
+    @Contract(pure = true)
+    public abstract @NotNull T elementFromRecord(@NotNull DictTuple record);
+
+    @Contract(pure = true)
+    public abstract @NotNull DictTuple elementToRecord(@NotNull T object);
+
+    public abstract @NotNull List<DictTuple> getRecords();
+
+    public abstract void saveRecord(@NotNull DictTuple record);
+
     public @NotNull Stream<T> getAll() {
-        return databaseAccessor.get().stream().map(recordFactory);
+        return getRecords().stream().map(this::elementFromRecord);
     }
 
     public @NotNull Stream<T> getAllWhere(@NotNull Predicate<T> predicate) {
@@ -37,4 +45,7 @@ public class WanminCollection<T extends DatabaseRecord> implements Provider<T> {
         return getAll().filter(record -> record.getId() == id).findFirst().orElseThrow();
     }
 
+    public void add(@NotNull T object) {
+        saveRecord(elementToRecord(object));
+    }
 }

@@ -2,14 +2,14 @@ package com.pixelsapphire.wanmin.controller;
 
 import com.pixelsapphire.wanmin.DatabaseException;
 import com.pixelsapphire.wanmin.Wanmin;
+import com.pixelsapphire.wanmin.controller.collections.*;
 import com.pixelsapphire.wanmin.data.DictTuple;
-import com.pixelsapphire.wanmin.data.WanminCollection;
-import com.pixelsapphire.wanmin.data.records.*;
+import com.pixelsapphire.wanmin.data.records.MenuItem;
+import com.pixelsapphire.wanmin.data.records.OrderItem;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,55 +18,29 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @SuppressWarnings("SqlSourceToSinkFlow")
-public class WanminDBController {
+public class WanminDBController implements DatabaseExecutor {
+
+    public final ContractorsCollection contractors = new ContractorsCollection(this);
+    public final ProductsCollection products = new ProductsCollection(this);
+    public final CustomersCollection customers = new CustomersCollection(this);
+    public final PositionsCollection positions = new PositionsCollection(this);
+    public final EmployeesCollection employees = new EmployeesCollection(this);
+    public final RecipesCollection recipes = new RecipesCollection(this, products);
+    public final Provider<MenuItem> menuItemProvider = id -> executeQuery("SELECT * FROM sbd147412.wm_menu_pozycje WHERE id = ?", id)
+            .stream().map((r) -> MenuItem.fromRecord(r, recipes)).findFirst().orElseThrow();
+    public final Provider<List<MenuItem>> menuItemsProvider = id -> executeQuery("SELECT * FROM sbd147412.wm_menu_pozycje WHERE menu = ?", id)
+            .stream().map((r) -> MenuItem.fromRecord(r, recipes)).toList();
+    public final Provider<List<OrderItem>> orderItemsProvider = id -> executeQuery("SELECT * FROM sbd147412.wm_zamowienia_pozycje WHERE zamowienie = ?", id)
+            .stream().map(r -> OrderItem.fromRecord(r, menuItemProvider)).toList();
+    public final MenuCollection menus = new MenuCollection(this, menuItemsProvider);
+    public final ForeignInvoiceCollection foreignInvoices = new ForeignInvoiceCollection(this, contractors, products);
+    public final StorageItemCollection storage = new StorageItemCollection(this, products, foreignInvoices);
+    public final EmploymentContractsCollection employmentContracts = new EmploymentContractsCollection(this, employees, positions);
+    public final OrdersCollection orders = new OrdersCollection(this, employees, customers, orderItemsProvider);
+    public final InvoicesCollection invoices = new InvoicesCollection(this, customers, orders);
 
     private final @NotNull String username;
     private final Connection connection;
-    public final WanminCollection<Contractor> contractors = new WanminCollection<>(
-            Contractor::fromRecord,
-            () -> executeReadOnly("SELECT * FROM sbd147412.wm_kontrahenci"));
-    public final WanminCollection<Product> products = new WanminCollection<>(
-            Product::fromRecord,
-            () -> executeReadOnly("SELECT * FROM sbd147412.wm_produkty"));
-    public final WanminCollection<ForeignInvoice> foreignInvoices = new WanminCollection<>(
-            (in) -> ForeignInvoice.fromRecord(in, contractors,
-                                              id -> executeReadOnly("SELECT * FROM sbd147412.wm_faktury_obce_pozycje WHERE faktura = %d", id)
-                                                      .stream().map((it) -> ForeignInvoiceItem.fromRecord(it, products)).toList()),
-            () -> executeReadOnly("SELECT * FROM sbd147412.wm_faktury_obce"));
-    public final WanminCollection<StorageItem> storage = new WanminCollection<>(
-            (r) -> StorageItem.fromRecord(r, products, foreignInvoices),
-            () -> executeReadOnly("SELECT * FROM sbd147412.wm_magazyn"));
-    public final WanminCollection<Recipe> recipes = new WanminCollection<>(
-            (r) -> Recipe.fromRecord(r, id -> executeReadOnly("SELECT * FROM sbd147412.wm_przepisy_skladniki WHERE przepis = %d", id)
-                    .stream().map((it) -> RecipeIngredient.fromRecord(it, products)).toList()),
-            () -> executeReadOnly("SELECT * FROM sbd147412.wm_przepisy"));
-    public final WanminCollection<Customer> customers = new WanminCollection<>(
-            Customer::fromRecord,
-            () -> executeReadOnly("SELECT * FROM sbd147412.wm_klienci"));
-    public final WanminCollection<Position> positions = new WanminCollection<>(
-            Position::fromRecord,
-            () -> executeReadOnly("SELECT * FROM sbd147412.wm_stanowiska"));
-    public final WanminCollection<Employee> employees = new WanminCollection<>(
-            Employee::fromRecord,
-            () -> executeReadOnly("SELECT * FROM sbd147412.wm_pracownicy"));
-    public final WanminCollection<EmploymentContract> employmentContracts = new WanminCollection<>(
-            (r) -> EmploymentContract.fromRecord(r, employees, positions),
-            () -> executeReadOnly("SELECT * FROM sbd147412.wm_umowy"));
-    private final Provider<MenuItem> menuItemProvider = id -> executeReadOnly("SELECT * FROM sbd147412.wm_menu_pozycje WHERE id = %d", id)
-            .stream().map((r) -> MenuItem.fromRecord(r,recipes)).findFirst().orElseThrow();
-    private final Provider<List<OrderItem>> orderItemsProvider = id -> executeReadOnly("SELECT * FROM sbd147412.wm_zamowienia_pozycje WHERE zamowienie = %d", id)
-            .stream().map(r -> OrderItem.fromRecord(r, menuItemProvider)).toList();
-    public final WanminCollection<Order> orders = new WanminCollection<>(
-            (r) -> Order.fromRecord(r, employees, customers, orderItemsProvider),
-            () -> executeReadOnly("SELECT * FROM sbd147412.wm_zamowienia"));
-    public final WanminCollection<Invoice> invoices = new WanminCollection<>(
-            (r) -> Invoice.fromRecord(r, customers, orders),
-            () -> executeReadOnly("SELECT * FROM sbd147412.wm_faktury"));
-    private final Provider<List<MenuItem>> menuItemsProvider = id -> executeReadOnly("SELECT * FROM sbd147412.wm_menu_pozycje WHERE menu = %d", id)
-            .stream().map((r) -> MenuItem.fromRecord(r,recipes)).toList();
-    public final WanminCollection<Menu> menus = new WanminCollection<>(
-            (r) -> Menu.fromRecord(r, menuItemsProvider),
-            () -> executeReadOnly("SELECT * FROM sbd147412.wm_menu"));
 
     public WanminDBController(@NotNull String username, char[] password) {
         this.username = username;
@@ -95,27 +69,40 @@ public class WanminDBController {
     }
 
     public int getEmployeeId() {
-        return executeReadOnly("SELECT sbd147412.wm_my_id('%s') AS id FROM dual", username.toUpperCase()).getFirst().getInt("id");
+        return executeQuery("SELECT sbd147412.wm_my_id(?) AS id FROM dual", username.toUpperCase()).getFirst().getInt("id");
     }
 
     public boolean isRoleEnabled(@NotNull String role) throws DatabaseException {
-        final var firstRecord = executeReadOnly("SELECT sbd147412.wm_rola_przyznana('%s') AS przyznana FROM dual",
-                                                role.toUpperCase()).getFirst();
+        final var firstRecord = executeQuery("SELECT sbd147412.wm_rola_przyznana(?) AS przyznana FROM dual",
+                                             role.toUpperCase()).getFirst();
         final var granted = firstRecord.getBoolean("przyznana");
-        if (granted) executeReadOnly("SET ROLE %s", role.toUpperCase());
+        if (granted) executeDML("SET ROLE ?", role.toUpperCase());
         return granted;
     }
 
-    public @NotNull List<DictTuple> executeReadOnly(@NotNull String query, Object... parameters) {
-        try (final var statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
-            final String sql = String.format(query, parameters);
-            try (final var result = statement.executeQuery(sql)) {
+    @Override
+    public List<DictTuple> executeQuery(@NotNull String sql, Object @NotNull ... params) {
+        try {
+            final var statement = connection.prepareStatement(sql);
+            for (int i = 0; i < params.length; i++) statement.setObject(i + 1, params[i]);
+            try (final var result = statement.executeQuery()) {
                 final List<DictTuple> list = new ArrayList<>();
                 while (result.next()) list.add(DictTuple.from(result));
                 return list;
             }
         } catch (SQLException e) {
             throw new DatabaseException("Nie udało się wykonać zapytania", e);
+        }
+    }
+
+    @Override
+    public void executeDML(@NotNull String sql, Object @NotNull ... params) {
+        try {
+            final var statement = connection.prepareStatement(sql);
+            for (int i = 0; i < params.length; i++) statement.setObject(i + 1, params[i]);
+            statement.execute();
+        } catch (SQLException e) {
+            throw new DatabaseException("Nie udało się wykonać polecenia DML", e);
         }
     }
 }

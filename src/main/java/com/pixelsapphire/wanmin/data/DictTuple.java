@@ -58,8 +58,7 @@ public class DictTuple {
     public @NotNull Optional<String> getOptionalString(@NotNull String key) {
         final String k = key.toLowerCase();
         if (!values.containsKey(k) || values.get(k) == null) return Optional.empty();
-        if (values.get(k) instanceof String) return Optional.of((String) values.get(k));
-        throw new IllegalArgumentException("Value for key " + key + " (" + ObjectUtil.getClass(values.get(k)) + ") is not a string");
+        else return Optional.of(getString(key));
     }
 
     public @NotNull Date getDate(@NotNull String key) {
@@ -73,6 +72,12 @@ public class DictTuple {
             } catch (SQLException ignored) {
             }
         throw new IllegalArgumentException("Value for key " + key + " (" + ObjectUtil.getClass(values.get(k)) + ") is not a date");
+    }
+
+    public @NotNull Optional<Date> getOptionalDate(@NotNull String key) {
+        final String k = key.toLowerCase();
+        if (!values.containsKey(k) || values.get(k) == null) return Optional.empty();
+        else return Optional.of(getDate(key));
     }
 
     @Override
