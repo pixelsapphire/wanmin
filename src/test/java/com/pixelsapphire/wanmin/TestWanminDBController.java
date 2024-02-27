@@ -39,9 +39,16 @@ public class TestWanminDBController {
     }
 
     @Test
-    void testRole() {
+    void testWaiterRole() {
         final WanminDBController database = new WanminDBController("sbd151886", "sbd151886!".toCharArray());
-        assertTrue(database.isRoleEnabled("sbd151886.wm_kelner"));
-        assertFalse(database.isRoleEnabled("sbd147412.wm_administrator"));
+        assertTrue(database.isRoleEnabled("WM_KELNER"));
+        assertFalse(database.isRoleEnabled("WM_ADMINISTRATOR"));
+    }
+
+    @Test
+    void testAdminRole() {
+        final WanminDBController database = new WanminDBController("sbd147412", "sbd147412!".toCharArray());
+        assertTrue(database.isRoleEnabled("WM_ADMINISTRATOR"));
+        assertTrue(database.isRoleEnabled("WM_KELNER"));
     }
 }

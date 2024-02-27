@@ -44,4 +44,14 @@ public class EmploymentContractsCollection extends WanminCollection<EmploymentCo
                               r.getString("numer"), r.getString("typ"), r.getInt("pracownik"),
                               r.getInt("stanowisko"), r.getDate("zawiazana"));
     }
+
+    public void deleteContract(int contractId) {
+        controller.executeDML("DELETE FROM sbd147412.wm_umowy WHERE ID = ?", contractId);
+    }
+
+    public void updateEmploymentContract(@NotNull EmploymentContract contract) {
+        controller.executeDML("UPDATE sbd147412.wm_umowy SET numer = ?, typ = ?, pracownik = ?, stanowisko = ?, zawiazana = ?, zerwana = ? WHERE id = ?",
+                              contract.getNumber(), contract.getType(), contract.getEmployee().getId(),
+                              contract.getPosition().getId(), contract.getConcluded(), contract.getId(), contract.getTerminated());
+    }
 }

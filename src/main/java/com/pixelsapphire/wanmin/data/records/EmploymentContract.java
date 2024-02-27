@@ -13,15 +13,16 @@ import java.util.Date;
 public class EmploymentContract implements DatabaseRecord {
 
     private final int id;
-    private final @NotNull String type;
+    private final @NotNull String number, type;
     private final @NotNull Employee employee;
     private final @NotNull Position position;
     private final @NotNull Date concluded;
     private final @Nullable Date terminated;
 
-    private EmploymentContract(int id, @NotNull String type, @NotNull Employee employee, @NotNull Position position,
-                               @NotNull Date concluded, @Nullable Date terminated) {
+    private EmploymentContract(int id, @NotNull String number, @NotNull String type, @NotNull Employee employee,
+                               @NotNull Position position, @NotNull Date concluded, @Nullable Date terminated) {
         this.id = id;
+        this.number = number;
         this.type = type;
         this.employee = employee;
         this.position = position;
@@ -34,7 +35,7 @@ public class EmploymentContract implements DatabaseRecord {
                                                          @NotNull Provider<Employee> employeeProvider,
                                                          @NotNull Provider<Position> positionProvider) {
         try {
-            return new EmploymentContract(record.getInt("id"), record.getString("typ"),
+            return new EmploymentContract(record.getInt("id"), record.getString("typ"), record.getString("numer"),
                                           employeeProvider.getById(record.getInt("pracownik")),
                                           positionProvider.getById(record.getInt("stanowisko")),
                                           record.getDate("zawiazana"), record.getDate("zerwana"));
@@ -45,6 +46,10 @@ public class EmploymentContract implements DatabaseRecord {
 
     public @NotNull String getType() {
         return type;
+    }
+
+    public @NotNull String getNumber() {
+        return number;
     }
 
     public @NotNull Employee getEmployee() {

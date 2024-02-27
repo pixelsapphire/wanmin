@@ -34,4 +34,8 @@ public class PositionsCollection extends WanminCollection<Position> {
         controller.executeDML("INSERT INTO sbd147412.wm_stanowiska (nazwa, pensja) VALUES (?,?)",
                               r.getString("nazwa"), r.getFloat("pensja"));
     }
+
+    public void deletePosition (int positionId) {
+        controller.executeDML("DELETE FROM sbd147412.wm_stanowiska where id = ?", positionId);
+    }
 }

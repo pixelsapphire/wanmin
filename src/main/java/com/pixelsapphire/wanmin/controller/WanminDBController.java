@@ -26,21 +26,20 @@ public class WanminDBController implements DatabaseExecutor {
     public final PositionsCollection positions = new PositionsCollection(this);
     public final EmployeesCollection employees = new EmployeesCollection(this);
     public final RecipesCollection recipes = new RecipesCollection(this, products);
-    public final Provider<MenuItem> menuItemProvider = id -> executeQuery("SELECT * FROM sbd147412.wm_menu_pozycje WHERE id = ?", id)
-            .stream().map((r) -> MenuItem.fromRecord(r, recipes)).findFirst().orElseThrow();
-    public final Provider<List<MenuItem>> menuItemsProvider = id -> executeQuery("SELECT * FROM sbd147412.wm_menu_pozycje WHERE menu = ?", id)
-            .stream().map((r) -> MenuItem.fromRecord(r, recipes)).toList();
-    public final Provider<List<OrderItem>> orderItemsProvider = id -> executeQuery("SELECT * FROM sbd147412.wm_zamowienia_pozycje WHERE zamowienie = ?", id)
-            .stream().map(r -> OrderItem.fromRecord(r, menuItemProvider)).toList();
-    public final MenuCollection menus = new MenuCollection(this, menuItemsProvider);
     public final ForeignInvoiceCollection foreignInvoices = new ForeignInvoiceCollection(this, contractors, products);
     public final StorageItemCollection storage = new StorageItemCollection(this, products, foreignInvoices);
     public final EmploymentContractsCollection employmentContracts = new EmploymentContractsCollection(this, employees, positions);
-    public final OrdersCollection orders = new OrdersCollection(this, employees, customers, orderItemsProvider);
-    public final InvoicesCollection invoices = new InvoicesCollection(this, customers, orders);
-
     private final @NotNull String username;
     private final Connection connection;
+    public final Provider<MenuItem> menuItemProvider = id -> executeQuery("SELECT * FROM sbd147412.wm_menu_pozycje WHERE id = ?", id)
+            .stream().map((r) -> MenuItem.fromRecord(r, recipes)).findFirst().orElseThrow();
+    public final Provider<List<OrderItem>> orderItemsProvider = id -> executeQuery("SELECT * FROM sbd147412.wm_zamowienia_pozycje WHERE zamowienie = ?", id)
+            .stream().map(r -> OrderItem.fromRecord(r, menuItemProvider)).toList();
+    public final OrdersCollection orders = new OrdersCollection(this, employees, customers, orderItemsProvider);
+    public final InvoicesCollection invoices = new InvoicesCollection(this, customers, orders);
+    public final Provider<List<MenuItem>> menuItemsProvider = id -> executeQuery("SELECT * FROM sbd147412.wm_menu_pozycje WHERE menu = ?", id)
+            .stream().map((r) -> MenuItem.fromRecord(r, recipes)).toList();
+    public final MenuCollection menus = new MenuCollection(this, menuItemsProvider);
 
     public WanminDBController(@NotNull String username, char[] password) {
         this.username = username;
@@ -76,7 +75,7 @@ public class WanminDBController implements DatabaseExecutor {
         final var firstRecord = executeQuery("SELECT sbd147412.wm_rola_przyznana(?) AS przyznana FROM dual",
                                              role.toUpperCase()).getFirst();
         final var granted = firstRecord.getBoolean("przyznana");
-        if (granted) executeDML("SET ROLE ?", role.toUpperCase());
+        if (granted) executeDML("SET ROLE " + role.toUpperCase());
         return granted;
     }
 
@@ -99,7 +98,8 @@ public class WanminDBController implements DatabaseExecutor {
     public void executeDML(@NotNull String sql, Object @NotNull ... params) {
         try {
             final var statement = connection.prepareStatement(sql);
-            for (int i = 0; i < params.length; i++) statement.setObject(i + 1, params[i]);
+            for (int i = 0; i < params.length; i++)
+                statement.setObject(i + 1, params[i]);
             statement.execute();
         } catch (SQLException e) {
             throw new DatabaseException("Nie udało się wykonać polecenia DML", e);

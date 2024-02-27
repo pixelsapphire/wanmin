@@ -39,8 +39,17 @@ public class MenuCollection extends WanminCollection<Menu> {
         controller.executeDML("INSERT INTO sbd147412.wm_menu (nazwa) VALUES (?)", r.getString("nazwa"));
     }
 
-    public void addItem(int menuId, @NotNull MenuItem menuItem) {
+    public void addItemToMenu(int menuId, @NotNull MenuItem menuItem) {
         controller.executeDML("INSERT INTO sbd147412.wm_menu_pozycje (nazwa, cena, przepis, kategoria, menu) values (?,?,?,?,?)",
                               menuItem.getName(), menuItem.getPrice(), menuItem.getRecipe(), menuItem.getCategory(), menuId);
+    }
+
+    public void deleteMenu (int menuId) {
+        controller.executeDML("DELETE FROM sbd147412.wm_menu_pozycje where menu = ?", menuId);
+        controller.executeDML("DELETE FROM sbd147412.wm_menu where id = ?", menuId);
+    }
+
+    public void deleteMenuItem (int menuItemId) {
+        controller.executeDML("DELETE FROM sbd147412.wm_menu_pozycje where id = ?", menuItemId);
     }
 }

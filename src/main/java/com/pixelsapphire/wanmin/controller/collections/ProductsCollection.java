@@ -34,4 +34,8 @@ public class ProductsCollection extends WanminCollection<Product> {
         controller.executeDML("INSERT INTO sbd147412.wm_produkty (nazwa, jednostka) VALUES (?,?)",
                               r.getString("nazwa"), r.getOptionalString("jednostka").orElse(null));
     }
+
+    public void deleteProduct (int productId) {
+        controller.executeDML("delete  from sbd147412.wm_produkty where id = ?", productId);
+    }
 }

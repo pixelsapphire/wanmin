@@ -43,4 +43,8 @@ public class InvoicesCollection extends WanminCollection<Invoice> {
         controller.executeDML("INSERT INTO sbd147412.wm_faktury (klient, zamowienie, data, nr_faktury, znizka) VALUES (?,?,?,?,?)",
                               r.getInt("klient"), r.getInt("zamowienie"), r.getString("data"), r.getString("nr_faktury"), r.getFloat("znizka"));
     }
+
+    public void deleteInvoice (int invoiceId) {
+        controller.executeDML("DELETE FROM sbd147412.wm_faktury where id = ?", invoiceId);
+    }
 }

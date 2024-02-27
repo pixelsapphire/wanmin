@@ -6,6 +6,7 @@ import com.pixelsapphire.wanmin.data.DictTuple;
 import com.pixelsapphire.wanmin.data.DictTuple.DictTupleBuilder;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Date;
 
@@ -14,14 +15,14 @@ public class ForeignInvoiceItem implements DatabaseRecord {
     private final int id;
     private final @NotNull Product product;
     private final float price, amount;
-    private final Date date;
+    private final @Nullable Date expires;
 
-    private ForeignInvoiceItem(int id, @NotNull Product product, float price, float amount, Date date) {
+    private ForeignInvoiceItem(int id, @NotNull Product product, float price, float amount, @Nullable Date expires) {
         this.id = id;
         this.product = product;
         this.price = price;
         this.amount = amount;
-        this.date = date;
+        this.expires = expires;
     }
 
     @Contract("_, _ -> new")
@@ -42,8 +43,8 @@ public class ForeignInvoiceItem implements DatabaseRecord {
         return amount;
     }
 
-    public Date getDate() {
-        return date;
+    public @Nullable Date getExpires() {
+        return expires;
     }
 
     public float getPrice() {
@@ -61,7 +62,7 @@ public class ForeignInvoiceItem implements DatabaseRecord {
                                      .with("produkt", product.getId())
                                      .with("cena", price)
                                      .with("ilosc", amount)
-                                     .with("data_waznosci", date)
+                                     .with("data_waznosci", expires)
                                      .build();
     }
 }

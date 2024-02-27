@@ -46,4 +46,23 @@ public class ForeignInvoiceCollection extends WanminCollection<ForeignInvoice> {
         controller.executeDML("INSERT INTO sbd147412.wm_faktury_obce (kontrahent, data, nr_obcy) VALUES (?,?,?)",
                               r.getInt("kontrahent"), r.getDate("data"), r.getString("nr_obcy"));
     }
+
+    public void addItemToForeignInvoice(int foreignInvoiceId, @NotNull ForeignInvoiceItem item) {
+        controller.executeDML("INSERT INTO sbd147412.wm_faktury_obce_pozycje (faktura, produkt, cena, ilosc, data_waznosci) VALUES (?,?,?,?,?)",
+                              foreignInvoiceId, item.getProduct(), item.getPrice(), item.getAmount(), item.getExpires());
+    }
+
+    public void deleteForeignInvoice(int foreignInvoiceId) {
+        controller.executeDML("DELETE FROM sbd147412.wm_faktury_obce_pozycje WHERE faktura = ?", foreignInvoiceId);
+        controller.executeDML("DELETE FROM sbd147412.wm_faktury_obce WHERE ID = ?", foreignInvoiceId);
+    }
+
+    public void deleteForeignInvoiceItem(int foreignInvoiceItemId) {
+        controller.executeDML("DELETE FROM sbd147412.wm_faktury_obce_pozycje WHERE ID = ?", foreignInvoiceItemId);
+    }
+
+    public void updateForeignInvoice(@NotNull ForeignInvoice foreignInvoice) {
+        controller.executeDML("UPDATE sbd147412.wm_faktury_obce SET kontrahent = ?, data = ?, nr_obcy = ? WHERE id = ?",
+                              foreignInvoice.getContractor(), foreignInvoice.getDate(), foreignInvoice.getNumber(), foreignInvoice.getId());
+    }
 }

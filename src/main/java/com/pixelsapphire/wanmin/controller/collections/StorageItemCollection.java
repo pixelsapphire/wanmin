@@ -44,4 +44,8 @@ public class StorageItemCollection extends WanminCollection<StorageItem> {
                                 r.getInt("produkt"), r.getInt("data_waznosci"),
                                 r.getOptionalDate("data_waznosci").orElse(null), r.getInt("faktura"));
     }
+
+    public void deleteStorageItem (int storageItemId) {
+        controller.executeDML("DELETE FROM sbd147412.wm_magazyn where id = ?", storageItemId);
+    }
 }

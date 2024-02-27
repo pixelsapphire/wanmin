@@ -48,4 +48,14 @@ public class OrdersCollection extends WanminCollection<Order> {
                               r.getInt("stolik"), r.getInt("kelner"), r.getDate("czas"),
                               r.getInt("klient"), r.getBoolean("czy_zaplacone"));
     }
+
+    public void addOrderItem(int orderId, @NotNull OrderItem orderItem) {
+        controller.executeDML("INSERT INTO sbd147412.wm_zamowienia_pozycje (zamowienie, pozycja, ilosc) VALUES (?,?,?)",
+                              orderId, orderItem.getMenuItem().getId(), orderItem.getAmount());
+    }
+
+    public void deleteOrder (int orderId) {
+        controller.executeDML("DELETE FROM sbd147412.wm_zamowienia_pozycje WHERE zamowienie = ?", orderId);
+        controller.executeDML("DELETE FROM sbd147412.wm_zamowienia WHERE id = ?", orderId);
+    }
 }

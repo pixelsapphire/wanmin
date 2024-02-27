@@ -116,6 +116,7 @@ public class WaiterScreen extends Layout {
         private void addNewOrder() {
             //TODO: dodanie nowego (pustego) zamowienia do bazy danych. i określenie czy klient jest stałym klientem.
             final var newOrderWindow = new JFrame();
+            //database.orders.add();
 
             newOrderWindow.setLayout(new GridBagLayout());
             var label = new JLabel("<html>" + "sb" + "</html>");

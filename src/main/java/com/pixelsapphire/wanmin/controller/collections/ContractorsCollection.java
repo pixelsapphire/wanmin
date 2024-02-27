@@ -38,4 +38,13 @@ public class ContractorsCollection extends WanminCollection<Contractor> {
                               r.getString("nazwa"), r.getString("adres"), r.getOptionalString("telefon").orElse(null),
                               r.getOptionalString("email").orElse(null), r.getOptionalString("NIP").orElse(null));
     }
+
+    public void deleteContractor(int contractorId) {
+        controller.executeDML("DELETE FROM sbd147412.wm_kontrahenci WHERE id = ?", contractorId);
+    }
+
+    public void updateContractor(@NotNull Contractor contractor) {
+        controller.executeDML("UPDATE sbd147412.wm_kontrahenci SET nazwa = ?, adres = ?, telefon = ?, email = ?, NIP = ? WHERE id = ?",
+                              contractor.getName(), contractor.getAddress(), contractor.getPhone(), contractor.getEmail(), contractor.getNIP(), contractor.getId());
+    }
 }

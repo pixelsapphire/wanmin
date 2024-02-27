@@ -40,4 +40,18 @@ public class RecipesCollection extends WanminCollection<Recipe> {
     public void saveRecord(@NotNull DictTuple r) {
         controller.executeDML("INSERT INTO sbd147412.wm_przepisy (nazwa) VALUES (?)", r.getString("nazwa"));
     }
+
+    public void addIngredientToRecipe(int recipeId, @NotNull RecipeIngredient ingredient) {
+        controller.executeDML("INSERT INTO sbd147412.wm_przepisy_skladniki (przepis, produkt, ilosc) VALUES (?,?,?)",
+                              recipeId, ingredient.getProduct().getId(), ingredient.getAmount());
+    }
+
+    public void deleteRecipe (int recipeId) {
+        controller.executeDML("DELETE FROM sbd147412.wm_przepisy_skladniki where przepis = ?", recipeId);
+        controller.executeDML("DELETE FROM sbd147412.wm_przepisy where id = ?", recipeId);
+    }
+
+    public void deleteRecipeIngredient (int recipeIngredientId) {
+        controller.executeDML("DELETE FROM sbd147412.wm_przepisy_skladniki where id = ?", recipeIngredientId);
+    }
 }

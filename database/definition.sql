@@ -677,8 +677,7 @@ CREATE ROLE wm_administrator;
 BEGIN
     FOR t IN (SELECT table_name FROM user_tables WHERE table_name LIKE 'WM_%')
         LOOP
-            EXECUTE IMMEDIATE 'GRANT ALL PRIVILEGES
-         ON ' || t.table_name || ' TO wm_administrator ';
+            EXECUTE IMMEDIATE 'GRANT ALL PRIVILEGES ON ' || t.table_name || ' TO wm_administrator ';
         END LOOP;
 END;
 
@@ -690,3 +689,6 @@ FROM wm_stanowiska;
 
 
 GRANT wm_kelner TO sbd151886;
+
+SELECT sbd147412.wm_rola_przyznana('WM_ADMINISTRATOR') AS przyznana
+FROM dual;

@@ -34,4 +34,13 @@ public class EmployeesCollection extends WanminCollection<Employee> {
         controller.executeDML("INSERT INTO sbd147412.wm_pracownicy (imie, nazwisko, login) VALUES (?,?,?)",
                               r.getString("imie"), r.getString("nazwisko"), r.getOptionalString("login").orElse(null));
     }
+
+    public void deleteEmployee(int employeeId) {
+        controller.executeDML("DELETE FROM sbd147412.wm_pracownicy WHERE ID = ?", employeeId);
+    }
+
+    public void updateEmployee(@NotNull Employee employee) {
+        controller.executeDML("UPDATE sbd147412.wm_pracownicy SET imie = ?, nazwisko = ?, login = ? WHERE id = ?",
+                              employee.getFirstName(), employee.getLastName(), employee.getUsername(), employee.getId());
+    }
 }
