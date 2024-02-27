@@ -68,7 +68,10 @@ public class ForeignInvoice implements DatabaseRecord {
                                      .with("kontrahent", contractor.getId())
                                      .with("data", date)
                                      .with("nr_obcy", number)
-                                     .with("pozycje", items)
                                      .build();
+    }
+
+    public void add(@NotNull ForeignInvoiceItem invoiceItem) {
+
     }
 }

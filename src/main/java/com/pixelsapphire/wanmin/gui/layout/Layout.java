@@ -33,8 +33,8 @@ public abstract class Layout {
                 switch (key) {
                     case "gridx" -> constraints.gridx = Integer.parseInt(value);
                     case "gridy" -> constraints.gridy = Integer.parseInt(value);
-                    case "gridwidth" -> constraints.gridwidth = Integer.parseInt(value);
-                    case "gridheight" -> constraints.gridheight = Integer.parseInt(value);
+                    case "width" -> constraints.gridwidth = Integer.parseInt(value);
+                    case "height" -> constraints.gridheight = Integer.parseInt(value);
                     case "weightx" -> constraints.weightx = Double.parseDouble(value);
                     case "weighty" -> constraints.weighty = Double.parseDouble(value);
                     case "anchor" -> constraints.anchor = Integer.parseInt(value);
@@ -60,10 +60,6 @@ public abstract class Layout {
         window.revalidate();
         window.repaint();
         window.pack();
-    }
-
-    public final void refresh() {
-        window.pack();
         window.setLocationRelativeTo(null);
     }
 
@@ -72,6 +68,6 @@ public abstract class Layout {
         window.getContentPane().removeAll();
         window.setLayout(new GridBagLayout());
         init(window);
-        refresh();
+        resizeToContent();
     }
 }

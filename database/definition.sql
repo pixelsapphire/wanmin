@@ -607,11 +607,11 @@ CREATE TABLE wm_faktury
     nr_faktury VARCHAR2(30) NOT NULL,
     data       DATE         NOT NULL,
     klient     NUMBER(5)    NOT NULL,
-    zamowiene  NUMBER(5)    NOT NULL,
+    zamowienie NUMBER(5)    NOT NULL,
     znizka     NUMBER(6, 2) DEFAULT 0,
     CONSTRAINT pk_faktury_id PRIMARY KEY (id),
     CONSTRAINT fk_faktury_klienci FOREIGN KEY (klient) REFERENCES wm_klienci (id),
-    CONSTRAINT fk_faktury_zamowienia FOREIGN KEY (zamowiene) REFERENCES wm_zamowienia (id)
+    CONSTRAINT fk_faktury_zamowienia FOREIGN KEY (zamowienie) REFERENCES wm_zamowienia (id)
 );
 
 CREATE OR REPLACE FUNCTION wm_rola_przyznana(rola IN VARCHAR2) RETURN NUMBER AUTHID CURRENT_USER IS

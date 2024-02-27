@@ -83,7 +83,6 @@ public class Order implements DatabaseRecord {
                                      .with("czas", time)
                                      .with("klient", customer.getId())
                                      .with("czy_zaplacone", paid)
-                                     .with("pozycje", items)
                                      .build();
     }
 
