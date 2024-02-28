@@ -58,4 +58,14 @@ public class OrdersCollection extends WanminCollection<Order> {
         controller.executeDML("DELETE FROM sbd147412.wm_zamowienia_pozycje WHERE zamowienie = ?", orderId);
         controller.executeDML("DELETE FROM sbd147412.wm_zamowienia WHERE id = ?", orderId);
     }
+
+    public void updateOrder (@NotNull Order order) {
+        controller.executeDML("UPDATE sbd147412.wm_zamowienia set stolik = ?, kelner = ?, czas = ?, klient = ?, czy_zaplacone = ? where id = ?",
+                order.getTable(), order.getWaiter(), order.getTime(), order.getCustomer(), order.isPaid(), order.getId());
+    }
+
+    public void updateOrderItem (int orderId, @NotNull OrderItem orderItem) {
+        controller.executeDML("UPDATE sbd147412.wm_zamowienia_pozycje set zamowienie = ?, pozycja = ?, ilosc = ? where id = ?",
+                orderId, orderItem.getMenuItem().getId(), orderItem.getAmount(), orderItem.getId());
+    }
 }

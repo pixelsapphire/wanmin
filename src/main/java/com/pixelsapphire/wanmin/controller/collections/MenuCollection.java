@@ -52,4 +52,13 @@ public class MenuCollection extends WanminCollection<Menu> {
     public void deleteMenuItem (int menuItemId) {
         controller.executeDML("DELETE FROM sbd147412.wm_menu_pozycje where id = ?", menuItemId);
     }
+
+    public void updateMenu (@NotNull Menu menu) {
+        controller.executeDML("UPDATE sbd147412.wm_menu set nazwa = ? where id =?", menu.getName(), menu.getId());
+    }
+
+    public void updateMenuItem (int menuId, @NotNull MenuItem item) {
+        controller.executeDML("UPDATE sbd1474.wm_menu_pozycje set nazwa = ?, cena = ?, przepis = ?, kategoria = ?, menu = ? where id =?",
+                item.getName(), item.getPrice(), item.getRecipe().getId(), item.getCategory(), menuId, item.getId());
+    }
 }

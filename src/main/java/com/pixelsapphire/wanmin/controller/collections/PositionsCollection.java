@@ -38,4 +38,9 @@ public class PositionsCollection extends WanminCollection<Position> {
     public void deletePosition (int positionId) {
         controller.executeDML("DELETE FROM sbd147412.wm_stanowiska where id = ?", positionId);
     }
+
+    public void updatePosition (@NotNull Position position) {
+        controller.executeDML("UPDATE sbd147412.wm_stanowiska SET nazwa = ?, pensja = ? WHERE id = ?",
+                position.getName(), position.getSalary(), position.getId());
+    }
 }

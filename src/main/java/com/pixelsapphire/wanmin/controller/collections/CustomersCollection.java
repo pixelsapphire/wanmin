@@ -36,6 +36,10 @@ public class CustomersCollection extends WanminCollection<Customer> {
                               r.getString("imie"), r.getString("nazwisko"));
     }
 
+    public void deleteCustomer(int customerId) {
+        controller.executeDML("delete from sbd147412.wm_klienci where id = ?", customerId);
+    }
+
     public void updateCustomer(@NotNull Customer customer) {
         controller.executeDML("UPDATE sbd147412.wm_klienci SET imie = ?, nazwisko = ?, punkty = ? WHERE id = ?",
                               customer.getFirstName(), customer.getLastName(), customer.getPoints(), customer.getId());

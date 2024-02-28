@@ -47,4 +47,9 @@ public class InvoicesCollection extends WanminCollection<Invoice> {
     public void deleteInvoice (int invoiceId) {
         controller.executeDML("DELETE FROM sbd147412.wm_faktury where id = ?", invoiceId);
     }
+
+    public void updateInvoice (@NotNull Invoice invoice) {
+        controller.executeDML("UPDATE sbd147412.wm_faktury SET klient = ?, zamowienie = ?, data = ?, nr_faktury = ?, znizka = ? where id = ?",
+                invoice.getCustomer().getId(), invoice.getOrder().getId(), invoice.getDate(), invoice.getNumber(), invoice.getDiscount(), invoice.getId());
+    }
 }

@@ -54,4 +54,14 @@ public class RecipesCollection extends WanminCollection<Recipe> {
     public void deleteRecipeIngredient (int recipeIngredientId) {
         controller.executeDML("DELETE FROM sbd147412.wm_przepisy_skladniki where id = ?", recipeIngredientId);
     }
+
+    public void updateRecipe (@NotNull Recipe recipe) {
+        controller.executeDML("UPDATE sbd147412.wm_przepisy set nazwa = ? WHERE id = ?", recipe.getName(), recipe.getId());
+    }
+
+    public void updateRecipeIngredient (int recipeId, @NotNull RecipeIngredient ingredient) {
+        controller.executeDML("update sbd147412.wm_przepisy_skladniki set przepis = ?, produkt = ?, ilosc = ? where id = ?",
+                recipeId, ingredient.getProduct().getId(), ingredient.getAmount(), ingredient.getId());
+    }
+
 }

@@ -65,4 +65,9 @@ public class ForeignInvoiceCollection extends WanminCollection<ForeignInvoice> {
         controller.executeDML("UPDATE sbd147412.wm_faktury_obce SET kontrahent = ?, data = ?, nr_obcy = ? WHERE id = ?",
                               foreignInvoice.getContractor(), foreignInvoice.getDate(), foreignInvoice.getNumber(), foreignInvoice.getId());
     }
+
+    public void updateForeignInvoiceItem(int newForeignInvoiceId, @NotNull ForeignInvoiceItem item) {
+        controller.executeDML("UPDATE sbd147412.wm_faktury_obce_pozycje SET faktura = ? , produkt = ? , cena = ? , ilosc = ? , data_waznosci = ? WHERE id = ?",
+                newForeignInvoiceId, item.getProduct().getId(), item.getPrice(), item.getAmount(), item.getExpires(), item.getId());
+    }
 }

@@ -48,4 +48,9 @@ public class StorageItemCollection extends WanminCollection<StorageItem> {
     public void deleteStorageItem (int storageItemId) {
         controller.executeDML("DELETE FROM sbd147412.wm_magazyn where id = ?", storageItemId);
     }
+
+    public void updateStorageItem (@NotNull StorageItem item) {
+        controller.executeDML("UPDATE sbd147412.wm_magazyn SET produkt = ?, ilosc = ?, data_waznosci = ?, faktura = ? where id = ?",
+                item.getProduct().getId(), item.getAmount(), item.getExpirationDate(), item.getInvoice().getId(), item.getId());
+    }
 }

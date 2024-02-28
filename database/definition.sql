@@ -638,6 +638,7 @@ GRANT EXECUTE ON wm_my_id TO PUBLIC;
 
 
 CREATE ROLE wm_kucharz;
+GRANT SELECT ON wm_produkty TO wm_kucharz;
 GRANT SELECT ON wm_przepisy TO wm_kucharz;
 GRANT SELECT ON wm_przepisy_skladniki TO wm_kucharz;
 GRANT SELECT ON wm_menu TO wm_kucharz;
@@ -687,6 +688,8 @@ FROM wm_pracownicy;
 SELECT *
 FROM wm_stanowiska;
 
+SELECT *
+FROM sbd147412.wm_menu;
 
 GRANT wm_kelner TO sbd151886;
 

@@ -38,4 +38,9 @@ public class ProductsCollection extends WanminCollection<Product> {
     public void deleteProduct (int productId) {
         controller.executeDML("delete  from sbd147412.wm_produkty where id = ?", productId);
     }
+
+    public void updateProduct (@NotNull Product product) {
+        controller.executeDML("update sbd147412.wm_produkty set nazwa = ?, jednostka = ? where id = ?",
+                product.getName(), product.getUnit());
+    }
 }
