@@ -11,8 +11,8 @@ public class LoginForm extends Layout {
 
     private final JLabel
             welcomeLabel = new JLabel("Witaj w Wanmin Restaurant!"),
-            loginLabel = new JLabel("Nazwa użytkownika:"),
-            passwordLabel = new JLabel("Hasło:");
+            loginLabel = new JLabel("Nazwa uzytkownika:"),
+            passwordLabel = new JLabel("Haslo:");
     private final JTextField loginField = new JTextField();
     private final JPasswordField passwordField = new JPasswordField();
     private final JButton loginButton = new JButton("Zaloguj");

@@ -49,6 +49,15 @@ public class OrdersCollection extends WanminCollection<Order> {
                               r.getInt("klient"), r.getBoolean("czy_zaplacone"));
     }
 
+    public void addNewOrder(int table, int waiterId, int customerId) {
+        controller.executeDML("INSERT INTO sbd147412.wm_zamowienia (stolik, kelner, klient) VALUES (?,?,?)",
+                table, waiterId, customerId);
+    }
+
+    public void addNewOrder(int table, @NotNull Employee waiter, @NotNull Customer customer) {
+        addNewOrder(table, waiter.getId(), customer.getId());
+    }
+
     public void addOrderItem(int orderId, @NotNull OrderItem orderItem) {
         controller.executeDML("INSERT INTO sbd147412.wm_zamowienia_pozycje (zamowienie, pozycja, ilosc) VALUES (?,?,?)",
                               orderId, orderItem.getMenuItem().getId(), orderItem.getAmount());
