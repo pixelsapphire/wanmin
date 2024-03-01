@@ -12,7 +12,7 @@ public class Product implements DatabaseRecord {
     private final @NotNull String name;
     private final String unit;
 
-    private Product(int id, @NotNull String name, String unit) {
+    public Product(int id, @NotNull String name, String unit) {
         this.id = id;
         this.name = name;
         this.unit = unit;

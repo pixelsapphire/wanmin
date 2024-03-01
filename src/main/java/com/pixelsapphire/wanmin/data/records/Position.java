@@ -12,7 +12,7 @@ public class Position implements DatabaseRecord {
     private final @NotNull String name;
     private final float salary;
 
-    private Position(int id, @NotNull String name, float salary) {
+    public Position(int id, @NotNull String name, float salary) {
         this.id = id;
         this.name = name;
         this.salary = salary;

@@ -14,7 +14,7 @@ public class MenuItem implements DatabaseRecord {
     private final @NotNull String category, name;
     private final @NotNull Recipe recipe;
 
-    private MenuItem(int id, @NotNull String name, float price, @NotNull Recipe recipe, @NotNull String category) {
+    public MenuItem(int id, @NotNull String name, float price, @NotNull Recipe recipe, @NotNull String category) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -44,7 +44,7 @@ public class MenuItem implements DatabaseRecord {
         return name;
     }
 
-    public Recipe getRecipe() {
+    public @NotNull Recipe getRecipe() {
         return recipe;
     }
 

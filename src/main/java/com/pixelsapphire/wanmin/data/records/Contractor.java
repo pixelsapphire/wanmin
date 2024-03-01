@@ -12,7 +12,7 @@ public class Contractor implements DatabaseRecord {
     private final @NotNull String name, address;
     private final String phone, email, nip;
 
-    private Contractor(int id, @NotNull String name, @NotNull String address, String phone, String email, String nip) {
+    public Contractor(int id, @NotNull String name, @NotNull String address, String phone, String email, String nip) {
         this.id = id;
         this.name = name;
         this.address = address;

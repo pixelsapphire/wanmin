@@ -17,7 +17,7 @@ public class Menu implements DatabaseRecord {
     private final @NotNull String name;
     private final @NotNull List<MenuItem> items;
 
-    private Menu(int id, @NotNull String name, @NotNull List<MenuItem> items) {
+    public Menu(int id, @NotNull String name, @NotNull List<MenuItem> items) {
         this.id = id;
         this.name = name;
         this.items = new ArrayList<>(items);

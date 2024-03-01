@@ -12,7 +12,7 @@ public class Customer implements DatabaseRecord {
     private final @NotNull String firstName, lastName;
     private final int points;
 
-    private Customer(int cardNumber, @NotNull String firstName, @NotNull String lastName, int points) {
+    public Customer(int cardNumber, @NotNull String firstName, @NotNull String lastName, int points) {
         this.cardNumber = cardNumber;
         this.firstName = firstName;
         this.lastName = lastName;

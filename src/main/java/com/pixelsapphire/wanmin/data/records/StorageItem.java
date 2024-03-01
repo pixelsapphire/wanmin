@@ -18,7 +18,7 @@ public class StorageItem implements DatabaseRecord {
     private final @NotNull ForeignInvoice invoice;
     private final @Nullable Date expirationDate;
 
-    private StorageItem(int id, @NotNull Product product, float amount, @Nullable Date expirationDate, @NotNull ForeignInvoice invoice) {
+    public StorageItem(int id, @NotNull Product product, float amount, @Nullable Date expirationDate, @NotNull ForeignInvoice invoice) {
         this.id = id;
         this.product = product;
         this.amount = amount;

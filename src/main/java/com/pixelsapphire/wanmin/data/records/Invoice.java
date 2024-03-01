@@ -18,7 +18,7 @@ public class Invoice implements DatabaseRecord {
     private final @NotNull String number;
     private final float discount;
 
-    private Invoice(int id, @NotNull Customer customer, @NotNull Order order, @NotNull Date date, @NotNull String number, float discount) {
+    public Invoice(int id, @NotNull Customer customer, @NotNull Order order, @NotNull Date date, @NotNull String number, float discount) {
         this.id = id;
         this.customer = customer;
         this.order = order;

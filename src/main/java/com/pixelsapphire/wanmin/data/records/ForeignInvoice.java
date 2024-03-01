@@ -6,6 +6,7 @@ import com.pixelsapphire.wanmin.data.DictTuple;
 import com.pixelsapphire.wanmin.data.DictTuple.DictTupleBuilder;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,7 +21,7 @@ public class ForeignInvoice implements DatabaseRecord {
     private final @NotNull String number;
     private final @NotNull List<ForeignInvoiceItem> items;
 
-    private ForeignInvoice(int id, @NotNull Contractor contractor, @NotNull Date date, @NotNull String number,
+    public ForeignInvoice(int id, @NotNull Contractor contractor, @NotNull Date date, @NotNull String number,
                            @NotNull List<ForeignInvoiceItem> items) {
         this.id = id;
         this.contractor = contractor;

@@ -17,7 +17,7 @@ public class Recipe implements DatabaseRecord {
     private final @NotNull String name;
     private final List<RecipeIngredient> recipeIngredients;
 
-    private Recipe(int id, @NotNull String name, @NotNull List<RecipeIngredient> recipeIngredients) {
+    public Recipe(int id, @NotNull String name, @NotNull List<RecipeIngredient> recipeIngredients) {
         this.id = id;
         this.name = name;
         this.recipeIngredients = new ArrayList<>(recipeIngredients);

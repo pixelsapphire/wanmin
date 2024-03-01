@@ -13,7 +13,7 @@ public class Employee implements DatabaseRecord {
     private final @NotNull String firstName, lastName;
     private final @Nullable String username;
 
-    private Employee(int id, @NotNull String firstName, @NotNull String lastName, @Nullable String username) {
+    public Employee(int id, @NotNull String firstName, @NotNull String lastName, @Nullable String username) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;

@@ -13,7 +13,7 @@ public class RecipeIngredient implements DatabaseRecord {
     private final @NotNull Product product;
     private final float amount;
 
-    private RecipeIngredient(int id, @NotNull Product product, float amount) {
+    public RecipeIngredient(int id, @NotNull Product product, float amount) {
         this.id = id;
         this.product = product;
         this.amount = amount;

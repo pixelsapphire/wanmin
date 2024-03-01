@@ -17,7 +17,7 @@ public class ForeignInvoiceItem implements DatabaseRecord {
     private final float price, amount;
     private final @Nullable Date expires;
 
-    private ForeignInvoiceItem(int id, @NotNull Product product, float price, float amount, @Nullable Date expires) {
+    public ForeignInvoiceItem(int id, @NotNull Product product, float price, float amount, @Nullable Date expires) {
         this.id = id;
         this.product = product;
         this.price = price;

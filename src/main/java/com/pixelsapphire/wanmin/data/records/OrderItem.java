@@ -12,7 +12,7 @@ public class OrderItem implements DatabaseRecord {
     private final int id, amount;
     private final @NotNull MenuItem menuItem;
 
-    private OrderItem(int id, int amount, @NotNull MenuItem menuItem) {
+    public OrderItem(int id, int amount, @NotNull MenuItem menuItem) {
         this.id = id;
         this.amount = amount;
         this.menuItem = menuItem;
