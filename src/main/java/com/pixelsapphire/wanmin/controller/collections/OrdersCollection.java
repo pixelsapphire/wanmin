@@ -50,8 +50,8 @@ public class OrdersCollection extends WanminCollection<Order> {
     }
 
     public void addNewOrder(int table, int waiterId, int customerId) {
-        controller.executeDML("INSERT INTO sbd147412.wm_zamowienia (stolik, kelner, klient) VALUES (?,?,?)",
-                table, waiterId, customerId);
+        controller.executeDML("INSERT INTO sbd147412.wm_zamowienia (stolik, kelner, klient, czy_zaplacone) VALUES (?,?,?,?)",
+                table, waiterId, customerId, 0);
     }
 
     public void addNewOrder(int table, @NotNull Employee waiter, @NotNull Customer customer) {

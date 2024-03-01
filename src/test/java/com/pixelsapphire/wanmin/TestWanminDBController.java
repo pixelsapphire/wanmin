@@ -51,4 +51,26 @@ public class TestWanminDBController {
         assertTrue(database.isRoleEnabled("WM_ADMINISTRATOR"));
         assertTrue(database.isRoleEnabled("WM_KELNER"));
     }
+
+    @Test
+    void testAddingAndDeletingOrder () {
+        final WanminDBController database = new WanminDBController("sbd147412", "sbd147412!".toCharArray());
+
+        System.out.println("obecne zamowienia:");
+        database.orders.getAll().forEach(p -> System.out.println(p.getId() + " stolik:" + p.getTable() + " klient" +
+                p.getCustomer().getId() + " kelner:" + p.getWaiter().getId() + " czas:" + p.getTime() + " zaplacone: " + p.isPaid()));
+        database.orders.addNewOrder(8, 21, 1);
+
+        System.out.println("\nzamowienia po dodaniu:");
+        database.orders.getAll().forEach(p -> System.out.println(p.getId() + " stolik:" + p.getTable() + " klient" +
+                p.getCustomer().getId() + " kelner:" + p.getWaiter().getId() + " czas:" + p.getTime() + " zaplacone: " + p.isPaid()));
+
+        //ORA-01000: przekroczono maksymalną liczbę otwartych kursorów
+        database.orders.deleteOrder(database.orders.getFirstWhere( o -> o.getTable() == 8 && o.getWaiter().getId() == 21 && o.getCustomer().getId() == 1).getId());
+        System.out.println("\nzamowienia po usunieciu:");
+        database.orders.getAll().forEach(p -> System.out.println(p.getId() + " stolik:" + p.getTable() + " klient" +
+                p.getCustomer().getId() + " kelner:" + p.getWaiter().getId() + " czas:" + p.getTime() + " zaplacone: " + p.isPaid()));
+    }
+
+
 }
