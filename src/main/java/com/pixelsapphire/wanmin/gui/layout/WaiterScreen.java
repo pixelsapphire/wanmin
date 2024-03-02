@@ -1,6 +1,7 @@
 package com.pixelsapphire.wanmin.gui.layout;
 
 import com.pixelsapphire.wanmin.controller.WanminDBController;
+import com.pixelsapphire.wanmin.data.records.Customer;
 import com.pixelsapphire.wanmin.data.records.Order;
 import com.pixelsapphire.wanmin.gui.components.MenuView;
 import com.pixelsapphire.wanmin.gui.renderers.CustomerListModel;
@@ -105,6 +106,20 @@ public class WaiterScreen extends Layout {
 
         public void showCustomers() {
 
+            removeAll();
+
+            //TODO: zrobić modyfikacje danych klienta (imie, nazwisko)
+            final var customers = database.customers.getAll().toList();
+            final var table = SwingUtils.createTable(new String[]{"numer", "imie", "nazwisko"}, customers,
+                    c -> new String[]{"#" + c.getId(), c.getFirstName(), c.getLastName()});
+                    //i -> showOrderContents(myOrders.get(i)));
+            add(table, Layout.params("gridy=0;fill=?;insets=8,0,8,8", SwingConstants.HORIZONTAL));
+
+            final JButton addOrder = new JButton("Dodaj nowego klienta");
+            addOrder.addActionListener(e -> addNewClient());
+            add(addOrder, Layout.params("gridy=1;fill=?;insets=0,0,8,0", SwingConstants.HORIZONTAL));
+
+            resizeToContent();
         }
 
         public void showMenus() {
@@ -118,10 +133,7 @@ public class WaiterScreen extends Layout {
         }
 
         private void addNewOrder() {
-            //TODO: dodanie nowego (pustego) zamowienia do bazy danych. i określenie czy klient jest stałym klientem - lista rozwijana.
             final var newOrderWindow = new JFrame();
-
-            //database.orders.addNewOrder(table,database.getEmployeeId(), customerId);
 
             final var customers = database.customers.getAll().toList();
             final var model = new CustomerListModel(customers);
@@ -134,9 +146,9 @@ public class WaiterScreen extends Layout {
             var label = new JLabel("<html>" + "Podaj nr stolika: " + "</html>");
             newOrderWindow.add((label), Layout.params("insets=4,4,4,4"));
             JTextField textField = new JTextField();
-            textField.setColumns(20);
+            textField.setColumns(5);
             newOrderWindow.add(textField);
-            label = new JLabel("<html>" + "Podaj nr karty klienta (lub -1 jesli nie posiada konta): " + "</html>");
+            label = new JLabel("<html>" + "Klient: " + "</html>");
 
             addButton.addActionListener(e -> {
                 final int table = Integer.parseInt(textField.getText().trim());
@@ -148,7 +160,6 @@ public class WaiterScreen extends Layout {
             newOrderWindow.add(addButton, Layout.params("gridy=1;fill=?;insets=0,0,8,0", SwingConstants.HORIZONTAL));
             newOrderWindow.add((label), Layout.params("insets=4,4,4,4"));
             newOrderWindow.add(tableComboBox, Layout.params("insets=4,4,4,4"));
-            resizeToContent();
 
             newOrderWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             newOrderWindow.setLocationRelativeTo(null);
@@ -157,5 +168,35 @@ public class WaiterScreen extends Layout {
             newOrderWindow.pack();
         }
 
+        private void addNewClient () {
+            final var newCustomerWindow = new JFrame();
+
+            final JButton addButton = new JButton("Dodaj klienta");
+
+            newCustomerWindow.setLayout(new GridBagLayout());
+            var label = new JLabel("<html>" + "Id: " + "</html>");
+            newCustomerWindow.add((label), Layout.params("insets=4,4,4,4"));
+            JTextField firstNameField = new JTextField(), lastNameField = new JTextField();
+            firstNameField.setColumns(10);
+            lastNameField.setColumns(15);
+            newCustomerWindow.add(firstNameField);
+            label = new JLabel("<html>" + "Nazwisko: " + "</html>");
+
+            addButton.addActionListener(e -> {
+
+                database.customers.add(new Customer(0, firstNameField.getText(), lastNameField.getText(),0));
+                newCustomerWindow.dispose();
+                showCustomers();
+            });
+            newCustomerWindow.add(addButton, Layout.params("gridy=1;fill=?;insets=0,0,8,0", SwingConstants.HORIZONTAL));
+            newCustomerWindow.add((label), Layout.params("insets=4,4,4,4"));
+            newCustomerWindow.add(lastNameField);
+
+            newCustomerWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            newCustomerWindow.setLocationRelativeTo(null);
+            newCustomerWindow.setResizable(false);
+            newCustomerWindow.setVisible(true);
+            newCustomerWindow.pack();
+        }
     }
 }
