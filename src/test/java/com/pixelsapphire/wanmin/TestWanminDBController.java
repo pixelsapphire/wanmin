@@ -1,6 +1,9 @@
 package com.pixelsapphire.wanmin;
 
 import com.pixelsapphire.wanmin.controller.WanminDBController;
+import com.pixelsapphire.wanmin.data.records.MenuItem;
+import com.pixelsapphire.wanmin.data.records.OrderItem;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -65,11 +68,25 @@ public class TestWanminDBController {
         database.orders.getAll().forEach(p -> System.out.println(p.getId() + " stolik:" + p.getTable() + " klient" +
                 p.getCustomer().getId() + " kelner:" + p.getWaiter().getId() + " czas:" + p.getTime() + " zaplacone: " + p.isPaid()));
 
-        //ORA-01000: przekroczono maksymalną liczbę otwartych kursorów
         database.orders.deleteOrder(database.orders.getFirstWhere( o -> o.getTable() == 8 && o.getWaiter().getId() == 21 && o.getCustomer().getId() == 1).getId());
         System.out.println("\nzamowienia po usunieciu:");
         database.orders.getAll().forEach(p -> System.out.println(p.getId() + " stolik:" + p.getTable() + " klient" +
                 p.getCustomer().getId() + " kelner:" + p.getWaiter().getId() + " czas:" + p.getTime() + " zaplacone: " + p.isPaid()));
+    }
+
+    //
+    public void testAddingOrderItemToOrder (int orderId, int menuItemId ) {
+        final WanminDBController database = new WanminDBController("sbd147412", "sbd147412!".toCharArray());
+        final var menuItem = database.menuItemProvider.getById(menuItemId);
+        database.orders.addOrderItem(orderId, new OrderItem(0, 1, menuItem));
+        database.orders.getFirstWhere(o -> o.getId() == orderId).getItems().forEach(orderItem -> System.out.println(orderItem.getId() +
+                " " + orderItem.getMenuItem().getName() + " " + orderItem.getAmount()));
+    }
+
+    @Test
+    public void testAddingOrderItemToOrder () {
+        testAddingOrderItemToOrder(41, 2);
+
     }
 
 
