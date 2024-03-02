@@ -87,6 +87,8 @@ public class WanminDBController implements DatabaseExecutor {
             try (final var result = statement.executeQuery()) {
                 final List<DictTuple> list = new ArrayList<>();
                 while (result.next()) list.add(DictTuple.from(result));
+                result.close();
+                statement.close();
                 return list;
             }
         } catch (SQLException e) {
@@ -101,6 +103,7 @@ public class WanminDBController implements DatabaseExecutor {
             for (int i = 0; i < params.length; i++)
                 statement.setObject(i + 1, params[i]);
             statement.execute();
+            statement.close();
         } catch (SQLException e) {
             throw new DatabaseException("Nie udało się wykonać polecenia DML", e);
         }
