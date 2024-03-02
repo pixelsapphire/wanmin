@@ -129,10 +129,6 @@ public class WaiterScreen extends Layout {
             tableComboBox.setRenderer(new CustomerListRenderer());
 
             final JButton addButton = new JButton("Dodaj zamowienie");
-            addButton.addActionListener(e -> {
-
-            });
-            add(addButton, Layout.params("gridy=1;fill=?;insets=0,0,8,0", SwingConstants.HORIZONTAL));
 
             newOrderWindow.setLayout(new GridBagLayout());
             var label = new JLabel("<html>" + "Podaj nr stolika: " + "</html>");
@@ -144,11 +140,15 @@ public class WaiterScreen extends Layout {
 
             addButton.addActionListener(e -> {
                 final int table = Integer.parseInt(textField.getText().trim());
-                final var customer = tableComboBox.getSelectedItem();
+                final var customer = model.getSelectedItem();
+                database.orders.addNewOrder(table, database.getEmployeeId(), customer.getId());
+                newOrderWindow.dispose();
+                showMyOrders();
             });
-            add(addButton, Layout.params("gridy=1;fill=?;insets=0,0,8,0", SwingConstants.HORIZONTAL));
+            newOrderWindow.add(addButton, Layout.params("gridy=1;fill=?;insets=0,0,8,0", SwingConstants.HORIZONTAL));
             newOrderWindow.add((label), Layout.params("insets=4,4,4,4"));
             newOrderWindow.add(tableComboBox, Layout.params("insets=4,4,4,4"));
+            resizeToContent();
 
             newOrderWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             newOrderWindow.setLocationRelativeTo(null);
