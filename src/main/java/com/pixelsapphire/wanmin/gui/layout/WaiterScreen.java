@@ -3,6 +3,8 @@ package com.pixelsapphire.wanmin.gui.layout;
 import com.pixelsapphire.wanmin.controller.WanminDBController;
 import com.pixelsapphire.wanmin.data.records.Order;
 import com.pixelsapphire.wanmin.gui.components.MenuView;
+import com.pixelsapphire.wanmin.gui.renderers.CustomerListModel;
+import com.pixelsapphire.wanmin.gui.renderers.CustomerListRenderer;
 import com.pixelsapphire.wanmin.util.StreamAdapter;
 import com.pixelsapphire.wanmin.util.SwingUtils;
 import org.jetbrains.annotations.NotNull;
@@ -11,6 +13,8 @@ import javax.swing.*;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.util.List;
+import java.util.Vector;
+import java.util.stream.Collectors;
 
 public class WaiterScreen extends Layout {
 
@@ -114,13 +118,37 @@ public class WaiterScreen extends Layout {
         }
 
         private void addNewOrder() {
-            //TODO: dodanie nowego (pustego) zamowienia do bazy danych. i określenie czy klient jest stałym klientem.
+            //TODO: dodanie nowego (pustego) zamowienia do bazy danych. i określenie czy klient jest stałym klientem - lista rozwijana.
             final var newOrderWindow = new JFrame();
-            //database.orders.add();
+
+            //database.orders.addNewOrder(table,database.getEmployeeId(), customerId);
+
+            final var customers = database.customers.getAll().toList();
+            final var model = new CustomerListModel(customers);
+            final var tableComboBox = new JComboBox<>(model);
+            tableComboBox.setRenderer(new CustomerListRenderer());
+
+            final JButton addButton = new JButton("Dodaj zamowienie");
+            addButton.addActionListener(e -> {
+
+            });
+            add(addButton, Layout.params("gridy=1;fill=?;insets=0,0,8,0", SwingConstants.HORIZONTAL));
 
             newOrderWindow.setLayout(new GridBagLayout());
-            var label = new JLabel("<html>" + "sb" + "</html>");
+            var label = new JLabel("<html>" + "Podaj nr stolika: " + "</html>");
             newOrderWindow.add((label), Layout.params("insets=4,4,4,4"));
+            JTextField textField = new JTextField();
+            textField.setColumns(20);
+            newOrderWindow.add(textField);
+            label = new JLabel("<html>" + "Podaj nr karty klienta (lub -1 jesli nie posiada konta): " + "</html>");
+
+            addButton.addActionListener(e -> {
+                final int table = Integer.parseInt(textField.getText().trim());
+                final var customer = tableComboBox.getSelectedItem();
+            });
+            add(addButton, Layout.params("gridy=1;fill=?;insets=0,0,8,0", SwingConstants.HORIZONTAL));
+            newOrderWindow.add((label), Layout.params("insets=4,4,4,4"));
+            newOrderWindow.add(tableComboBox, Layout.params("insets=4,4,4,4"));
 
             newOrderWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             newOrderWindow.setLocationRelativeTo(null);

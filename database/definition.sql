@@ -543,8 +543,9 @@ CREATE TABLE wm_zamowienia
     CONSTRAINT chk_zamowienia_czy_zaplacone CHECK (czy_zaplacone IN (0, 1))
 );
 
+-- TODO: poprawić
 CREATE OR REPLACE TRIGGER wm_trig_zamowienia_czy_zaplacone
-    BEFORE INSERT OR UPDATE OF czy_zaplacone
+    BEFORE INSERT OR UPDATE OF czy_zaplacone, stolik
     ON wm_zamowienia
 BEGIN
     IF (SELECT COUNT(czy_zaplacone)
