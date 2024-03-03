@@ -2,7 +2,9 @@ package com.pixelsapphire.wanmin.gui.layout;
 
 import com.pixelsapphire.wanmin.controller.WanminDBController;
 import com.pixelsapphire.wanmin.data.records.Customer;
+import com.pixelsapphire.wanmin.data.records.Invoice;
 import com.pixelsapphire.wanmin.data.records.Order;
+import com.pixelsapphire.wanmin.data.records.OrderItem;
 import com.pixelsapphire.wanmin.gui.components.MenuView;
 import com.pixelsapphire.wanmin.gui.renderers.CustomerListModel;
 import com.pixelsapphire.wanmin.gui.renderers.CustomerListRenderer;
@@ -11,11 +13,14 @@ import com.pixelsapphire.wanmin.util.SwingUtils;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-import java.util.Vector;
-import java.util.stream.Collectors;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 public class WaiterScreen extends Layout {
 
@@ -76,31 +81,71 @@ public class WaiterScreen extends Layout {
             final List<Order> myOrders = database.orders.getAllWhere(o -> o.getWaiter().getId() == waiterId && !o.isPaid()).toList();
 
             // TODO selecty (lista rozwijana) i przyciski dodające nowe potrawy - po jednym dla każdego zamówienia. + przycisk zatwierdź/dodaj potrawę łacznie z wpisaniem tej pozycji do bazy danych
-            // TODO do każdego zamówienia przycisk zakończ i płać - ustawiający stan zamowienia w bazie danych ispaid na 1 i tworzący fakturę do tego zamówienia. Sprawdź czy dać zniżkę.
-
+            final Order[] selectedOrder = {null};
             final var table = SwingUtils.createTable(new String[]{"numer", "stolik", "klient"}, myOrders,
                                                      o -> new String[]{"#" + o.getId(), "" + o.getTable(), o.getCustomer().toString()},
-                                                     i -> showOrderContents(myOrders.get(i)));
+                                                     i -> {selectedOrder[0] = myOrders.get(i); showOrderContents(selectedOrder[0]);});
             add(table, Layout.params("gridy=0;fill=?;insets=8,0,8,8", SwingConstants.HORIZONTAL));
 
             final JButton addOrder = new JButton("Dodaj zamowienie");
             addOrder.addActionListener(e -> addNewOrder());
             add(addOrder, Layout.params("gridy=1;fill=?;insets=0,0,8,0", SwingConstants.HORIZONTAL));
 
+            final JButton deleteOrder = new JButton("Usun zamowienie");
+            addOrder.addActionListener(e -> {
+                if (selectedOrder[0] == null) {
+                    //najpierw zaznacz zamowienie!
+                }
+                else {
+                    database.orders.deleteOrder(selectedOrder[0].getId());
+                    showMyOrders();
+                }
+            });
+            add(deleteOrder, Layout.params("gridy=1;fill=?;insets=0,0,8,0", SwingConstants.HORIZONTAL));
+            add(addOrder, Layout.params("gridy=2;fill=?;insets=0,0,8,0", SwingConstants.HORIZONTAL));
+
+            final JButton changeTable = new JButton("Zmien stolik");
+            addOrder.addActionListener(e -> {
+                final var changeTableWindow = new JFrame();
+                changeTableWindow.setLayout(new GridBagLayout());
+                var label = new JLabel("<html>" + "Nowy numer stolika: " + "</html>");
+                JTextField newTableField = new JTextField();
+                newTableField.setColumns(3);
+                changeTableWindow.add(label);
+                changeTableWindow.add(newTableField);
+                JButton button = new JButton("Zatwierdz");
+                button.addActionListener( i -> {
+                    database.orders.updateOrder(new Order(selectedOrder[0].getId(), Integer.parseInt(newTableField.getText().trim()), selectedOrder[0].getWaiter(),
+                            selectedOrder[0].getTime(), selectedOrder[0].getCustomer(), selectedOrder[0].isPaid(),new ArrayList<OrderItem>()));
+                });
+                changeTableWindow.add(button);
+
+            });
+            add(changeTable,Layout.params("gridy=2;fill=?;insets=0,0,8,0", SwingConstants.HORIZONTAL));
+            add(addOrder, Layout.params("gridy=3;fill=?;insets=0,0,8,0", SwingConstants.HORIZONTAL));
+
             resizeToContent();
         }
 
         private void showOrderContents(@NotNull Order order) {
             extraPanel.removeAll();
-            extraPanel.add(SwingUtils.createTable(new String[]{"pozycja", "ilość", "cena"}, order.getItems(),
-                                                  i -> new String[]{i.getMenuItem().getName(), "" + i.getAmount(), "" + i.getMenuItem().getPrice()}),
+            extraPanel.add(SwingUtils.createTable(new String[]{"pozycja", "ilosc", "cena"}, order.getItems(),
+                            i -> new String[]{i.getMenuItem().getName(), "" + i.getAmount(), "" + i.getMenuItem().getPrice()}),
                            Layout.params("insets=8,8,8,8"));
-            extraPanel.add(new JLabel("Suma: " + order.getItems().stream().mapToDouble(i -> i.getAmount() * i.getMenuItem().getPrice()).sum()),
-                           Layout.params("gridy=1;insets=8,8,8,8"));
+            final float[] total = {(float) order.getItems().stream().mapToDouble(i -> i.getAmount() * i.getMenuItem().getPrice()).sum()};
+            extraPanel.add(new JLabel("Suma: " + total[0] + "\n"),
+                    Layout.params("gridy=1;insets=8,8,8,8"));
+            extraPanel.add(getPayButton(order, total),
+                    Layout.params("gridy=2;insets=8,8,8,8;align=right"));
+            //final JButton payButton = getPayButton(order, total);
+            //extraPanel.add(payButton, Layout.params("gridy=1;insets=8,8,8,8"));
             if (!extraPanelVisible) {
                 add(extraPanel, Layout.params("gridx=1;height=2"));
-                extraPanelVisible = true;
             }
+            else {
+                add(extraPanel);
+            }
+            extraPanelVisible = true;
             resizeToContent();
         }
 
@@ -108,12 +153,46 @@ public class WaiterScreen extends Layout {
 
             removeAll();
 
-            //TODO: zrobić modyfikacje danych klienta (imie, nazwisko)
             final var customers = database.customers.getAll().toList();
-            final var table = SwingUtils.createTable(new String[]{"numer", "imie", "nazwisko"}, customers,
-                    c -> new String[]{"#" + c.getId(), c.getFirstName(), c.getLastName()});
-                    //i -> showOrderContents(myOrders.get(i)));
+            DefaultTableModel model = new DefaultTableModel(
+                    new String[]{"numer", "imie", "nazwisko", "akcje"}, 0) {
+                @Override
+                public boolean isCellEditable(int row, int column) {
+                    // Allow editing only in first name (index 1) and last name (index 2) columns
+                    return column == 1 || column == 2;
+                }
+            };
+            for (Customer c : customers) {
+                model.addRow(new String[]{"#" + c.getId(), c.getFirstName(), c.getLastName(), ""});
+            }
+
+            final var table = new JTable(model);
+
+            // Add table selection listener (optional)
+            table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+                @Override
+                public void valueChanged(ListSelectionEvent e) {
+                }
+            });
+
             add(table, Layout.params("gridy=0;fill=?;insets=8,0,8,8", SwingConstants.HORIZONTAL));
+
+            final JButton saveButton = new JButton("Zapisz zmiany");
+            saveButton.addActionListener(e -> {
+                int rowCount = model.getRowCount();
+                for (int i = 0; i < rowCount; i++) {
+                    String id = (String) model.getValueAt(i, 0); // Extract ID
+                    int customerId = Integer.parseInt(id.trim().substring(1));
+                    String firstName = (String) model.getValueAt(i, 1); // Get modified first name
+                    String lastName = (String) model.getValueAt(i, 2); // Get modified last name
+
+                    // Update customer in database
+                    database.customers.updateCustomer(new Customer(customerId, firstName, lastName,database.customers.getById(customerId).getPoints()));
+                }
+                showCustomers();
+            });
+
+            add(saveButton, Layout.params("gridy=2;fill=?;insets=0,0,8,0", SwingConstants.HORIZONTAL));
 
             final JButton addOrder = new JButton("Dodaj nowego klienta");
             addOrder.addActionListener(e -> addNewClient());
@@ -174,11 +253,11 @@ public class WaiterScreen extends Layout {
             final JButton addButton = new JButton("Dodaj klienta");
 
             newCustomerWindow.setLayout(new GridBagLayout());
-            var label = new JLabel("<html>" + "Id: " + "</html>");
+            var label = new JLabel("<html>" + "Imie: " + "</html>");
             newCustomerWindow.add((label), Layout.params("insets=4,4,4,4"));
             JTextField firstNameField = new JTextField(), lastNameField = new JTextField();
-            firstNameField.setColumns(10);
-            lastNameField.setColumns(15);
+            firstNameField.setColumns(20);
+            lastNameField.setColumns(30);
             newCustomerWindow.add(firstNameField);
             label = new JLabel("<html>" + "Nazwisko: " + "</html>");
 
@@ -188,7 +267,8 @@ public class WaiterScreen extends Layout {
                 newCustomerWindow.dispose();
                 showCustomers();
             });
-            newCustomerWindow.add(addButton, Layout.params("gridy=1;fill=?;insets=0,0,8,0", SwingConstants.HORIZONTAL));
+            newCustomerWindow.add(addButton, Layout.params("gridx=0;gridy=2;gridwidth=2;fill=?;insets=8,8,8,8;", SwingConstants.HORIZONTAL));
+            //newCustomerWindow.add(addButton, Layout.params("gridx=0;gridy=2;gridwidth=2;fill=?;insets=8,8,8,8;anchor=?;", SwingConstants.HORIZONTAL, SwingConstants.CENTER));
             newCustomerWindow.add((label), Layout.params("insets=4,4,4,4"));
             newCustomerWindow.add(lastNameField);
 
@@ -198,5 +278,25 @@ public class WaiterScreen extends Layout {
             newCustomerWindow.setVisible(true);
             newCustomerWindow.pack();
         }
+    }
+
+    @NotNull
+    private JButton getPayButton(@NotNull Order order, float[] total) {
+        final JButton payButton = new JButton("Zaplac");
+        payButton.addActionListener( p -> {
+            database.orders.payOrder(order);
+            Customer customer = order.getCustomer();
+            float discount = 0.0f;
+            int points = customer.getPoints();
+            if(customer.getPoints() >= 100) {
+                discount = total[0] * 0.1f;
+                total[0] -= discount;
+                points -= 100;
+            }
+            points += (int) (total[0]/10);
+            database.customers.updateCustomer( new Customer( customer.getId(), customer.getFirstName(), customer.getLastName(), points));
+            database.invoices.add(new Invoice(0, customer, order, new Date(), discount));
+            mainPanel.showMyOrders();});
+        return payButton;
     }
 }

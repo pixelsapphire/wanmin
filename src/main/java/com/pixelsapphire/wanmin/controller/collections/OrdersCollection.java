@@ -10,6 +10,7 @@ import com.pixelsapphire.wanmin.data.records.Order;
 import com.pixelsapphire.wanmin.data.records.OrderItem;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class OrdersCollection extends WanminCollection<Order> {
@@ -76,5 +77,9 @@ public class OrdersCollection extends WanminCollection<Order> {
     public void updateOrderItem (int orderId, @NotNull OrderItem orderItem) {
         controller.executeDML("UPDATE sbd147412.wm_zamowienia_pozycje set zamowienie = ?, pozycja = ?, ilosc = ? where id = ?",
                 orderId, orderItem.getMenuItem().getId(), orderItem.getAmount(), orderItem.getId());
+    }
+
+    public void payOrder (@NotNull Order order) {
+        updateOrder(new Order(order.getId(), order.getTable(), order.getWaiter(), order.getTime(), order.getCustomer(),true, new ArrayList<OrderItem>()));
     }
 }

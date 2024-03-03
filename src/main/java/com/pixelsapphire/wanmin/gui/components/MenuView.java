@@ -19,7 +19,7 @@ public class MenuView extends JFrame {
         this.menu = menu;
         setLayout(new GridBagLayout());
         ListAdapter.wrap(menu.getItems()).forEachIndexed((i, item)->{
-            add(new JLabel((i + 1) + ". " + item.getName() + " " + item.getPrice() + "zł"),
+            add(new JLabel((i + 1) + ". " + item.getName() + " " + item.getPrice() + " zl"),
                     Layout.params("gridx=0;gridy=?;fill=?;insets=8,8,8,8", i, SwingConstants.HORIZONTAL));
             final var button = new JButton("Przepis");
             button.addActionListener(e -> showRecipe(item.getRecipe()));
@@ -36,7 +36,7 @@ public class MenuView extends JFrame {
     private void showRecipe(@NotNull Recipe recipe) {
         final var recipeWindow = new JFrame();
         recipeWindow.setLayout(new GridBagLayout());
-        var sb = new StringBuilder("Składniki: <br>");
+        var sb = new StringBuilder("Skladniki: <br>");
         ListAdapter.wrap(recipe.getRecipeIngredients()).forEachIndexed((i, ingredient) ->
             sb.append((i + 1)).append(". ").append(ingredient.getProduct().getName()).append("<br>"));
         recipeWindow.add(new JLabel("<html>" + sb + "</html>"), Layout.params("insets=4,4,4,4"));

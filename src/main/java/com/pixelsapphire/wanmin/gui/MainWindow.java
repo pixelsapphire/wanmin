@@ -33,7 +33,7 @@ public class MainWindow extends JFrame {
                 else new Message(this, "Nie nadano roli. Skontaktuj się z administratorem.", loginForm::apply).apply();
             } catch (final DatabaseException e) {
                 Logger.getLogger(Wanmin.class.getName()).log(Level.SEVERE, e.getMessage() + ": " + e.getCause().getMessage());
-                new Message(this, "Nie udalo się zalogowac", loginForm::apply).apply();
+                new Message(this, "Nie udalo sie zalogowac", loginForm::apply).apply();
             }
         }).start();
     }
