@@ -605,7 +605,6 @@ CREATE TABLE wm_zamowienia_pozycje
 CREATE TABLE wm_faktury
 (
     id         NUMBER(5) GENERATED ALWAYS AS IDENTITY,
-    nr_faktury VARCHAR2(30) NOT NULL,
     data       DATE         NOT NULL,
     klient     NUMBER(5)    NOT NULL,
     zamowienie NUMBER(5)    NOT NULL,

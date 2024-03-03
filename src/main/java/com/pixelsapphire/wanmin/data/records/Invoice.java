@@ -15,15 +15,13 @@ public class Invoice implements DatabaseRecord {
     private final @NotNull Customer customer;
     private final @NotNull Order order;
     private final @NotNull Date date;
-    private final @NotNull String number;
     private final float discount;
 
-    public Invoice(int id, @NotNull Customer customer, @NotNull Order order, @NotNull Date date, @NotNull String number, float discount) {
+    public Invoice(int id, @NotNull Customer customer, @NotNull Order order, @NotNull Date date, float discount) {
         this.id = id;
         this.customer = customer;
         this.order = order;
         this.date = date;
-        this.number = number;
         this.discount = discount;
     }
 
@@ -32,7 +30,7 @@ public class Invoice implements DatabaseRecord {
                                               @NotNull Provider<Order> orderProvider) {
         try {
             return new Invoice(record.getInt("id"), customerProvider.getById(record.getInt("klient")), orderProvider.getById(record.getInt("zamowienie")),
-                               record.getDate("data"), record.getString("nr_faktury"), record.getFloat("znizka"));
+                               record.getDate("data"), record.getFloat("znizka"));
         } catch (IllegalArgumentException e) {
             throw new DatabaseException("Failed to create Invoice from record" + record, e);
         }
@@ -47,7 +45,7 @@ public class Invoice implements DatabaseRecord {
     }
 
     public @NotNull String getNumber() {
-        return number;
+        return "FV/" + id;
     }
 
     public float getDiscount() {
@@ -69,7 +67,6 @@ public class Invoice implements DatabaseRecord {
                                      .with("klient", customer.getId())
                                      .with("zamowienie", order.getId())
                                      .with("data", date)
-                                     .with("nr_faktury", number)
                                      .with("znizka", discount)
                                      .build();
     }
