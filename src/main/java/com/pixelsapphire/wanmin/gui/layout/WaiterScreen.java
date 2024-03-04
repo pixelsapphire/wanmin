@@ -89,23 +89,22 @@ public class WaiterScreen extends Layout {
 
             final JButton addOrder = new JButton("Dodaj zamowienie");
             addOrder.addActionListener(e -> addNewOrder());
-            add(addOrder, Layout.params("gridy=1;fill=?;insets=0,0,8,0", SwingConstants.HORIZONTAL));
+            //add(addOrder, Layout.params("gridy=1;fill=?;insets=0,0,8,0", SwingConstants.HORIZONTAL));
 
             final JButton deleteOrder = new JButton("Usun zamowienie");
-            addOrder.addActionListener(e -> {
-                if (selectedOrder[0] == null) {
-                    //najpierw zaznacz zamowienie!
-                }
-                else {
+            deleteOrder.addActionListener(e -> {
+                if (selectedOrder[0] != null) {
                     database.orders.deleteOrder(selectedOrder[0].getId());
                     showMyOrders();
                 }
+//                else {
+//                    //najpierw zaznacz zamowienie!
+//                }
             });
-            add(deleteOrder, Layout.params("gridy=1;fill=?;insets=0,0,8,0", SwingConstants.HORIZONTAL));
-            add(addOrder, Layout.params("gridy=2;fill=?;insets=0,0,8,0", SwingConstants.HORIZONTAL));
+
 
             final JButton changeTable = new JButton("Zmien stolik");
-            addOrder.addActionListener(e -> {
+            changeTable.addActionListener(e -> {
                 final var changeTableWindow = new JFrame();
                 changeTableWindow.setLayout(new GridBagLayout());
                 var label = new JLabel("<html>" + "Nowy numer stolika: " + "</html>");
@@ -117,34 +116,61 @@ public class WaiterScreen extends Layout {
                 button.addActionListener( i -> {
                     database.orders.updateOrder(new Order(selectedOrder[0].getId(), Integer.parseInt(newTableField.getText().trim()), selectedOrder[0].getWaiter(),
                             selectedOrder[0].getTime(), selectedOrder[0].getCustomer(), selectedOrder[0].isPaid(),new ArrayList<OrderItem>()));
+                    changeTableWindow.dispose();
+                    showMyOrders();
                 });
                 changeTableWindow.add(button);
 
+                changeTableWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                changeTableWindow.setLocationRelativeTo(null);
+                changeTableWindow.setResizable(false);
+                changeTableWindow.setVisible(true);
+                changeTableWindow.pack();
             });
+
+            add(deleteOrder, Layout.params("gridy=3;fill=?;insets=0,0,8,0", SwingConstants.HORIZONTAL));
+            add(addOrder, Layout.params("gridy=1;fill=?;insets=0,0,8,0", SwingConstants.HORIZONTAL));
             add(changeTable,Layout.params("gridy=2;fill=?;insets=0,0,8,0", SwingConstants.HORIZONTAL));
-            add(addOrder, Layout.params("gridy=3;fill=?;insets=0,0,8,0", SwingConstants.HORIZONTAL));
 
             resizeToContent();
         }
 
         private void showOrderContents(@NotNull Order order) {
             extraPanel.removeAll();
-            extraPanel.add(SwingUtils.createTable(new String[]{"pozycja", "ilosc", "cena"}, order.getItems(),
-                            i -> new String[]{i.getMenuItem().getName(), "" + i.getAmount(), "" + i.getMenuItem().getPrice()}),
+            List<OrderItem> items = order.getItems();
+            final float[] total = {(float) items.stream().mapToDouble(i -> i.getAmount() * i.getMenuItem().getPrice()).sum()};
+            final OrderItem[] item = {null};
+            extraPanel.add(SwingUtils.createTable(new String[]{"pozycja", "ilosc", "cena"},items,
+                            i -> new String[]{i.getMenuItem().getName(), "" + i.getAmount(), "" + i.getMenuItem().getPrice()},
+                            i -> item[0] = items.get(i)),
                            Layout.params("insets=8,8,8,8"));
-            final float[] total = {(float) order.getItems().stream().mapToDouble(i -> i.getAmount() * i.getMenuItem().getPrice()).sum()};
+
             extraPanel.add(new JLabel("Suma: " + total[0] + "\n"),
                     Layout.params("gridy=1;insets=8,8,8,8"));
             extraPanel.add(getPayButton(order, total),
                     Layout.params("gridy=2;insets=8,8,8,8;align=right"));
+
             //final JButton payButton = getPayButton(order, total);
             //extraPanel.add(payButton, Layout.params("gridy=1;insets=8,8,8,8"));
-            if (!extraPanelVisible) {
-                add(extraPanel, Layout.params("gridx=1;height=2"));
-            }
-            else {
-                add(extraPanel);
-            }
+//            if (!extraPanelVisible) {
+//                add(extraPanel, Layout.params("gridx=1;height=2"));
+//            }
+//            else {
+//                add(extraPanel);
+//            }
+
+            final JButton deleteButton = new JButton("Usun pozycje");
+            deleteButton.addActionListener( a -> {
+                database.orders.deleteOrderItem(item[0].getId());
+                showOrderContents(order);
+            });
+            extraPanel.add(deleteButton);
+
+            final JButton addButton = new JButton("Dodaj pozycje");
+            addButton.addActionListener( a -> addNewOrderItem(order.getId()));
+            extraPanel.add(addButton);
+
+            add(extraPanel, Layout.params("gridx=1;height=2"));
             extraPanelVisible = true;
             resizeToContent();
         }
@@ -245,6 +271,43 @@ public class WaiterScreen extends Layout {
             newOrderWindow.setResizable(false);
             newOrderWindow.setVisible(true);
             newOrderWindow.pack();
+        }
+
+        //developerandroid.com
+        private void addNewOrderItem(int OrderId) {
+            final var newOrderItemWindow = new JFrame();
+
+//            final var dishes = database.menus.getById(1).getItems();
+//            final var model = new CustomerListModel(dishes);
+//            final var tableComboBox = new JComboBox<>(model);
+//            tableComboBox.setRenderer(new CustomerListRenderer());
+//
+//            final JButton addButton = new JButton("Dodaj pozycje");
+//
+//            newOrderItemWindow.setLayout(new GridBagLayout());
+//            var label = new JLabel("<html>" + "Podaj nr stolika: " + "</html>");
+//            newOrderItemWindow.add((label), Layout.params("insets=4,4,4,4"));
+//            JTextField textField = new JTextField();
+//            textField.setColumns(5);
+//            newOrderItemWindow.add(textField);
+//            label = new JLabel("<html>" + "Klient: " + "</html>");
+//
+//            addButton.addActionListener(e -> {
+//                final int table = Integer.parseInt(textField.getText().trim());
+//                final var customer = model.getSelectedItem();
+//                database.orders.addNewOrder(table, database.getEmployeeId(), customer.getId());
+//                newOrderItemWindow.dispose();
+//                showMyOrders();
+//            });
+//            newOrderItemWindow.add(addButton, Layout.params("gridy=1;fill=?;insets=0,0,8,0", SwingConstants.HORIZONTAL));
+//            newOrderItemWindow.add((label), Layout.params("insets=4,4,4,4"));
+//            newOrderItemWindow.add(tableComboBox, Layout.params("insets=4,4,4,4"));
+
+            newOrderItemWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            newOrderItemWindow.setLocationRelativeTo(null);
+            newOrderItemWindow.setResizable(false);
+            newOrderItemWindow.setVisible(true);
+            newOrderItemWindow.pack();
         }
 
         private void addNewClient () {
