@@ -78,7 +78,7 @@ public class TestWanminDBController {
     public void testAddingOrderItemToOrder (int orderId, int menuItemId ) {
         final WanminDBController database = new WanminDBController("sbd147412", "sbd147412!".toCharArray());
         final var menuItem = database.menuItemProvider.getById(menuItemId);
-        database.orders.addOrderItem(orderId, new OrderItem(0, 1, menuItem));
+        database.orders.addOrderItem(orderId, new OrderItem(1, menuItem));
         database.orders.getFirstWhere(o -> o.getId() == orderId).getItems().forEach(orderItem -> System.out.println(orderItem.getId() +
                 " " + orderItem.getMenuItem().getName() + " " + orderItem.getAmount()));
     }

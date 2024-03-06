@@ -19,6 +19,10 @@ public class Customer implements DatabaseRecord {
         this.points = points;
     }
 
+    public Customer(@NotNull String firstName, @NotNull String lastName, int points) {
+        this(DatabaseRecord.ID_UNINITIALIZED, firstName, lastName, points);
+    }
+
     @Contract("_ -> new")
     public static @NotNull Customer fromRecord(@NotNull DictTuple record) {
         try {
@@ -57,7 +61,7 @@ public class Customer implements DatabaseRecord {
 
     @Override
     public String toString() {
-        if (points == -1) return "klient niezarejestrowany";
+        //if (points == -1) return "klient niezarejestrowany";
         return firstName + " " + lastName + " [#" + cardNumber + "]";
     }
 }

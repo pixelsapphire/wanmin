@@ -18,6 +18,10 @@ public class OrderItem implements DatabaseRecord {
         this.menuItem = menuItem;
     }
 
+    public OrderItem(int amount, @NotNull MenuItem menuItem) {
+        this(DatabaseRecord.ID_UNINITIALIZED, amount, menuItem);
+    }
+
     @Contract("_, _ -> new")
     public static @NotNull OrderItem fromRecord(@NotNull DictTuple record, @NotNull Provider<MenuItem> menuItemProvider) {
         try {

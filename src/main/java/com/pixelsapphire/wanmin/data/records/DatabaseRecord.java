@@ -6,6 +6,8 @@ import org.jetbrains.annotations.NotNull;
 
 public interface DatabaseRecord {
 
+    int ID_UNINITIALIZED = 0;
+
     @Contract(pure = true)
     int getId();
 

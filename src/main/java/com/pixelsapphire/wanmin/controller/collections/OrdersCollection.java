@@ -70,7 +70,7 @@ public class OrdersCollection extends WanminCollection<Order> {
     }
 
     public void deleteOrderItem (int orderItemId) {
-        controller.executeDML("DELETE FROM sbd147412.wm_zamowienia_pozycje WHERE zamowienie = ?", orderItemId);
+        controller.executeDML("DELETE FROM sbd147412.wm_zamowienia_pozycje WHERE id = ?", orderItemId);
     }
 
     public void updateOrder (@NotNull Order order) {

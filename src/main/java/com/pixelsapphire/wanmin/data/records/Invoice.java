@@ -25,6 +25,10 @@ public class Invoice implements DatabaseRecord {
         this.discount = discount;
     }
 
+    public Invoice(@NotNull Customer customer, @NotNull Order order, @NotNull Date date, float discount) {
+        this(DatabaseRecord.ID_UNINITIALIZED, customer, order, date, discount);
+    }
+
     @Contract("_, _ -> new")
     public static @NotNull Invoice fromRecord(@NotNull DictTuple record, @NotNull Provider<Customer> customerProvider,
                                               @NotNull Provider<Order> orderProvider) {
